@@ -57,5 +57,29 @@ class ProdutoBusinessUnitTest {
             Assertions.assertThrows(DadoComTamanhoMaximoInvalidoException.class, acao);
         }
     }
+
+    @Nested
+    @DisplayName("Valor Custo")
+    class ValorCusto {
+
+        @Test
+        @DisplayName("nulo")
+        void dadoValorCustoNulo_QuandoSetar_EntaoLancarException() {
+            Executable acao = () -> produtoBusiness.setValorCusto(null);
+            Assertions.assertThrows(CampoNuloProibidoException.class, acao);
+        }
+    }
+
+    @Nested
+    @DisplayName("Valor Venda")
+    class ValorVenda {
+
+        @Test
+        @DisplayName("nulo")
+        void dadoValorVendaNulo_QuandoSetar_EntaoLancarException() {
+            Executable acao = () -> produtoBusiness.setValorVenda(null);
+            Assertions.assertThrows(CampoNuloProibidoException.class, acao);
+        }
+    }
 }
 
