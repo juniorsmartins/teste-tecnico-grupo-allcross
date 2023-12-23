@@ -40,7 +40,7 @@ public final class ProdutoEntity implements Serializable {
     @Column(name = "ativo")
     private boolean ativo;
 
-    @Column(name = "valor_custo", nullable = false, precision = 19, scale = 2)
+    @Column(name = "valor_custo", nullable = false)
     private BigDecimal valorCusto;
 
 //    private String categoria; // tornar entidade
@@ -48,7 +48,7 @@ public final class ProdutoEntity implements Serializable {
     @Column(name = "icms")
     private double icms;
 
-    @Column(name = "valor_venda", nullable = false, precision = 19, scale = 2)
+    @Column(name = "valor_venda", nullable = false)
     private BigDecimal valorVenda;
 
 //    private byte[] imagem;

@@ -1,17 +1,18 @@
 package br.com.desafiogrupoallcross.application.core.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import br.com.desafiogrupoallcross.config.exception.http_400.CampoNuloProibidoException;
+import br.com.desafiogrupoallcross.config.exception.http_400.CampoVazioProibidoException;
+import br.com.desafiogrupoallcross.config.exception.http_400.DadoComTamanhoMaximoInvalidoException;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class ProdutoBusiness {
+
+    public static final int NOME_CARACTERES_MAXIMO = 100;
 
     private Long id;
 
@@ -48,7 +49,16 @@ public final class ProdutoBusiness {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        final String NOME = "Nome";
+
+        Optional.ofNullable(nome)
+            .ifPresentOrElse(name -> {
+                this.checarCampoVazioOuEmBranco(NOME, name);
+                this.checarTamanhoDeCampo(NOME, name, NOME_CARACTERES_MAXIMO);
+                this.nome = name;
+            },
+            () -> {throw new CampoNuloProibidoException(NOME);}
+        );
     }
 
     public boolean isAtivo() {
@@ -105,6 +115,18 @@ public final class ProdutoBusiness {
 
     public void setQuantidadeEstoque(int quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+    private void checarCampoVazioOuEmBranco(String nomeCampo, String valorCampo) {
+        if (valorCampo.isBlank()) {
+            throw new CampoVazioProibidoException(nomeCampo);
+        }
+    }
+
+    private void checarTamanhoDeCampo(String nomeCampo, String valorCampo, int tamanhoMaximno) {
+        if (valorCampo.length() > tamanhoMaximno) {
+            throw new DadoComTamanhoMaximoInvalidoException(nomeCampo, tamanhoMaximno, valorCampo.length());
+        }
     }
 
     @Override

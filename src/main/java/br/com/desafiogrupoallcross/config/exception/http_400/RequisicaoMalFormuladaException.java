@@ -2,7 +2,8 @@ package br.com.desafiogrupoallcross.config.exception.http_400;
 
 import java.io.Serial;
 
-public abstract sealed class RequisicaoMalFormuladaException extends RuntimeException permits FalhaAoSalvarProdutoException {
+public abstract sealed class RequisicaoMalFormuladaException extends RuntimeException permits FalhaAoSalvarProdutoException,
+        CampoNuloProibidoException, CampoVazioProibidoException, DadoComTamanhoMaximoInvalidoException {
 
   @Serial
   private static final long serialVersionUID = 1L;
