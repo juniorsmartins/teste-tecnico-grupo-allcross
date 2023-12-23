@@ -1,7 +1,10 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Generated;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,32 +30,38 @@ public final class ProdutoEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome")
-    private String nome;
-
-    @Column(name = "ativo")
-    private boolean ativo;
-
-    @Column(name = "sku")
+    @Generated(GenerationTime.ALWAYS)
+    @Column(name = "sku", nullable = false, columnDefinition = "uuid DEFAULT gen_random_uuid()")
     private UUID sku;
 
-    @Column(name = "valor_custo")
+    @Column(name = "nome", nullable = false, length = 100)
+    private String nome;
+
+    @Column(name = "ativo", nullable = false)
+    private boolean ativo;
+
+    @Column(name = "valor_custo", nullable = false, precision = 19, scale = 2)
     private BigDecimal valorCusto;
 
 //    private String categoria; // tornar entidade
 
-    @Column(name = "icms")
+    @Column(name = "icms", nullable = false)
     private double icms;
 
-    @Column(name = "valor_venda")
+    @Column(name = "valor_venda", nullable = false, precision = 19, scale = 2)
     private BigDecimal valorVenda;
 
 //    private byte[] imagem;
 
-    @Column(name = "data_cadastro")
+    @Column(name = "data_cadastro", nullable = false, insertable = true, updatable = false)
     private Instant dataCadastro;
 
-    @Column(name = "quantidade_estoque")
+    @Column(name = "quantidade_estoque", nullable = false)
     private int quantidadeEstoque;
+
+    @PrePersist
+    private void acionarAntesDePersistir() {
+        this.dataCadastro = Instant.now();
+    }
 }
 
