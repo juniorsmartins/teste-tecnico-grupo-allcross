@@ -37,7 +37,7 @@ public final class ProdutoEntity implements Serializable {
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "ativo", nullable = false)
+    @Column(name = "ativo")
     private boolean ativo;
 
     @Column(name = "valor_custo", nullable = false, precision = 19, scale = 2)
@@ -45,7 +45,7 @@ public final class ProdutoEntity implements Serializable {
 
 //    private String categoria; // tornar entidade
 
-    @Column(name = "icms", nullable = false)
+    @Column(name = "icms")
     private double icms;
 
     @Column(name = "valor_venda", nullable = false, precision = 19, scale = 2)
@@ -56,7 +56,7 @@ public final class ProdutoEntity implements Serializable {
     @Column(name = "data_cadastro", nullable = false, insertable = true, updatable = false)
     private Instant dataCadastro;
 
-    @Column(name = "quantidade_estoque", nullable = false)
+    @Column(name = "quantidade_estoque")
     private int quantidadeEstoque;
 
     @PrePersist

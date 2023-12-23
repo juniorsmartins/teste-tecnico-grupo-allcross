@@ -4,6 +4,7 @@ import br.com.desafiogrupoallcross.adapter.out.mapper.ProdutoOutMapper;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import br.com.desafiogrupoallcross.application.port.out.ProdutoSalvarOutputPort;
+import br.com.desafiogrupoallcross.config.exception.http_400.FalhaAoSalvarProdutoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
                 .map(outMapper::toProdutoEntity)
                 .map(this.produtoRepository::save)
                 .map(outMapper::toProdutoBusiness)
-                .orElseThrow();
+                .orElseThrow(FalhaAoSalvarProdutoException::new);
     }
 }
 
