@@ -66,17 +66,17 @@
 
 
 		<!-- CONTENT NEGOTIATION -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.fasterxml.jackson.dataformat</groupId>-->
+<!--			<artifactId>jackson-dataformat-xml</artifactId>-->
+<!--		</dependency>-->
 
 
 		<!-- AUDITORIA -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-envers</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.data</groupId>-->
+<!--			<artifactId>spring-data-envers</artifactId>-->
+<!--		</dependency>-->
 
 
 		<!-- FERRAMENTAS -->
@@ -101,10 +101,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-webflux</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- Parametrização de Testes -->
 		<dependency>
@@ -115,13 +115,6 @@
 		</dependency>
 
 		<!-- Simular Objetos - Mocks -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>5.8.0</version>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
@@ -152,27 +145,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.10</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 
