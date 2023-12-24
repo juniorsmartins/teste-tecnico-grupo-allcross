@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
+import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -19,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(of = {"id"})
 public final class ProdutoEntity implements Serializable {
 
@@ -62,6 +62,36 @@ public final class ProdutoEntity implements Serializable {
     @PrePersist
     private void acionarAntesDePersistir() {
         this.dataCadastro = Instant.now();
+    }
+
+    public static ProdutoEntity converterParaEntity(ProdutoBusiness produtoBusiness) {
+        var entidade = new ProdutoEntity();
+        entidade.setId(produtoBusiness.getId());
+        entidade.setSku(produtoBusiness.getSku());
+        entidade.setNome(produtoBusiness.getNome());
+        entidade.setAtivo(produtoBusiness.isAtivo());
+        entidade.setValorCusto(produtoBusiness.getValorCusto());
+        entidade.setIcms(produtoBusiness.getIcms());
+        entidade.setValorVenda(produtoBusiness.getValorVenda());
+        entidade.setDataCadastro(produtoBusiness.getDataCadastro());
+        entidade.setQuantidadeEstoque(produtoBusiness.getQuantidadeEstoque());
+
+        return entidade;
+    }
+
+    public static ProdutoBusiness converterParaBusiness(ProdutoEntity produtoEntity) {
+        var business = new ProdutoBusiness();
+        business.setId(produtoEntity.getId());
+        business.setSku(produtoEntity.getSku());
+        business.setNome(produtoEntity.getNome());
+        business.setAtivo(produtoEntity.isAtivo());
+        business.setValorCusto(produtoEntity.getValorCusto());
+        business.setIcms(produtoEntity.getIcms());
+        business.setValorVenda(produtoEntity.getValorVenda());
+        business.setDataCadastro(produtoEntity.getDataCadastro());
+        business.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque());
+
+        return business;
     }
 }
 

@@ -82,7 +82,12 @@ public final class ProdutoBusiness {
     }
 
     public void setValorCusto(BigDecimal valorCusto) {
-        this.valorCusto = valorCusto;
+        final String NOME_CAMPO = "valorCusto";
+
+        Optional.ofNullable(valorCusto)
+            .ifPresentOrElse(valor -> this.valorCusto = valor,
+                () -> {throw new CampoNuloProibidoException(NOME_CAMPO);}
+            );
     }
 
     public double getIcms() {
@@ -98,7 +103,12 @@ public final class ProdutoBusiness {
     }
 
     public void setValorVenda(BigDecimal valorVenda) {
-        this.valorVenda = valorVenda;
+        final String NOME_CAMPO = "valorVenda";
+
+        Optional.ofNullable(valorVenda)
+            .ifPresentOrElse(valor -> this.valorVenda = valor,
+                () -> {throw new CampoNuloProibidoException(NOME_CAMPO);}
+            );
     }
 
     public Instant getDataCadastro() {

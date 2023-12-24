@@ -14,11 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@DisplayName("Classe ProdutoBusiness")
+@DisplayName("Unitário - Classe ProdutoBusiness")
 class ProdutoBusinessUnitTest {
 
     private ProdutoCadastrarUseCase cadastrarUseCase;
@@ -55,6 +53,62 @@ class ProdutoBusinessUnitTest {
             var nome = FabricaDeObjetosDeTeste.faker.lorem().characters(101, 120);
             Executable acao = () -> produtoBusiness.setNome(nome);
             Assertions.assertThrows(DadoComTamanhoMaximoInvalidoException.class, acao);
+        }
+    }
+
+    @Nested
+    @DisplayName("Valor Custo")
+    class ValorCusto {
+
+        @Test
+        @DisplayName("nulo")
+        void dadoValorCustoNulo_QuandoSetar_EntaoLancarException() {
+            Executable acao = () -> produtoBusiness.setValorCusto(null);
+            Assertions.assertThrows(CampoNuloProibidoException.class, acao);
+        }
+    }
+
+    @Nested
+    @DisplayName("Valor Venda")
+    class ValorVenda {
+
+        @Test
+        @DisplayName("nulo")
+        void dadoValorVendaNulo_QuandoSetar_EntaoLancarException() {
+            Executable acao = () -> produtoBusiness.setValorVenda(null);
+            Assertions.assertThrows(CampoNuloProibidoException.class, acao);
+        }
+    }
+
+    @Nested
+    @DisplayName("Métodos Padrão")
+    class MetodosPadrao {
+
+        private ProdutoBusiness primeiroProduto;
+
+        private ProdutoBusiness segundoProduto;
+
+        @BeforeEach
+        void criarCenarioParaMetodosPadrao() {
+            primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+            primeiroProduto.setId(1L);
+
+            segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+            segundoProduto.setId(2L);
+        }
+
+        @Test
+        @DisplayName("equals")
+        void dadoDoisProdutosValidos_QuandoEquals_EntaoRetornarNotEquals() {
+            Assertions.assertNotEquals(primeiroProduto, segundoProduto);
+        }
+
+        @Test
+        @DisplayName("hashCode")
+        void dadoDoisHashCodeValidos_QuandoHashCode_EntaoRetornarNotEquals() {
+            var primeiroHash = primeiroProduto.hashCode();
+            var segundoHash = segundoProduto.hashCode();
+            Assertions.assertNotEquals(primeiroHash, segundoHash);
         }
     }
 }
