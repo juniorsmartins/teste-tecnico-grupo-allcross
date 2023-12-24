@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public class FotoProdutoCadastrarUseCase implements FotoProdutoCadastrarInputPort {
 
-    private final FotoProdutoSalvarOutputPort salvarOutputPort;
+    private final FotoProdutoSalvarOutputPort outputPort;
 
-    public FotoProdutoCadastrarUseCase(FotoProdutoSalvarOutputPort salvarOutputPort) {
-        this.salvarOutputPort = salvarOutputPort;
+    public FotoProdutoCadastrarUseCase(FotoProdutoSalvarOutputPort outputPort) {
+        this.outputPort = outputPort;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class FotoProdutoCadastrarUseCase implements FotoProdutoCadastrarInputPor
         Optional.ofNullable(fotoProdutoBusiness)
             .ifPresentOrElse(foto -> {
                 this.extrairMetadadosDaFoto(foto);
-                salvarOutputPort.cadastrarImagem(id, foto);
+                outputPort.salvar(id, foto);
                 },
                 () -> {throw new FotoProdutoCadastrarUseCaseException();}
             );

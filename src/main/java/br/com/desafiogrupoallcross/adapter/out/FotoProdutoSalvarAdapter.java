@@ -26,7 +26,7 @@ public class FotoProdutoSalvarAdapter implements FotoProdutoSalvarOutputPort {
 
     @Transactional
     @Override
-    public void cadastrarImagem(final Long id, FotoProdutoBusiness fotoProdutoBusiness) {
+    public void salvar(final Long id, FotoProdutoBusiness fotoProdutoBusiness) {
 
         Optional.of(fotoProdutoBusiness)
                 .map(this::converterParaEntity)

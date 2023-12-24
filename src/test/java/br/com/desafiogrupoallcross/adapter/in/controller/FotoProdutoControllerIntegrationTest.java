@@ -1,12 +1,10 @@
 package br.com.desafiogrupoallcross.adapter.in.controller;
 
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,9 @@ class FotoProdutoControllerIntegrationTest {
     @Nested
     @DisplayName("Foto válida")
     class FotoProdutoValida {
+
+        @Autowired
+        private FotoProdutoRepository fotoProdutoRepository;
 
         @Autowired
         private ProdutoRepository produtoRepository;
@@ -67,25 +68,23 @@ class FotoProdutoControllerIntegrationTest {
         @Test
         @DisplayName("persistência")
         void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarFotoPersistida() throws IOException {
-
-            // Aqui você chamaria o método que manipula o arquivo no seu serviço
-            // Exemplo fictício: fileUploadService.uploadFile(multipartFile);
+            var produtoId = produtoSalvo.getId();
 
             // Simule uma requisição multipart
             webTestClient.post()
-                    .uri("/api/v1/produtos/" + produtoSalvo.getId() + "/imagem")
+                    .uri("/api/v1/produtos/" + produtoId + "/imagem")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(BodyInserters.fromMultipartData("foto", imagem).with("descricao", "descrição da foto"))
+                    .body(BodyInserters.fromMultipartData("foto", imagem)
+                            .with("descricao", "descrição X"))
                     .exchange()
                     .expectStatus().isNoContent();
 
+            var fotoPersistida = fotoProdutoRepository.findById(produtoId).get();
 
-
-            // Asserts para verificar se o arquivo foi carregado corretamente
-//            Assertions.assertEquals("descrição X", fotoProdutoDtoIn.descricao());
-//            Assertions.assertEquals("teste.jpg", fotoProdutoDtoIn.foto().getOriginalFilename());
-//            Assertions.assertEquals("image/jpeg", fotoProdutoDtoIn.foto().getContentType());
-//            Assertions.assertTrue(fotoProdutoDtoIn.foto().getSize() > 0);
+            Assertions.assertEquals("descrição X", fotoPersistida.getDescricao());
+            Assertions.assertEquals("teste.jpg", fotoPersistida.getNome());
+            Assertions.assertEquals("image/jpeg", fotoPersistida.getTipo());
+            Assertions.assertTrue(fotoPersistida.getFoto().length > 0);
         }
     }
 }
