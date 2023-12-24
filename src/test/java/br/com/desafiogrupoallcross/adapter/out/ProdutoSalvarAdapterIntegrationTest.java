@@ -1,20 +1,14 @@
 package br.com.desafiogrupoallcross.adapter.out;
 
-import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.temporal.ChronoUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
@@ -45,7 +39,7 @@ class ProdutoSalvarAdapterIntegrationTest {
 
         @Test
         @DisplayName("completos")
-        void dadoProdutoComDadosCompletos_QuandoSalvar_EntaoRetornarProdutoSalvoComIdAndSku() {
+        void dadoProdutoComDadosCompletos_QuandoSalvar_EntaoRetornarProdutoSalvoComValoresIguaisAhEntrada() {
             var resposta = salvarAdapter.salvar(produtoBusiness);
 
             Assertions.assertAll("Asserções Salvar",
@@ -59,6 +53,14 @@ class ProdutoSalvarAdapterIntegrationTest {
                     () -> Assertions.assertEquals(produtoBusiness.getQuantidadeEstoque(), resposta.getQuantidadeEstoque()),
                     () -> Assertions.assertNotNull(resposta.getDataCadastro())
             );
+        }
+
+        @Test
+        @DisplayName("persistidos")
+        void dadoProdutoComDadosCompletos_QuandoSalvar_EntaoRetornarProdutoPersistido() {
+            var resposta = salvarAdapter.salvar(produtoBusiness);
+            var produtoPersistido = repository.findById(resposta.getId());
+            Assertions.assertNotNull(produtoPersistido);
         }
     }
 }
