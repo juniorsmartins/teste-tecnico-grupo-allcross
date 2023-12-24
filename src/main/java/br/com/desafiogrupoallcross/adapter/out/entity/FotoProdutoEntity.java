@@ -20,7 +20,7 @@ public final class FotoProdutoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "pedido_id")
+    @Column(name = "produto_id")
     private Long id;
 
     @MapsId
