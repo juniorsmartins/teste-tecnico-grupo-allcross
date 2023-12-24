@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@DisplayName("Classe ProdutoBusiness")
+@DisplayName("Unitário - Classe ProdutoBusiness")
 class ProdutoBusinessUnitTest {
 
     private ProdutoCadastrarUseCase cadastrarUseCase;

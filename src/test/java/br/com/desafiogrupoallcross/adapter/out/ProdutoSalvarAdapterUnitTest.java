@@ -1,7 +1,7 @@
 package br.com.desafiogrupoallcross.adapter.out;
 
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
-import br.com.desafiogrupoallcross.config.exception.http_400.FalhaAoSalvarProdutoException;
+import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoSalvarAdapterException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,7 +33,7 @@ class ProdutoSalvarAdapterUnitTest {
         @DisplayName("por produto nulo")
         void dadoProdutoNulo_QuandoSalvar_EntaoLancarException() {
             Executable acao = () -> salvarAdapter.salvar(null);
-            Assertions.assertThrows(FalhaAoSalvarProdutoException.class, acao);
+            Assertions.assertThrows(ProdutoSalvarAdapterException.class, acao);
         }
     }
 }
