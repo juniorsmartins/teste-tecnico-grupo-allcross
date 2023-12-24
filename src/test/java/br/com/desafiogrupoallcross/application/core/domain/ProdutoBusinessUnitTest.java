@@ -79,5 +79,37 @@ class ProdutoBusinessUnitTest {
             Assertions.assertThrows(CampoNuloProibidoException.class, acao);
         }
     }
+
+    @Nested
+    @DisplayName("Métodos Padrão")
+    class MetodosPadrao {
+
+        private ProdutoBusiness primeiroProduto;
+
+        private ProdutoBusiness segundoProduto;
+
+        @BeforeEach
+        void criarCenarioParaMetodosPadrao() {
+            primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+            primeiroProduto.setId(1L);
+
+            segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+            segundoProduto.setId(2L);
+        }
+
+        @Test
+        @DisplayName("equals")
+        void dadoDoisProdutosValidos_QuandoEquals_EntaoRetornarNotEquals() {
+            Assertions.assertNotEquals(primeiroProduto, segundoProduto);
+        }
+
+        @Test
+        @DisplayName("hashCode")
+        void dadoDoisHashCodeValidos_QuandoHashCode_EntaoRetornarNotEquals() {
+            var primeiroHash = primeiroProduto.hashCode();
+            var segundoHash = segundoProduto.hashCode();
+            Assertions.assertNotEquals(primeiroHash, segundoHash);
+        }
+    }
 }
 
