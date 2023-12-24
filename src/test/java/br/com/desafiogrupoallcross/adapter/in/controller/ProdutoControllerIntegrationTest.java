@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@DisplayName("Produto Controller - Cadastrar")
+@DisplayName("Integração - Produto Controller - Cadastrar")
 class ProdutoControllerIntegrationTest {
 
     private static final String END_POINT = "/api/v1/produtos";
