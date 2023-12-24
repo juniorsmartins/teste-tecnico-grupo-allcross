@@ -39,7 +39,7 @@ class FotoProdutoControllerIntegrationTest {
         private ProdutoRepository produtoRepository;
 
         // Carregue uma imagem de exemplo do classpath
-        ClassPathResource imagem;
+        private ClassPathResource imagem;
 
         private ProdutoEntity produtoSalvo;
 

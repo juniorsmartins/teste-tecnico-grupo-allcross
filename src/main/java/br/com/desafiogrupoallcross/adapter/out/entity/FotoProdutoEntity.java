@@ -30,6 +30,12 @@ public final class FotoProdutoEntity implements Serializable {
 
     private byte[] foto;
 
+    private String nome;
+
     private String descricao;
+
+    private String tipo;
+
+    private long tamanho;
 }
 
