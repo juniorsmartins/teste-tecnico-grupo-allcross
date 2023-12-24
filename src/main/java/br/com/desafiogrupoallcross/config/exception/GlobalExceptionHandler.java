@@ -1,6 +1,7 @@
 package br.com.desafiogrupoallcross.config.exception;
 
 import br.com.desafiogrupoallcross.config.exception.http_400.RequisicaoMalFormuladaException;
+import br.com.desafiogrupoallcross.config.exception.http_404.RecursoNaoEncontradoException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         var tipoErroEnum = TipoDeErroEnum.REQUISICAO_MAL_FORMULADA;
         var httpStatus = HttpStatus.BAD_REQUEST;
+        var detail = ex.getMessage();
+
+        var mensagemDeErro = this.criarMensagemDeRetorno(tipoErroEnum, httpStatus, detail)
+                .build();
+
+        return this.handleExceptionInternal(ex, mensagemDeErro, new HttpHeaders(), httpStatus, webRequest);
+    }
+
+    @ExceptionHandler(value = RecursoNaoEncontradoException.class)
+    public ResponseEntity<Object> tratarRecursoNaoEncontrado(RecursoNaoEncontradoException ex, WebRequest webRequest) {
+
+        var tipoErroEnum = TipoDeErroEnum.RECURSO_NAO_ENCONTRADO;
+        var httpStatus = HttpStatus.NOT_FOUND;
         var detail = ex.getMessage();
 
         var mensagemDeErro = this.criarMensagemDeRetorno(tipoErroEnum, httpStatus, detail)

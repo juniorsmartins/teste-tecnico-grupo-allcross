@@ -1,7 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.request;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 public record ProdutoCadastrarDtoIn(
 

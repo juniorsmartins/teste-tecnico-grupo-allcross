@@ -1,11 +1,17 @@
 package br.com.desafiogrupoallcross.utilitarios;
 
+import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import com.github.javafaker.Faker;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
@@ -55,6 +61,21 @@ public final class FabricaDeObjetosDeTeste {
         var quantidadeEstoque = random.nextInt(50) + 1;
 
         return new ProdutoCadastrarDtoIn(nome, ativo, valorCusto, icms, valorVenda, quantidadeEstoque);
+    }
+
+    public static FotoProdutoDtoIn.FotoProdutoDtoInBuilder gerarFotoProdutoDtoInBuilder() throws IOException {
+
+        // Cria um arquivo temporário com dados fictícios
+        Path arquivoTemporario = Files.createTempFile("teste", ".jpg");
+        Files.write(arquivoTemporario, "Teste file content".getBytes());
+
+        // Cria um objeto MockMultipartFile a partir do arquivo temporário
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                "teste.jpg", "image/jpeg", Files.readAllBytes(arquivoTemporario));
+
+        return FotoProdutoDtoIn.builder()
+                .foto(multipartFile)
+                .descricao("descrição X");
     }
 }
 
