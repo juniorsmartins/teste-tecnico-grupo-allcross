@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.utilitarios;
 
+import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import com.github.javafaker.Faker;
@@ -43,6 +44,17 @@ public final class FabricaDeObjetosDeTeste {
         produto.setQuantidadeEstoque(random.nextInt(50) + 1);
 
         return produto;
+    }
+
+    public static ProdutoCadastrarDtoIn gerarProdutoCadastrarDtoIn() {
+        var nome = faker.name().fullName();
+        var ativo = random.nextBoolean();
+        var valorCusto = BigDecimal.valueOf(10.0);
+        var icms = 10.0;
+        var valorVenda = BigDecimal.valueOf(11);
+        var quantidadeEstoque = random.nextInt(50) + 1;
+
+        return new ProdutoCadastrarDtoIn(nome, ativo, valorCusto, icms, valorVenda, quantidadeEstoque);
     }
 }
 

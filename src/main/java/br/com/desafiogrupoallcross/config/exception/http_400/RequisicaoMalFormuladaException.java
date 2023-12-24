@@ -4,7 +4,7 @@ import java.io.Serial;
 
 public abstract sealed class RequisicaoMalFormuladaException extends RuntimeException permits ProdutoSalvarAdapterException,
         CampoNuloProibidoException, CampoVazioProibidoException, DadoComTamanhoMaximoInvalidoException,
-        ProdutoCadastrarUseCaseException {
+        ProdutoCadastrarUseCaseException, ProdutoCadastrarControllerException {
 
   @Serial
   private static final long serialVersionUID = 1L;
