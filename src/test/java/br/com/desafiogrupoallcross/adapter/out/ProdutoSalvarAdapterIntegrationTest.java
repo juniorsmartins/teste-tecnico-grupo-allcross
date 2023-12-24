@@ -28,11 +28,6 @@ class ProdutoSalvarAdapterIntegrationTest {
         produtoBusiness = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
     }
 
-    @AfterEach
-    void destruirCenario() {
-        repository.deleteAll();
-    }
-
     @Nested
     @DisplayName("Dados válidos")
     class DadosValidos {

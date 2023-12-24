@@ -27,16 +27,16 @@ class ProdutoControllerIntegrationTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    private ProdutoCadastrarDtoIn dtoIn;
-
-    @BeforeEach
-    void criarCenario() {
-        dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
-    }
-
     @Nested
     @DisplayName("Dados válidos")
-    class DadoValido {
+    class ProdutoComDadoValido {
+
+        private ProdutoCadastrarDtoIn dtoIn;
+
+        @BeforeEach
+        void criarCenario() {
+            dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
+        }
 
         @Test
         @DisplayName("completos por XML")

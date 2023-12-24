@@ -2,6 +2,7 @@ package br.com.desafiogrupoallcross.adapter.out.entity;
 
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -11,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -52,6 +54,8 @@ public final class ProdutoEntity implements Serializable {
     private BigDecimal valorVenda;
 
 //    private byte[] imagem;
+    @OneToMany(mappedBy = "produto")
+    private List<FotoProdutoEntity> fotos;
 
     @Column(name = "data_cadastro", nullable = false, insertable = true, updatable = false)
     private Instant dataCadastro;
