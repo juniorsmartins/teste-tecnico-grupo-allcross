@@ -3,9 +3,14 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
+import br.com.desafiogrupoallcross.config.exception.ApiError;
+import br.com.desafiogrupoallcross.config.exception.TipoDeErroEnum;
+import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoCadastrarUseCaseException;
+import br.com.desafiogrupoallcross.config.exception.http_404.ProdutoNaoEncontradoException;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,8 +22,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @DisplayName("Integração - FotoProduto Controller - Cadastrar")
@@ -28,6 +31,14 @@ class FotoProdutoControllerIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    // Carregue uma imagem de exemplo do classpath
+    private ClassPathResource imagem;
+
+    @BeforeEach
+    void criarCenario() throws IOException {
+        imagem = new ClassPathResource("teste.jpg");
+    }
 
     @Nested
     @DisplayName("Foto válida")
@@ -39,17 +50,12 @@ class FotoProdutoControllerIntegrationTest {
         @Autowired
         private ProdutoRepository produtoRepository;
 
-        // Carregue uma imagem de exemplo do classpath
-        private ClassPathResource imagem;
-
         private ProdutoEntity produtoSalvo;
 
         @BeforeEach
         void criarCenario() throws IOException {
             var produto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
             produtoSalvo = produtoRepository.save(produto);
-
-            imagem = new ClassPathResource("teste.jpg");
         }
 
         @Test
@@ -85,6 +91,30 @@ class FotoProdutoControllerIntegrationTest {
             Assertions.assertEquals("teste.jpg", fotoPersistida.getNome());
             Assertions.assertEquals("image/jpeg", fotoPersistida.getTipo());
             Assertions.assertTrue(fotoPersistida.getFoto().length > 0);
+        }
+    }
+
+    @Nested
+    @DisplayName("Exceções")
+    class FotoProdutoException {
+
+        @Test
+        @DisplayName("com produto inexistente")
+        void dadoFotoProdutoComProdutoInexistente_QuandoCadastrar_EntaoLancarException() {
+            var produtoIdInexistente = 0L;
+
+            var resposta = webTestClient.post()
+                    .uri("/api/v1/produtos/" + produtoIdInexistente + "/imagem")
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData("foto", imagem)
+                            .with("descricao", "descrição X"))
+                    .exchange()
+                    .expectStatus().isNotFound()
+                    .expectBody(ApiError.class)
+                    .returnResult().getResponseBody();
+
+            Assertions.assertEquals(404, resposta.getStatus());
+            Assertions.assertEquals(TipoDeErroEnum.RECURSO_NAO_ENCONTRADO.getTitulo(), resposta.getTitle());
         }
     }
 }
