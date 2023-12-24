@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.application.core.domain;
 
+import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoNuloProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoVazioProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.DadoComTamanhoMaximoInvalidoException;

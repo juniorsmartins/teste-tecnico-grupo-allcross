@@ -1,6 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.out;
 
-import br.com.desafiogrupoallcross.adapter.out.mapper.ProdutoOutMapper;
+import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import br.com.desafiogrupoallcross.application.port.out.ProdutoSalvarOutputPort;
@@ -16,15 +16,13 @@ public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
 
     private final ProdutoRepository produtoRepository;
 
-    private final ProdutoOutMapper outMapper;
-
     @Override
     public ProdutoBusiness salvar(ProdutoBusiness produtoBusiness) {
 
         return Optional.ofNullable(produtoBusiness)
-                .map(outMapper::toProdutoEntity)
+                .map(ProdutoEntity::converterParaEntity)
                 .map(this.produtoRepository::save)
-                .map(outMapper::toProdutoBusiness)
+                .map(ProdutoEntity::converterParaBusiness)
                 .orElseThrow(FalhaAoSalvarProdutoException::new);
     }
 }

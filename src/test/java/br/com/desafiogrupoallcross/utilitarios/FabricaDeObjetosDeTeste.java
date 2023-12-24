@@ -33,7 +33,7 @@ public final class FabricaDeObjetosDeTeste {
     public static ProdutoBusiness gerarProdutoBusiness() {
 
         var produto = new ProdutoBusiness();
-        produto.setNome(faker.name().fullName());
+        produto.setNome(faker.lorem().characters(5, 100));
         produto.setAtivo(random.nextBoolean());
         produto.setSku(UUID.randomUUID());
         produto.setValorCusto(BigDecimal.valueOf(10));
