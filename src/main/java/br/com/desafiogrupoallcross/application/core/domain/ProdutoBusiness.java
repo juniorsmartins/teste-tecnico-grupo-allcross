@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.application.core.domain;
 
+import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoNuloProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoVazioProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.DadoComTamanhoMaximoInvalidoException;
@@ -24,17 +25,15 @@ public final class ProdutoBusiness {
 
     private BigDecimal valorCusto;
 
-//    private String categoria; // tornar entidade
-
     private double icms;
 
     private BigDecimal valorVenda;
 
-//    private byte[] imagem;
-
     private Instant dataCadastro;
 
     private int quantidadeEstoque;
+
+    private CategoriaBusiness categoria;
 
     public Long getId() {
         return id;
@@ -125,6 +124,19 @@ public final class ProdutoBusiness {
 
     public void setQuantidadeEstoque(int quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+    public CategoriaBusiness getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaBusiness categoria) {
+        final String NOME_CAMPO = "categoria";
+
+        Optional.ofNullable(categoria)
+            .ifPresentOrElse(classe -> this.categoria = categoria,
+                () -> {throw new CampoNuloProibidoException(NOME_CAMPO);}
+            );
     }
 
     private void checarCampoVazioOuEmBranco(String nomeCampo, String valorCampo) {

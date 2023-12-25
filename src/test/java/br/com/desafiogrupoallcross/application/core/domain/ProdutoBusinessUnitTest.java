@@ -81,6 +81,18 @@ class ProdutoBusinessUnitTest {
     }
 
     @Nested
+    @DisplayName("Categoria")
+    class Categoria {
+
+        @Test
+        @DisplayName("nulo")
+        void dadaCategoriaNula_QuandoSetar_EntaoLancarException() {
+            Executable acao = () -> produtoBusiness.setCategoria(null);
+            Assertions.assertThrows(CampoNuloProibidoException.class, acao);
+        }
+    }
+
+    @Nested
     @DisplayName("Métodos Padrão")
     class MetodosPadrao {
 

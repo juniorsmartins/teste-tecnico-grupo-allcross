@@ -8,8 +8,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 @JsonPropertyOrder({
-        "id", "sku", "nome", "categoria", "ativo", "valorCusto", "icms",
-        "valorVenda", "quantidadeEstoque", "dataCadastro"
+        "id", "sku", "nome", "ativo", "valorCusto", "icms",
+        "valorVenda", "quantidadeEstoque", "dataCadastro", "categoria"
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProdutoCadastrarDtoOut(

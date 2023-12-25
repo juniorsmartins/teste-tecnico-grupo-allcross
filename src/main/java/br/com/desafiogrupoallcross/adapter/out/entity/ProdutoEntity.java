@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
+import br.com.desafiogrupoallcross.application.core.domain.CategoriaBusiness;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,8 +44,6 @@ public final class ProdutoEntity implements Serializable {
     @Column(name = "valor_custo", nullable = false)
     private BigDecimal valorCusto;
 
-//    private String categoria; // tornar entidade
-
     @Column(name = "icms")
     private double icms;
 
@@ -59,6 +58,10 @@ public final class ProdutoEntity implements Serializable {
 
     @Column(name = "quantidade_estoque")
     private int quantidadeEstoque;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private CategoriaEntity categoria;
 
     @PrePersist
     private void acionarAntesDePersistir() {
@@ -76,6 +79,12 @@ public final class ProdutoEntity implements Serializable {
         entidade.setValorVenda(produtoBusiness.getValorVenda());
         entidade.setDataCadastro(produtoBusiness.getDataCadastro());
         entidade.setQuantidadeEstoque(produtoBusiness.getQuantidadeEstoque());
+        entidade.setCategoria(new CategoriaEntity(
+                produtoBusiness.getCategoria().getId(),
+                produtoBusiness.getCategoria().getNome(),
+                produtoBusiness.getCategoria().isAtivo(),
+                produtoBusiness.getCategoria().getTipo()
+            ));
 
         return entidade;
     }
@@ -91,6 +100,12 @@ public final class ProdutoEntity implements Serializable {
         business.setValorVenda(produtoEntity.getValorVenda());
         business.setDataCadastro(produtoEntity.getDataCadastro());
         business.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque());
+        business.setCategoria(new CategoriaBusiness(
+                produtoEntity.getCategoria().getId(),
+                produtoEntity.getCategoria().getNome(),
+                produtoEntity.getCategoria().isAtivo(),
+                produtoEntity.getCategoria().getTipo()
+        ));
 
         return business;
     }

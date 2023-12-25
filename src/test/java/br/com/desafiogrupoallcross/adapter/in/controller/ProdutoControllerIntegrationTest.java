@@ -75,6 +75,7 @@ class ProdutoControllerIntegrationTest {
                         assertThat(response.getResponseBody().icms()).isEqualTo(dtoIn.icms());
                         assertThat(response.getResponseBody().valorVenda()).isEqualTo(dtoIn.valorVenda());
                         assertThat(response.getResponseBody().quantidadeEstoque()).isEqualTo(dtoIn.quantidadeEstoque());
+                        assertThat(response.getResponseBody().categoria().id()).isEqualTo(dtoIn.categoria().id());
                         assertThat(response.getResponseBody().dataCadastro()).isNotNull();
                     });
         }
