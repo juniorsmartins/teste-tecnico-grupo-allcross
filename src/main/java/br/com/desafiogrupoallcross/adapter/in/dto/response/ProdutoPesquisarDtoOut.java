@@ -12,27 +12,27 @@ import java.util.UUID;
         "valorVenda", "quantidadeEstoque", "dataCadastro", "categoria"
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ProdutoCadastrarDtoOut(
+public record ProdutoPesquisarDtoOut(
 
-        Long id,
+    Long id,
 
-        UUID sku,
+    UUID sku,
 
-        String nome,
+    String nome,
 
-        CategoriaDtoOut categoria,
+    CategoriaDtoOut categoria,
 
-        boolean ativo,
+    boolean ativo,
 
-        BigDecimal valorCusto,
+    BigDecimal valorCusto,
 
-        double icms,
+    double icms,
 
-        BigDecimal valorVenda,
+    BigDecimal valorVenda,
 
-        int quantidadeEstoque,
+    int quantidadeEstoque,
 
-        Instant dataCadastro
+    Instant dataCadastro
 
 ) { }
 

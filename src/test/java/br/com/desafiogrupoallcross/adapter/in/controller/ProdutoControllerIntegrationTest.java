@@ -2,11 +2,11 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
+import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
+import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +27,41 @@ class ProdutoControllerIntegrationTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private FotoProdutoRepository fotoProdutoRepository;
+
+    private ProdutoEntity primeiroProduto;
+
+    private ProdutoEntity segundoProduto;
+
+    private ProdutoCadastrarDtoIn dtoIn;
+
+    @BeforeEach
+    void criarCenario() {
+        primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder()
+                .build();
+
+        segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder()
+                .build();
+
+        primeiroProduto = this.produtoRepository.save(primeiroProduto);
+        segundoProduto = this.produtoRepository.save(segundoProduto);
+
+        dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
+    }
+
+    @AfterEach
+    void destruirCenario() {
+        this.fotoProdutoRepository.deleteAll();
+        this.produtoRepository.deleteAll();
+    }
+
     @Nested
-    @DisplayName("Dados válidos")
-    class ProdutoComDadoValido {
-
-        private ProdutoCadastrarDtoIn dtoIn;
-
-        @BeforeEach
-        void criarCenario() {
-            dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
-        }
+    @DisplayName("Cadastrar com Dados válidos")
+    class ProdutoCadastrarComDadoValido {
 
         @Test
         @DisplayName("completos por XML")
@@ -75,8 +100,50 @@ class ProdutoControllerIntegrationTest {
                         assertThat(response.getResponseBody().icms()).isEqualTo(dtoIn.icms());
                         assertThat(response.getResponseBody().valorVenda()).isEqualTo(dtoIn.valorVenda());
                         assertThat(response.getResponseBody().quantidadeEstoque()).isEqualTo(dtoIn.quantidadeEstoque());
+                        assertThat(response.getResponseBody().categoria().id()).isEqualTo(dtoIn.categoria().id());
                         assertThat(response.getResponseBody().dataCadastro()).isNotNull();
                     });
+        }
+    }
+
+    @Nested
+    @DisplayName("Pesquisar")
+    class ProdutoPesquisarComDadoValido {
+
+        @Test
+        @DisplayName("sem filtro e sem paginação")
+        void dadoSemFiltroAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComTodosOsProdutos() {
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                    .expectBody()
+                    .jsonPath("$.content.size()").isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("com filtro de nome e sem paginação")
+        void dadoComFiltroDeNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("nome", primeiroProduto.getNome())
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].nome").isEqualTo(primeiroProduto.getNome());
         }
     }
 }
