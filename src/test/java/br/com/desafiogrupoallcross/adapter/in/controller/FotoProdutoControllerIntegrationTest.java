@@ -17,8 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.io.IOException;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @DisplayName("Integração - FotoProduto Controller - Cadastrar")
@@ -33,7 +31,7 @@ class FotoProdutoControllerIntegrationTest {
     private ClassPathResource imagem;
 
     @BeforeEach
-    void criarCenario() throws IOException {
+    void criarCenario() {
         imagem = new ClassPathResource("teste.jpg"); // Carregue imagem para teste - está no diretório Resources
     }
 
@@ -50,14 +48,20 @@ class FotoProdutoControllerIntegrationTest {
         private ProdutoEntity produtoSalvo;
 
         @BeforeEach
-        void criarCenario() throws IOException {
+        void criarCenario() {
             var produto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
             produtoSalvo = produtoRepository.save(produto);
         }
 
+        @AfterEach
+        void destruirCenario() {
+            fotoProdutoRepository.deleteAll();
+            produtoRepository.deleteAll();
+        }
+
         @Test
         @DisplayName("completa")
-        void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarHttp204NoContent() throws IOException {
+        void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarHttp204NoContent() {
 
             // Simule uma requisição multipart
             webTestClient.post()
@@ -70,7 +74,7 @@ class FotoProdutoControllerIntegrationTest {
 
         @Test
         @DisplayName("persistência")
-        void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarFotoPersistida() throws IOException {
+        void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarFotoPersistida() {
             var produtoId = produtoSalvo.getId();
 
             // Simule uma requisição multipart
@@ -82,12 +86,50 @@ class FotoProdutoControllerIntegrationTest {
                     .exchange()
                     .expectStatus().isNoContent();
 
-            var fotoPersistida = fotoProdutoRepository.findById(produtoId).get();
+            var fotoPersistida = fotoProdutoRepository.findByProdutoId(produtoId).get(0);
 
             Assertions.assertEquals("descrição X", fotoPersistida.getDescricao());
             Assertions.assertEquals("teste.jpg", fotoPersistida.getNome());
             Assertions.assertEquals("image/jpeg", fotoPersistida.getTipo());
             Assertions.assertTrue(fotoPersistida.getFoto().length > 0);
+        }
+
+        @Test
+        @DisplayName("persistência dobrada")
+        void dadoDuasFotosValidas_QuandoCadastrarFoto_EntaoRetornarDuasFotosPersistidas() {
+            var produtoId = produtoSalvo.getId();
+
+            // Simule uma requisição multipart
+            webTestClient.post()
+                    .uri("/api/v1/produtos/" + produtoId + "/imagem")
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData("foto", imagem)
+                            .with("descricao", "descrição X"))
+                    .exchange()
+                    .expectStatus().isNoContent();
+
+            var fotoPersistida = fotoProdutoRepository.findByProdutoId(produtoId).get(0);
+
+            Assertions.assertEquals("descrição X", fotoPersistida.getDescricao());
+            Assertions.assertEquals("teste.jpg", fotoPersistida.getNome());
+            Assertions.assertEquals("image/jpeg", fotoPersistida.getTipo());
+            Assertions.assertTrue(fotoPersistida.getFoto().length > 0);
+
+            webTestClient.post()
+                    .uri("/api/v1/produtos/" + produtoId + "/imagem")
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData("foto", imagem)
+                            .with("descricao", "descrição Y"))
+                    .exchange()
+                    .expectStatus().isNoContent();
+
+            var fotoPersistida2 = fotoProdutoRepository.findByProdutoId(produtoId);
+
+            Assertions.assertEquals("descrição Y", fotoPersistida2.get(1).getDescricao());
+            Assertions.assertEquals("teste.jpg", fotoPersistida2.get(1).getNome());
+            Assertions.assertEquals("image/jpeg", fotoPersistida2.get(1).getTipo());
+            Assertions.assertTrue(fotoPersistida2.get(1).getFoto().length > 0);
+            Assertions.assertEquals(2, fotoPersistida2.size());
         }
     }
 

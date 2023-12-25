@@ -3,6 +3,7 @@ package br.com.desafiogrupoallcross.utilitarios;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
+import br.com.desafiogrupoallcross.adapter.out.entity.FotoProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoBusiness;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
@@ -99,6 +100,24 @@ public final class FabricaDeObjetosDeTeste {
         fotoProdutoBusiness.setDescricao("Descrição X");
 
         return fotoProdutoBusiness;
+    }
+
+    public static FotoProdutoEntity.FotoProdutoEntityBuilder gerarFotoProdutoEntityBuilder() throws IOException {
+
+        // Cria um arquivo temporário com dados fictícios
+        Path arquivoTemporario = Files.createTempFile("teste", ".jpg");
+        Files.write(arquivoTemporario, "Teste file content".getBytes());
+
+        // Cria um objeto MockMultipartFile a partir do arquivo temporário
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                "teste.jpg", "image/jpeg", Files.readAllBytes(arquivoTemporario));
+
+        return FotoProdutoEntity.builder()
+                .foto(multipartFile.getBytes())
+                .nome(multipartFile.getOriginalFilename())
+                .descricao("Descrição X")
+                .tipo(multipartFile.getContentType())
+                .tamanho(multipartFile.getSize());
     }
 }
 
