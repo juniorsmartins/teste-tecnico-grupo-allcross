@@ -4,6 +4,7 @@ import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoBusiness;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import com.github.javafaker.Faker;
 import org.springframework.mock.web.MockMultipartFile;
@@ -79,6 +80,25 @@ public final class FabricaDeObjetosDeTeste {
         return FotoProdutoDtoIn.builder()
                 .foto(multipartFile)
                 .descricao("descrição X");
+    }
+
+    public static FotoProdutoBusiness gerarFotoProdutoBusinessSemFoto() throws IOException {
+
+        // Cria um arquivo temporário com dados fictícios
+        Path arquivoTemporario = Files.createTempFile("teste", ".jpg");
+        Files.write(arquivoTemporario, "Teste file content".getBytes());
+
+        // Cria um objeto MockMultipartFile a partir do arquivo temporário
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                "teste.jpg", "image/jpeg", Files.readAllBytes(arquivoTemporario));
+
+        var fotoProdutoBusiness = new FotoProdutoBusiness();
+        fotoProdutoBusiness.setNome(multipartFile.getOriginalFilename());
+        fotoProdutoBusiness.setTamanho(multipartFile.getSize());
+        fotoProdutoBusiness.setTipo(multipartFile.getContentType());
+        fotoProdutoBusiness.setDescricao("Descrição X");
+
+        return fotoProdutoBusiness;
     }
 }
 

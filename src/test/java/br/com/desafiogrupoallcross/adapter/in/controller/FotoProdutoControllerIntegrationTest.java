@@ -5,12 +5,9 @@ import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
 import br.com.desafiogrupoallcross.config.exception.TipoDeErroEnum;
-import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoCadastrarUseCaseException;
-import br.com.desafiogrupoallcross.config.exception.http_404.ProdutoNaoEncontradoException;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,12 +29,12 @@ class FotoProdutoControllerIntegrationTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    // Carregue uma imagem de exemplo do classpath
+
     private ClassPathResource imagem;
 
     @BeforeEach
     void criarCenario() throws IOException {
-        imagem = new ClassPathResource("teste.jpg");
+        imagem = new ClassPathResource("teste.jpg"); // Carregue imagem para teste - está no diretório Resources
     }
 
     @Nested
