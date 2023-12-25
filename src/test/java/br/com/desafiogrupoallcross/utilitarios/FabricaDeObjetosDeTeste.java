@@ -3,7 +3,12 @@ package br.com.desafiogrupoallcross.utilitarios;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
+import br.com.desafiogrupoallcross.adapter.out.entity.CategoriaEntity;
+import br.com.desafiogrupoallcross.adapter.out.entity.FotoProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
+import br.com.desafiogrupoallcross.application.core.domain.CategoriaBusiness;
+import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoBusiness;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import com.github.javafaker.Faker;
 import org.springframework.mock.web.MockMultipartFile;
@@ -26,6 +31,13 @@ public final class FabricaDeObjetosDeTeste {
 
     public static ProdutoEntity.ProdutoEntityBuilder gerarProdutoEntityBuilder() {
 
+        var categoria = CategoriaEntity.builder()
+                .id(1L)
+                .nome("Eletrônicos")
+                .ativo(true)
+                .tipo(TipoCategoriaEnum.NORMAL)
+                .build();
+
         return ProdutoEntity.builder()
                 .id(random.nextLong(200) + 100)
                 .nome(faker.name().fullName())
@@ -35,10 +47,17 @@ public final class FabricaDeObjetosDeTeste {
                 .icms(10)
                 .valorVenda(BigDecimal.valueOf(11))
                 .dataCadastro(Instant.now().minusSeconds(2 * 365 * 24 * 60 * 60))
-                .quantidadeEstoque(random.nextInt(50) + 1);
+                .quantidadeEstoque(random.nextInt(50) + 1)
+                .categoria(categoria);
     }
 
     public static ProdutoBusiness gerarProdutoBusiness() {
+
+        var categoria = new CategoriaBusiness();
+        categoria.setId(1L);
+        categoria.setNome("Eletrônicos");
+        categoria.setAtivo(true);
+        categoria.setTipo(TipoCategoriaEnum.NORMAL);
 
         var produto = new ProdutoBusiness();
         produto.setNome(faker.lorem().characters(5, 100));
@@ -49,6 +68,7 @@ public final class FabricaDeObjetosDeTeste {
         produto.setValorVenda(BigDecimal.valueOf(11));
         produto.setDataCadastro(Instant.now().minusSeconds(2 * 365 * 24 * 60 * 60));
         produto.setQuantidadeEstoque(random.nextInt(50) + 1);
+        produto.setCategoria(categoria);
 
         return produto;
     }
@@ -79,6 +99,43 @@ public final class FabricaDeObjetosDeTeste {
         return FotoProdutoDtoIn.builder()
                 .foto(multipartFile)
                 .descricao("descrição X");
+    }
+
+    public static FotoProdutoBusiness gerarFotoProdutoBusinessSemFoto() throws IOException {
+
+        // Cria um arquivo temporário com dados fictícios
+        Path arquivoTemporario = Files.createTempFile("teste", ".jpg");
+        Files.write(arquivoTemporario, "Teste file content".getBytes());
+
+        // Cria um objeto MockMultipartFile a partir do arquivo temporário
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                "teste.jpg", "image/jpeg", Files.readAllBytes(arquivoTemporario));
+
+        var fotoProdutoBusiness = new FotoProdutoBusiness();
+        fotoProdutoBusiness.setNome(multipartFile.getOriginalFilename());
+        fotoProdutoBusiness.setTamanho(multipartFile.getSize());
+        fotoProdutoBusiness.setTipo(multipartFile.getContentType());
+        fotoProdutoBusiness.setDescricao("Descrição X");
+
+        return fotoProdutoBusiness;
+    }
+
+    public static FotoProdutoEntity.FotoProdutoEntityBuilder gerarFotoProdutoEntityBuilder() throws IOException {
+
+        // Cria um arquivo temporário com dados fictícios
+        Path arquivoTemporario = Files.createTempFile("teste", ".jpg");
+        Files.write(arquivoTemporario, "Teste file content".getBytes());
+
+        // Cria um objeto MockMultipartFile a partir do arquivo temporário
+        MultipartFile multipartFile = new MockMultipartFile("file",
+                "teste.jpg", "image/jpeg", Files.readAllBytes(arquivoTemporario));
+
+        return FotoProdutoEntity.builder()
+                .foto(multipartFile.getBytes())
+                .nome(multipartFile.getOriginalFilename())
+                .descricao("Descrição X")
+                .tipo(multipartFile.getContentType())
+                .tamanho(multipartFile.getSize());
     }
 }
 

@@ -13,17 +13,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"produto"})
+@EqualsAndHashCode(of = {"id"})
 public final class FotoProdutoEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "produto_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MapsId
     @ManyToOne
     @JoinColumn(name = "produto_id")
     private ProdutoEntity produto;
