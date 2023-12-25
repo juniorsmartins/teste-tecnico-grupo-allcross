@@ -10,15 +10,13 @@ public record ProdutoCadastrarDtoIn(
 
         BigDecimal valorCusto,
 
-//    private String categoria; // tornar entidade
-
         double icms,
 
         BigDecimal valorVenda,
 
-//    private byte[] imagem;
+        int quantidadeEstoque,
 
-        int quantidadeEstoque
+        CategoriaId categoria
 
 ) { }
 

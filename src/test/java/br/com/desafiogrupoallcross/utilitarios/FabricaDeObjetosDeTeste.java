@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.utilitarios;
 
+import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
@@ -53,6 +54,8 @@ public final class FabricaDeObjetosDeTeste {
     }
 
     public static ProdutoCadastrarDtoIn gerarProdutoCadastrarDtoIn() {
+        var categoriaId = new CategoriaId(1L);
+
         var nome = faker.name().fullName();
         var ativo = random.nextBoolean();
         var valorCusto = BigDecimal.valueOf(10.0);
@@ -60,7 +63,7 @@ public final class FabricaDeObjetosDeTeste {
         var valorVenda = BigDecimal.valueOf(11);
         var quantidadeEstoque = random.nextInt(50) + 1;
 
-        return new ProdutoCadastrarDtoIn(nome, ativo, valorCusto, icms, valorVenda, quantidadeEstoque);
+        return new ProdutoCadastrarDtoIn(nome, ativo, valorCusto, icms, valorVenda, quantidadeEstoque, categoriaId);
     }
 
     public static FotoProdutoDtoIn.FotoProdutoDtoInBuilder gerarFotoProdutoDtoInBuilder() throws IOException {
