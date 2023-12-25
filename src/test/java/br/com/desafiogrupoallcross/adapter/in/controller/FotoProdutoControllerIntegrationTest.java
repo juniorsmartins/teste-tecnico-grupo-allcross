@@ -27,6 +27,12 @@ class FotoProdutoControllerIntegrationTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    @Autowired
+    private FotoProdutoRepository fotoProdutoRepository;
+
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
 
     private ClassPathResource imagem;
 
@@ -35,15 +41,15 @@ class FotoProdutoControllerIntegrationTest {
         imagem = new ClassPathResource("teste.jpg"); // Carregue imagem para teste - está no diretório Resources
     }
 
+    @AfterEach
+    void destruirCenario() {
+        this.fotoProdutoRepository.deleteAll();
+        this.produtoRepository.deleteAll();
+    }
+
     @Nested
     @DisplayName("Foto válida")
     class FotoProdutoValida {
-
-        @Autowired
-        private FotoProdutoRepository fotoProdutoRepository;
-
-        @Autowired
-        private ProdutoRepository produtoRepository;
 
         private ProdutoEntity produtoSalvo;
 
