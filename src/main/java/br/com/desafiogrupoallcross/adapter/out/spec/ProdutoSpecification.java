@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Root;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +57,10 @@ public final class ProdutoSpecification {
 
             if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getNome())) {
                 adicionarCategoriaNomePredicados(filtro.getCategoria().getNome(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getAtivo())) {
+                adicionarCategoriaAtivoPredicados(filtro.getCategoria().getAtivo(), root, criteriaBuilder, pesquisa);
             }
 
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
@@ -135,6 +140,11 @@ public final class ProdutoSpecification {
             .toList();
 
         pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+    }
+
+    private static void adicionarCategoriaAtivoPredicados(Boolean ativo, Root<ProdutoEntity> root,
+                                                  CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("categoria").get("ativo"), ativo));
     }
 }
 
