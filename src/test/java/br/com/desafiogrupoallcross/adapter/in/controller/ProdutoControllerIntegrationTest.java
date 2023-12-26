@@ -3,28 +3,34 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
-import br.com.desafiogrupoallcross.adapter.out.repository.CategoriaRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
+@Sql(scripts = "/sql/produtos/produtos-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/fotos/fotos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/sql/produtos/produtos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("Integração - Produto Controller - Cadastrar")
 class ProdutoControllerIntegrationTest {
 
@@ -39,39 +45,16 @@ class ProdutoControllerIntegrationTest {
     @Autowired
     private FotoProdutoRepository fotoProdutoRepository;
 
-    @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    private ProdutoEntity primeiroProduto;
-
-    private ProdutoEntity segundoProduto;
-
-    private ProdutoEntity terceiroProduto;
-
-    private ProdutoCadastrarDtoIn dtoIn;
-
-    @BeforeEach
-    void criarCenario() {
-        primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
-        segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
-        terceiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
-
-        primeiroProduto = this.produtoRepository.save(primeiroProduto);
-        segundoProduto = this.produtoRepository.save(segundoProduto);
-        terceiroProduto = this.produtoRepository.save(terceiroProduto);
-
-        dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
-    }
-
-    @AfterEach
-    void destruirCenario() {
-        this.fotoProdutoRepository.deleteAll();
-        this.produtoRepository.deleteAll();
-    }
-
     @Nested
     @DisplayName("Cadastrar com Dados válidos")
     class ProdutoCadastrarComDadoValido {
+
+        private ProdutoCadastrarDtoIn dtoIn;
+
+        @BeforeEach
+        void criarCenario() {
+            dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
+        }
 
         @Test
         @DisplayName("completos por XML")
@@ -120,6 +103,19 @@ class ProdutoControllerIntegrationTest {
     @DisplayName("Pesquisar")
     class ProdutoPesquisarComDadoValido {
 
+        private ProdutoEntity primeiroProduto;
+
+        private ProdutoEntity segundoProduto;
+
+        private ProdutoEntity terceiroProduto;
+
+        @BeforeEach
+        void criarCenario() {
+            primeiroProduto = produtoRepository.findById(1000L).get();
+            segundoProduto = produtoRepository.findById(2000L).get();
+            terceiroProduto = produtoRepository.findById(3000L).get();
+        }
+
         @Test
         @DisplayName("sem filtro e sem paginação")
         void dadoSemFiltroAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComTodosOsProdutos() {
@@ -140,15 +136,7 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("sem filtro e com paginação")
         void dadoSemFiltroAndComPaginacao_QuandoPesquisar_EntaoRetornarListaComTodosOsProdutos() {
-            primeiroProduto.setNome("Abracadabra Test");
-            segundoProduto.setNome("Bracadabra Test");
-            terceiroProduto.setNome("Cadabra Test");
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
-            List<String> expectedNomesAscendentes = Arrays.asList(primeiroProduto.getNome(), segundoProduto.getNome());
+            var expectedNomesAscendentes = List.of(primeiroProduto.getNome(), terceiroProduto.getNome());
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -185,7 +173,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].nome").isEqualTo(primeiroProduto.getNome());
+                    .jsonPath("$.content[0].nome").isEqualTo(nomePesquisado);
         }
 
         @Test
@@ -193,7 +181,7 @@ class ProdutoControllerIntegrationTest {
         void dadoComFiltroDeDoisNomesAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProdutos() {
             var doisNomesSeparadorPorVirgula = primeiroProduto.getNome() + "," + terceiroProduto.getNome();
 
-            List<String> expectedNomes = Arrays.asList(primeiroProduto.getNome(), terceiroProduto.getNome());
+            var expected = List.of(doisNomesSeparadorPorVirgula.split(","));
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -207,7 +195,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].nome").value(Matchers.containsInAnyOrder(expectedNomes.toArray()));
+                    .jsonPath("$.content[*].nome").value(Matchers.containsInAnyOrder(expected.toArray()));
         }
 
         @Test
@@ -227,7 +215,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].id").isEqualTo(segundoProduto.getId());
+                    .jsonPath("$.content[0].id").isEqualTo(idPesquisado);
         }
 
         @Test
@@ -235,7 +223,7 @@ class ProdutoControllerIntegrationTest {
         void dadoComFiltroDeDoisIdsAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProdutos() {
             var doisIdsSeparadorPorVirgula = segundoProduto.getId() + "," + terceiroProduto.getId();
 
-            var expectedIds = Arrays.asList(segundoProduto.getId(), terceiroProduto.getId());
+            var expected = List.of(doisIdsSeparadorPorVirgula.split(","));
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -249,21 +237,13 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].id", Matchers.containsInAnyOrder(expectedIds.toArray()));
+                    .jsonPath("$.content[*].id", Matchers.containsInAnyOrder(expected.toArray()));
         }
 
         @Test
         @DisplayName("com um ativo e sem paginação")
         void dadoComFiltroDeAtivoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.setAtivo(false);
-            segundoProduto.setAtivo(false);
-            terceiroProduto.setAtivo(true);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
-            var ativoPesquisado = terceiroProduto.isAtivo();
+            var ativoPesquisado = segundoProduto.isAtivo();
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -283,15 +263,9 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com um valorCusto e sem paginação")
         void dadoComFiltroDeValorCustoAndSemPaginacao_QuandoPesquisar_EntaoRetornarUmProduto() {
-            primeiroProduto.setValorCusto(BigDecimal.valueOf(20.0));
-            segundoProduto.setValorCusto(BigDecimal.valueOf(40.0));
-            terceiroProduto.setValorCusto(BigDecimal.valueOf(30.0));
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = segundoProduto.getValorCusto();
+
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -305,20 +279,12 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].valorCusto").isEqualTo(valorPesquisado);
+                    .jsonPath("$.content[0].valorCusto").isEqualTo(valorPesquisado.setScale(1, BigDecimal.ROUND_HALF_UP));
         }
 
         @Test
         @DisplayName("com um icms e sem paginação")
         void dadoComFiltroDeIcmsAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.setIcms(3D);
-            segundoProduto.setIcms(2D);
-            terceiroProduto.setIcms(5D);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = segundoProduto.getIcms();
 
             webTestClient.get()
@@ -339,14 +305,6 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com um valorVenda e sem paginação")
         void dadoComFiltroDeValorVendaAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.setValorVenda(BigDecimal.valueOf(100.0));
-            segundoProduto.setValorVenda(BigDecimal.valueOf(90.0));
-            terceiroProduto.setValorVenda(BigDecimal.valueOf(80.0));
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = terceiroProduto.getValorVenda();
 
             webTestClient.get()
@@ -361,20 +319,12 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].valorVenda").isEqualTo(valorPesquisado);
+                    .jsonPath("$.content[0].valorVenda").isEqualTo(valorPesquisado.setScale(1, BigDecimal.ROUND_HALF_UP));
         }
 
         @Test
         @DisplayName("com um quantidadeEstoque e sem paginação")
         void dadoComFiltroDeQuantidadeEstoqueAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.setQuantidadeEstoque(6);
-            segundoProduto.setQuantidadeEstoque(7);
-            terceiroProduto.setQuantidadeEstoque(9);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = primeiroProduto.getQuantidadeEstoque();
 
             webTestClient.get()
@@ -395,14 +345,6 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com um categoria.id e sem paginação")
         void dadoComFiltroDeCategoriaIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = segundoProduto.getCategoria().getId();
 
             webTestClient.get()
@@ -423,17 +365,9 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com dois categoria.id e sem paginação")
         void dadoComFiltroComDuasCategoriaIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getId() + "," + terceiroProduto.getCategoria().getId();
 
-            var expectedIds = Arrays.asList(segundoProduto.getCategoria().getId(), terceiroProduto.getCategoria().getId());
+            var expected = List.of(doisIdsSeparadorPorVirgula.split(","));
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -447,20 +381,12 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].categoria.id", Matchers.containsInAnyOrder(expectedIds.toArray()));
+                    .jsonPath("$.content[*].categoria.id", Matchers.containsInAnyOrder(expected.toArray()));
         }
 
         @Test
         @DisplayName("com um categoria.nome e sem paginação")
         void dadoComFiltroDeCategoriaNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = segundoProduto.getCategoria().getNome();
 
             webTestClient.get()
@@ -481,17 +407,9 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com dois categoria.nome e sem paginação")
         void dadoComFiltroComDuasCategoriaNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getNome() + "," + terceiroProduto.getCategoria().getNome();
 
-            var expectedIds = Arrays.asList(segundoProduto.getCategoria().getNome(), terceiroProduto.getCategoria().getNome());
+            var expected = List.of(doisIdsSeparadorPorVirgula.split(","));
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -505,24 +423,12 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].categoria.nome", Matchers.containsInAnyOrder(expectedIds.toArray()));
+                    .jsonPath("$.content[*].categoria.nome", Matchers.containsInAnyOrder(expected.toArray()));
         }
 
         @Test
         @DisplayName("com um categoria.ativo e sem paginação")
         void dadoComFiltroDeCategoriaAtivoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
-            var categoria_3 = categoriaRepository.findById(3L).get();
-            categoria_3.setAtivo(false);
-            categoriaRepository.save(categoria_3);
-
             var valorPesquisado = false;
 
             webTestClient.get()
@@ -543,14 +449,6 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com um categoria.tipo e sem paginação")
         void dadoComFiltroDeCategoriaTipoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var valorPesquisado = segundoProduto.getCategoria().getTipo().toString();
 
             webTestClient.get()
@@ -571,17 +469,9 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com dois categoria.tipo e sem paginação")
         void dadoComFiltroComDoisCategoriaTipoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
-            primeiroProduto.getCategoria().setId(2L);
-            segundoProduto.getCategoria().setId(3L);
-            terceiroProduto.getCategoria().setId(1L);
-
-            primeiroProduto = produtoRepository.save(primeiroProduto);
-            segundoProduto = produtoRepository.save(segundoProduto);
-            terceiroProduto = produtoRepository.save(terceiroProduto);
-
             var doisTiposSeparadorPorVirgula = segundoProduto.getCategoria().getTipo() + "," + terceiroProduto.getCategoria().getTipo();
 
-            var expectedTipos = Arrays.asList(doisTiposSeparadorPorVirgula.split(","));
+            var expected = List.of(doisTiposSeparadorPorVirgula.split(","));
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -595,7 +485,27 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].categoria.tipo", Matchers.containsInAnyOrder(expectedTipos.toArray()));
+                    .jsonPath("$.content[*].categoria.tipo", Matchers.containsInAnyOrder(expected.toArray()));
+        }
+
+        @Test
+        @DisplayName("com dataCadastro e sem paginação")
+        void dadoComFiltroDeDataCadastroAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            var valorPesquisado = "01/01/2022";
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("dataCadastro", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[*].nome").isEqualTo("PS4");
         }
     }
 }
