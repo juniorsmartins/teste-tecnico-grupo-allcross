@@ -54,6 +54,10 @@ public final class ProdutoSpecification {
                 adicionarCategoriaIdPredicados(filtro.getCategoria().getId(), root, pesquisa);
             }
 
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getNome())) {
+                adicionarCategoriaNomePredicados(filtro.getCategoria().getNome(), root, criteriaBuilder, pesquisa);
+            }
+
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
         });
     }
@@ -118,6 +122,19 @@ public final class ProdutoSpecification {
                 .toList();
 
         pesquisa.add(root.join("categoria").get("id").in(parametros));
+    }
+
+    private static void adicionarCategoriaNomePredicados(String nome, Root<ProdutoEntity> root,
+                                               CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+
+        var parametros = List.of(nome.trim().split(","));
+
+        var predicates = parametros.stream()
+            .map(valor -> criteriaBuilder.like(criteriaBuilder.lower(root.get("categoria").get("nome")),
+                "%" + valor.toLowerCase() + "%"))
+            .toList();
+
+        pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 }
 
