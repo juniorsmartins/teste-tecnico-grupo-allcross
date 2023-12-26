@@ -1,15 +1,19 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.filtro;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
-import lombok.Getter;
-import lombok.Setter;
+import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public final class ProdutoDtoFiltro implements Serializable {
 
     @Serial
@@ -30,5 +34,15 @@ public final class ProdutoDtoFiltro implements Serializable {
     private Integer quantidadeEstoque;
 
     private CategoriaId categoria;
+
+    public static ProdutoFiltro converterParaProdutoFiltro(ProdutoDtoFiltro dtoFiltro) {
+        var produtoFiltro = new ProdutoFiltro();
+
+        produtoFiltro.setId(dtoFiltro.getId());
+        produtoFiltro.setNome(dtoFiltro.getNome());
+        produtoFiltro.setAtivo(dtoFiltro.getAtivo());
+
+        return produtoFiltro;
+    }
 }
 

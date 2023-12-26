@@ -85,5 +85,19 @@ public final class ProdutoFiltro {
     public void setCategoria(CategoriaId categoria) {
         this.categoria = categoria;
     }
+
+    @Override
+    public String toString() {
+        return "ProdutoFiltro{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", ativo=" + ativo +
+                ", valorCusto=" + valorCusto +
+                ", icms=" + icms +
+                ", valorVenda=" + valorVenda +
+                ", quantidadeEstoque=" + quantidadeEstoque +
+                ", categoria=" + categoria +
+                '}';
+    }
 }
 

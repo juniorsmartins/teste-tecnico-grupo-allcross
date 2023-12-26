@@ -5,7 +5,6 @@ import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoPesquisarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoMapper;
-import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoFiltroMapper;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoCadastrarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoPesquisarInputPort;
 import jakarta.validation.Valid;
@@ -31,8 +30,6 @@ public class ProdutoController {
     private final ProdutoPesquisarInputPort pesquisarInputPort;
 
     private final ProdutoMapper mapper;
-
-    private final ProdutoFiltroMapper filtroMapper;
 
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -60,21 +57,13 @@ public class ProdutoController {
                     System.out.println("\n\n 1 -> " + filtro + "\n");
                     return filtro;
                 })
-                .map(filtroMapper::toProdutoFiltro)
+                .map(ProdutoDtoFiltro::converterParaProdutoFiltro)
                 .map(filtro -> {
                     System.out.println("\n\n 2 -> " + filtro + "\n");
                     return filtro;
                 })
                 .map(filtro -> this.pesquisarInputPort.pesquisar(filtro, paginacao))
-                .map(filtro -> {
-                    System.out.println("\n\n 3 -> " + filtro + "\n");
-                    return filtro;
-                })
                 .map(pagina -> pagina.map(this.mapper::toProdutoPesquisarDtoOut))
-                .map(filtro -> {
-                    System.out.println("\n\n 4 -> " + filtro + "\n");
-                    return filtro;
-                })
                 .orElseThrow();
 
         return ResponseEntity

@@ -37,18 +37,19 @@ class ProdutoControllerIntegrationTest {
 
     private ProdutoEntity segundoProduto;
 
+    private ProdutoEntity terceiroProduto;
+
     private ProdutoCadastrarDtoIn dtoIn;
 
     @BeforeEach
     void criarCenario() {
-        primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder()
-                .build();
-
-        segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder()
-                .build();
+        primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+        segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+        terceiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
 
         primeiroProduto = this.produtoRepository.save(primeiroProduto);
         segundoProduto = this.produtoRepository.save(segundoProduto);
+        terceiroProduto = this.produtoRepository.save(terceiroProduto);
 
         dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
     }
@@ -124,17 +125,18 @@ class ProdutoControllerIntegrationTest {
                     .expectStatus().isOk()
                     .expectHeader().contentType(MediaType.APPLICATION_JSON)
                     .expectBody()
-                    .jsonPath("$.content.size()").isEqualTo(2);
+                    .jsonPath("$.content.size()").isEqualTo(3);
         }
 
         @Test
         @DisplayName("com filtro de nome e sem paginação")
         void dadoComFiltroDeNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            var nomePesquisado = primeiroProduto.getNome();
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path(END_POINT)
-                            .queryParam("nome", primeiroProduto.getNome())
+                            .queryParam("nome", nomePesquisado)
                             .queryParam("paginacao", "")
                             .build())
                     .accept(MediaType.APPLICATION_JSON)
@@ -144,6 +146,27 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
                     .jsonPath("$.content[0].nome").isEqualTo(primeiroProduto.getNome());
+        }
+
+        @Test
+        @DisplayName("com filtro de dois nomes e sem paginação")
+        void dadoComFiltroDeDoisNomesAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProdutos() {
+            var doisNomesSeparadorPorVirgula = primeiroProduto.getNome() + "," + terceiroProduto.getNome();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("nome", doisNomesSeparadorPorVirgula)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(2)
+                    .jsonPath("$.content[0].nome").isEqualTo(primeiroProduto.getNome())
+                    .jsonPath("$.content[1].nome").isEqualTo(terceiroProduto.getNome());
         }
     }
 }

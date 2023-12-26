@@ -9,26 +9,27 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-public final class ProdutoSpecification {
+public class ProdutoSpecification {
 
     public static Specification<ProdutoEntity> consultarDinamicamente(ProdutoFiltro filtro) {
 
         return ((root, query, criteriaBuilder) -> {
 
-            var parametrosDePesquisa = new ArrayList<Predicate>();
+            var pesquisa = new ArrayList<Predicate>();
 
             if (ObjectUtils.isNotEmpty(filtro.getNome())) {
                 var parametros = Arrays.asList(filtro.getNome().split(","));
-                List<Predicate> parametrosPredicate = parametros.stream()
-                        .map(parametro -> criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("nome")), "%" + parametro.toLowerCase() + "%"))
-                        .toList();
-                parametrosDePesquisa.add(criteriaBuilder.or(parametrosPredicate.toArray(new Predicate[0])));
+
+                List<Predicate> predicates = parametros.stream()
+                    .map(valor -> criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("nome")), "%" + valor.toLowerCase() + "%"))
+                    .toList();
+
+                pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
             }
 
-            return criteriaBuilder.and(parametrosDePesquisa.toArray(new Predicate[0]));
+            return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
         });
     }
 }
