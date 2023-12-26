@@ -41,6 +41,8 @@ public final class ProdutoDtoFiltro implements Serializable {
         produtoFiltro.setId(dtoFiltro.getId());
         produtoFiltro.setNome(dtoFiltro.getNome());
         produtoFiltro.setAtivo(dtoFiltro.getAtivo());
+        produtoFiltro.setValorCusto(dtoFiltro.getValorCusto());
+        produtoFiltro.setIcms(dtoFiltro.getIcms());
 
         return produtoFiltro;
     }

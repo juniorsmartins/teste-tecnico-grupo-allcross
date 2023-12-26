@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -273,6 +274,62 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
                     .jsonPath("$.content[0].ativo").isEqualTo(ativoPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um valorCusto e sem paginação")
+        void dadoComFiltroDeValorCustoAndSemPaginacao_QuandoPesquisar_EntaoRetornarUmProduto() {
+            primeiroProduto.setValorCusto(BigDecimal.valueOf(20));
+            segundoProduto.setValorCusto(BigDecimal.valueOf(40));
+            terceiroProduto.setValorCusto(BigDecimal.valueOf(30));
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getValorCusto();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("valorCusto", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].valorCusto").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um icms e sem paginação")
+        void dadoComFiltroDeIcmsAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setIcms(3D);
+            segundoProduto.setIcms(2D);
+            terceiroProduto.setIcms(5D);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getIcms();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("icms", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].icms").isEqualTo(valorPesquisado);
         }
     }
 }
