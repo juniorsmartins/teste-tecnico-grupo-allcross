@@ -18,6 +18,7 @@ public class ProdutoPesquisarUseCase implements ProdutoPesquisarInputPort {
     @Override
     public Page<ProdutoBusiness> pesquisar(final ProdutoFiltro produtoFiltro, final Pageable paginacao) {
 
+        // TODO - add pipeline
         return this.pesquisarOutputPort.pesquisar(produtoFiltro, paginacao);
     }
 }

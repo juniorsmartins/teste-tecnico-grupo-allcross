@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -245,6 +246,262 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
                     .jsonPath("$.content[*].id", Matchers.containsInAnyOrder(expectedIds.toArray()));
+        }
+
+        @Test
+        @DisplayName("com um ativo e sem paginação")
+        void dadoComFiltroDeAtivoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setAtivo(false);
+            segundoProduto.setAtivo(false);
+            terceiroProduto.setAtivo(true);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var ativoPesquisado = terceiroProduto.isAtivo();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("ativo", ativoPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].ativo").isEqualTo(ativoPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um valorCusto e sem paginação")
+        void dadoComFiltroDeValorCustoAndSemPaginacao_QuandoPesquisar_EntaoRetornarUmProduto() {
+            primeiroProduto.setValorCusto(BigDecimal.valueOf(20.0));
+            segundoProduto.setValorCusto(BigDecimal.valueOf(40.0));
+            terceiroProduto.setValorCusto(BigDecimal.valueOf(30.0));
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getValorCusto();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("valorCusto", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].valorCusto").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um icms e sem paginação")
+        void dadoComFiltroDeIcmsAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setIcms(3D);
+            segundoProduto.setIcms(2D);
+            terceiroProduto.setIcms(5D);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getIcms();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("icms", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].icms").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um valorVenda e sem paginação")
+        void dadoComFiltroDeValorVendaAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setValorVenda(BigDecimal.valueOf(100.0));
+            segundoProduto.setValorVenda(BigDecimal.valueOf(90.0));
+            terceiroProduto.setValorVenda(BigDecimal.valueOf(80.0));
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = terceiroProduto.getValorVenda();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("valorVenda", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].valorVenda").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um quantidadeEstoque e sem paginação")
+        void dadoComFiltroDeQuantidadeEstoqueAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setQuantidadeEstoque(6);
+            segundoProduto.setQuantidadeEstoque(7);
+            terceiroProduto.setQuantidadeEstoque(9);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = primeiroProduto.getQuantidadeEstoque();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("quantidadeEstoque", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].quantidadeEstoque").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um categoria.id e sem paginação")
+        void dadoComFiltroDeCategoriaIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getCategoria().getId();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.id", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].categoria.id").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com dois categoria.id e sem paginação")
+        void dadoComFiltroComDuasCategoriaIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getId() + "," + terceiroProduto.getCategoria().getId();
+
+            var expectedIds = Arrays.asList(segundoProduto.getCategoria().getId(), terceiroProduto.getCategoria().getId());
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.id", doisIdsSeparadorPorVirgula)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(2)
+                    .jsonPath("$.content[*].categoria.id", Matchers.containsInAnyOrder(expectedIds.toArray()));
+        }
+
+        @Test
+        @DisplayName("com um categoria.nome e sem paginação")
+        void dadoComFiltroDeCategoriaNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getCategoria().getNome();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.nome", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].categoria.nome").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com dois categoria.nome e sem paginação")
+        void dadoComFiltroComDuasCategoriaNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getNome() + "," + terceiroProduto.getCategoria().getNome();
+
+            var expectedIds = Arrays.asList(segundoProduto.getCategoria().getNome(), terceiroProduto.getCategoria().getNome());
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.nome", doisIdsSeparadorPorVirgula)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(2)
+                    .jsonPath("$.content[*].categoria.nome", Matchers.containsInAnyOrder(expectedIds.toArray()));
         }
     }
 }
