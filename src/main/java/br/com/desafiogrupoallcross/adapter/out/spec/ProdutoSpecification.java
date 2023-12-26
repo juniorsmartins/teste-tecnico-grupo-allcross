@@ -1,6 +1,7 @@
 package br.com.desafiogrupoallcross.adapter.out.spec;
 
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
 import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
@@ -8,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +60,18 @@ public final class ProdutoSpecification {
                 adicionarCategoriaNomePredicados(filtro.getCategoria().getNome(), root, criteriaBuilder, pesquisa);
             }
 
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getAtivo())) {
+                adicionarCategoriaAtivoPredicados(filtro.getCategoria().getAtivo(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getTipo())) {
+                adicionarCategoriaTipoPredicados(filtro.getCategoria().getTipo(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getDataCadastro())) {
+                adicionarDataCadastroPredicados(filtro, root, criteriaBuilder, pesquisa);
+            }
+
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
         });
     }
@@ -78,8 +92,7 @@ public final class ProdutoSpecification {
     private static void adicionarIdsPredicados(String id, Root<ProdutoEntity> root,
                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
 
-        var parametros = List.of(id.trim().split(","))
-            .stream()
+        var parametros = Stream.of(id.trim().split(","))
             .map(Long::parseLong)
             .toList();
 
@@ -135,6 +148,28 @@ public final class ProdutoSpecification {
             .toList();
 
         pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+    }
+
+    private static void adicionarCategoriaAtivoPredicados(Boolean ativo, Root<ProdutoEntity> root,
+                                                  CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("categoria").get("ativo"), ativo));
+    }
+
+    private static void adicionarCategoriaTipoPredicados(String tipo, Root<ProdutoEntity> root,
+                                                         CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+
+        var predicates = Arrays.stream(tipo.trim().toUpperCase().split(","))
+                .map(TipoCategoriaEnum::valueOf)
+                .map(valor -> criteriaBuilder.equal(root.get("categoria").get("tipo"), valor))
+                .toList();
+
+        pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+    }
+
+    private static void adicionarDataCadastroPredicados(ProdutoFiltro filtro, Root<ProdutoEntity> root,
+                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dataCadastro"), filtro.dataCadastroInicial()));
+        pesquisa.add(criteriaBuilder.lessThanOrEqualTo(root.get("dataCadastro"), filtro.dataCadastroFinal()));
     }
 }
 

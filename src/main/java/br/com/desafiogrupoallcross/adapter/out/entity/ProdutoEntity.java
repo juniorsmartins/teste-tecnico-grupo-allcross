@@ -41,13 +41,13 @@ public final class ProdutoEntity implements Serializable {
     @Column(name = "ativo")
     private boolean ativo;
 
-    @Column(name = "valor_custo", nullable = false)
+    @Column(name = "valor_custo", nullable = false, scale = 2)
     private BigDecimal valorCusto;
 
     @Column(name = "icms")
     private double icms;
 
-    @Column(name = "valor_venda", nullable = false)
+    @Column(name = "valor_venda", nullable = false, scale = 2)
     private BigDecimal valorVenda;
 
     @OneToMany(mappedBy = "produto")
