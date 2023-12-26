@@ -551,7 +551,7 @@ class ProdutoControllerIntegrationTest {
             segundoProduto = produtoRepository.save(segundoProduto);
             terceiroProduto = produtoRepository.save(terceiroProduto);
 
-            var valorPesquisado = segundoProduto.getCategoria().getTipo();
+            var valorPesquisado = segundoProduto.getCategoria().getTipo().toString();
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder

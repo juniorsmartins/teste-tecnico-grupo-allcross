@@ -14,6 +14,6 @@ public final class CategoriaFiltro {
 
     private Boolean ativo;
 
-    private TipoCategoriaEnum tipo;
+    private String tipo;
 }
 

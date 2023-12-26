@@ -1,6 +1,7 @@
 package br.com.desafiogrupoallcross.adapter.out.spec;
 
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
 import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
@@ -63,6 +64,10 @@ public final class ProdutoSpecification {
                 adicionarCategoriaAtivoPredicados(filtro.getCategoria().getAtivo(), root, criteriaBuilder, pesquisa);
             }
 
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getTipo())) {
+                adicionarCategoriaTipoPredicados(filtro.getCategoria().getTipo(), root, criteriaBuilder, pesquisa);
+            }
+
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
         });
     }
@@ -83,8 +88,7 @@ public final class ProdutoSpecification {
     private static void adicionarIdsPredicados(String id, Root<ProdutoEntity> root,
                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
 
-        var parametros = List.of(id.trim().split(","))
-            .stream()
+        var parametros = Stream.of(id.trim().split(","))
             .map(Long::parseLong)
             .toList();
 
@@ -145,6 +149,18 @@ public final class ProdutoSpecification {
     private static void adicionarCategoriaAtivoPredicados(Boolean ativo, Root<ProdutoEntity> root,
                                                   CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
         pesquisa.add(criteriaBuilder.equal(root.get("categoria").get("ativo"), ativo));
+    }
+
+    private static void adicionarCategoriaTipoPredicados(String tipo, Root<ProdutoEntity> root,
+                                                         CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        var parametros = List.of(tipo.trim().toUpperCase().split(","));
+
+        var predicates = parametros.stream()
+                .map(TipoCategoriaEnum::valueOf)
+                .map(valor -> criteriaBuilder.equal(root.get("categoria").get("tipo"), valor))
+                .toList();
+
+        pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 }
 
