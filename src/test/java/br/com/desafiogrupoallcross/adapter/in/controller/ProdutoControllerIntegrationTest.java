@@ -3,6 +3,7 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
+import br.com.desafiogrupoallcross.adapter.out.repository.CategoriaRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
@@ -37,6 +38,9 @@ class ProdutoControllerIntegrationTest {
 
     @Autowired
     private FotoProdutoRepository fotoProdutoRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     private ProdutoEntity primeiroProduto;
 
@@ -502,6 +506,38 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
                     .jsonPath("$.content[*].categoria.nome", Matchers.containsInAnyOrder(expectedIds.toArray()));
+        }
+
+        @Test
+        @DisplayName("com um categoria.ativo e sem paginação")
+        void dadoComFiltroDeCategoriaAtivoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var categoria_3 = categoriaRepository.findById(3L).get();
+            categoria_3.setAtivo(false);
+            categoriaRepository.save(categoria_3);
+
+            var valorPesquisado = false;
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.ativo", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].categoria.ativo").isEqualTo(valorPesquisado);
         }
     }
 }

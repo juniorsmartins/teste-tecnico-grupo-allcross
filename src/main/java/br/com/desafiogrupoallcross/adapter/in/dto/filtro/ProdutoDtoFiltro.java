@@ -1,6 +1,5 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.filtro;
 
-import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaResumo;
 import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import lombok.*;
 
@@ -30,7 +29,7 @@ public final class ProdutoDtoFiltro implements Serializable {
 
     private Integer quantidadeEstoque;
 
-    private CategoriaResumo categoria;
+    private CategoriaFiltro categoria;
 
     public static ProdutoFiltro converterParaProdutoFiltro(ProdutoDtoFiltro dtoFiltro) {
         var produtoFiltro = new ProdutoFiltro();
