@@ -6,6 +6,7 @@ import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -129,7 +133,38 @@ class ProdutoControllerIntegrationTest {
         }
 
         @Test
-        @DisplayName("com filtro de nome e sem paginação")
+        @DisplayName("sem filtro e com paginação")
+        void dadoSemFiltroAndComPaginacao_QuandoPesquisar_EntaoRetornarListaComTodosOsProdutos() {
+            primeiroProduto.setNome("Abracadabra Test");
+            segundoProduto.setNome("Bracadabra Test");
+            terceiroProduto.setNome("Cadabra Test");
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            List<String> expectedNomesAscendentes = Arrays.asList(primeiroProduto.getNome(), segundoProduto.getNome());
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("page", 0)
+                            .queryParam("size", 2)
+                            .queryParam("sort", "nome,asc")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(2)
+                    .jsonPath("$.content.size()").isEqualTo(2)
+                    .jsonPath("$.content[0].nome").isEqualTo(expectedNomesAscendentes.get(0))
+                    .jsonPath("$.content[1].nome").isEqualTo(expectedNomesAscendentes.get(1));
+        }
+
+        @Test
+        @DisplayName("com um nome e sem paginação")
         void dadoComFiltroDeNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
             var nomePesquisado = primeiroProduto.getNome();
 
@@ -149,9 +184,11 @@ class ProdutoControllerIntegrationTest {
         }
 
         @Test
-        @DisplayName("com filtro de dois nomes e sem paginação")
+        @DisplayName("com dois nomes e sem paginação")
         void dadoComFiltroDeDoisNomesAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProdutos() {
             var doisNomesSeparadorPorVirgula = primeiroProduto.getNome() + "," + terceiroProduto.getNome();
+
+            List<String> expectedNomes = Arrays.asList(primeiroProduto.getNome(), terceiroProduto.getNome());
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -165,8 +202,49 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[0].nome").isEqualTo(primeiroProduto.getNome())
-                    .jsonPath("$.content[1].nome").isEqualTo(terceiroProduto.getNome());
+                    .jsonPath("$.content[*].nome").value(Matchers.containsInAnyOrder(expectedNomes.toArray()));
+        }
+
+        @Test
+        @DisplayName("com um id e sem paginação")
+        void dadoComFiltroDeIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            var idPesquisado = segundoProduto.getId();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("id", idPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].id").isEqualTo(segundoProduto.getId());
+        }
+
+        @Test
+        @DisplayName("com dois ids e sem paginação")
+        void dadoComFiltroDeDoisIdsAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProdutos() {
+            var doisIdsSeparadorPorVirgula = segundoProduto.getId() + "," + terceiroProduto.getId();
+
+            var expectedIds = Arrays.asList(segundoProduto.getId(), terceiroProduto.getId());
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("id", doisIdsSeparadorPorVirgula)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(2)
+                    .jsonPath("$.content[*].id", Matchers.containsInAnyOrder(expectedIds.toArray()));
         }
     }
 }
