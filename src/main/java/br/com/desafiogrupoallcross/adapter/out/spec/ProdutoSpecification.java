@@ -68,6 +68,10 @@ public final class ProdutoSpecification {
                 adicionarCategoriaTipoPredicados(filtro.getCategoria().getTipo(), root, criteriaBuilder, pesquisa);
             }
 
+            if (ObjectUtils.isNotEmpty(filtro.getDataCadastro())) {
+                adicionarDataCadastroPredicados(filtro, root, criteriaBuilder, pesquisa);
+            }
+
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
         });
     }
@@ -160,6 +164,12 @@ public final class ProdutoSpecification {
                 .toList();
 
         pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+    }
+
+    private static void adicionarDataCadastroPredicados(ProdutoFiltro filtro, Root<ProdutoEntity> root,
+                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dataCadastro"), filtro.dataCadastroInicial()));
+        pesquisa.add(criteriaBuilder.lessThanOrEqualTo(root.get("dataCadastro"), filtro.dataCadastroFinal()));
     }
 }
 

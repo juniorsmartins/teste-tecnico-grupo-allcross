@@ -1,7 +1,8 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.filtro;
 
-import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @Getter
@@ -15,5 +16,6 @@ public final class CategoriaFiltro {
     private Boolean ativo;
 
     private String tipo;
+
 }
 

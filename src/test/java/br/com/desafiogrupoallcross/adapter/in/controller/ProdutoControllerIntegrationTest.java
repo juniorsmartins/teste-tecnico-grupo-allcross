@@ -505,7 +505,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[*].nome").isEqualTo("PS4");
+                    .jsonPath("$.content[*].nome").isEqualTo("Notebook");
         }
     }
 }

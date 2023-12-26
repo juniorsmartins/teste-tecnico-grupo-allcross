@@ -1,7 +1,10 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.filtro;
 
-import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
-import lombok.*;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -31,19 +34,8 @@ public final class ProdutoDtoFiltro implements Serializable {
 
     private CategoriaFiltro categoria;
 
-    public static ProdutoFiltro converterParaProdutoFiltro(ProdutoDtoFiltro dtoFiltro) {
-        var produtoFiltro = new ProdutoFiltro();
-
-        produtoFiltro.setId(dtoFiltro.getId());
-        produtoFiltro.setNome(dtoFiltro.getNome());
-        produtoFiltro.setAtivo(dtoFiltro.getAtivo());
-        produtoFiltro.setValorCusto(dtoFiltro.getValorCusto());
-        produtoFiltro.setIcms(dtoFiltro.getIcms());
-        produtoFiltro.setValorVenda(dtoFiltro.getValorVenda());
-        produtoFiltro.setQuantidadeEstoque(dtoFiltro.getQuantidadeEstoque());
-        produtoFiltro.setCategoria(dtoFiltro.getCategoria());
-
-        return produtoFiltro;
-    }
+    @Pattern(regexp = "\\d{2}/\\d{2}/\\d{4}", message = "Formato de data inválido. Utilize o formato dd/MM/yyyy.")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private String dataCadastro;
 }
 

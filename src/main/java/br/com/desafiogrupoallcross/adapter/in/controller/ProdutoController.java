@@ -5,6 +5,7 @@ import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoPesquisarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoMapper;
+import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoCadastrarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoPesquisarInputPort;
 import jakarta.validation.Valid;
@@ -53,7 +54,7 @@ public class ProdutoController {
         @PageableDefault(sort = "nome", direction = Sort.Direction.ASC, page = 0, size = 10) final Pageable paginacao) {
 
         var paginaDtoOut = Optional.ofNullable(produtoDtoFiltro)
-                .map(ProdutoDtoFiltro::converterParaProdutoFiltro)
+                .map(ProdutoFiltro::converterParaProdutoFiltro)
                 .map(filtro -> this.pesquisarInputPort.pesquisar(filtro, paginacao))
                 .map(pagina -> pagina.map(this.mapper::toProdutoPesquisarDtoOut))
                 .orElseThrow();
