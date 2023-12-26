@@ -153,9 +153,8 @@ public final class ProdutoSpecification {
 
     private static void adicionarCategoriaTipoPredicados(String tipo, Root<ProdutoEntity> root,
                                                          CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
-        var parametros = List.of(tipo.trim().toUpperCase().split(","));
 
-        var predicates = parametros.stream()
+        var predicates = Arrays.stream(tipo.trim().toUpperCase().split(","))
                 .map(TipoCategoriaEnum::valueOf)
                 .map(valor -> criteriaBuilder.equal(root.get("categoria").get("tipo"), valor))
                 .toList();
