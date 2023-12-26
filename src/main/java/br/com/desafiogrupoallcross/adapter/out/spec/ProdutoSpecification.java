@@ -41,6 +41,14 @@ public final class ProdutoSpecification {
                 adicionarIcmsPredicados(filtro.getIcms(), root, criteriaBuilder, pesquisa);
             }
 
+            if (ObjectUtils.isNotEmpty(filtro.getValorVenda())) {
+                adicionarValorVendaPredicados(filtro.getValorVenda(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getQuantidadeEstoque())) {
+                adicionarEstoquePredicados(filtro.getQuantidadeEstoque(), root, criteriaBuilder, pesquisa);
+            }
+
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
         });
     }
@@ -86,6 +94,16 @@ public final class ProdutoSpecification {
     private static void adicionarIcmsPredicados(Double icms, Root<ProdutoEntity> root,
                                                  CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
         pesquisa.add(criteriaBuilder.equal(root.get("icms"), icms));
+    }
+
+    private static void adicionarValorVendaPredicados(BigDecimal valorVenda, Root<ProdutoEntity> root,
+                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("valorVenda"), valorVenda));
+    }
+
+    private static void adicionarEstoquePredicados(Integer quantidadeEstoque, Root<ProdutoEntity> root,
+                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("quantidadeEstoque"), quantidadeEstoque));
     }
 }
 

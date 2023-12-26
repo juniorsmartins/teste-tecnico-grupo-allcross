@@ -43,6 +43,8 @@ public final class ProdutoDtoFiltro implements Serializable {
         produtoFiltro.setAtivo(dtoFiltro.getAtivo());
         produtoFiltro.setValorCusto(dtoFiltro.getValorCusto());
         produtoFiltro.setIcms(dtoFiltro.getIcms());
+        produtoFiltro.setValorVenda(dtoFiltro.getValorVenda());
+        produtoFiltro.setQuantidadeEstoque(dtoFiltro.getQuantidadeEstoque());
 
         return produtoFiltro;
     }

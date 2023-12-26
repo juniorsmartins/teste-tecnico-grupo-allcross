@@ -331,6 +331,62 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalElements").isEqualTo(1)
                     .jsonPath("$.content[0].icms").isEqualTo(valorPesquisado);
         }
+
+        @Test
+        @DisplayName("com um valorVenda e sem paginação")
+        void dadoComFiltroDeValorVendaAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setValorVenda(BigDecimal.valueOf(100.0));
+            segundoProduto.setValorVenda(BigDecimal.valueOf(90.0));
+            terceiroProduto.setValorVenda(BigDecimal.valueOf(80.0));
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = terceiroProduto.getValorVenda();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("valorVenda", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].valorVenda").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com um quantidadeEstoque e sem paginação")
+        void dadoComFiltroDeQuantidadeEstoqueAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setQuantidadeEstoque(6);
+            segundoProduto.setQuantidadeEstoque(7);
+            terceiroProduto.setQuantidadeEstoque(9);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = primeiroProduto.getQuantidadeEstoque();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("quantidadeEstoque", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].quantidadeEstoque").isEqualTo(valorPesquisado);
+        }
     }
 }
 
