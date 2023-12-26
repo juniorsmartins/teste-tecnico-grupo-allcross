@@ -246,6 +246,34 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalElements").isEqualTo(2)
                     .jsonPath("$.content[*].id", Matchers.containsInAnyOrder(expectedIds.toArray()));
         }
+
+        @Test
+        @DisplayName("com um ativo e sem paginação")
+        void dadoComFiltroDeAtivoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.setAtivo(false);
+            segundoProduto.setAtivo(false);
+            terceiroProduto.setAtivo(true);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var ativoPesquisado = terceiroProduto.isAtivo();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("ativo", ativoPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].ativo").isEqualTo(ativoPesquisado);
+        }
     }
 }
 

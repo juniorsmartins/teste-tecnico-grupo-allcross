@@ -53,15 +53,7 @@ public class ProdutoController {
         @PageableDefault(sort = "nome", direction = Sort.Direction.ASC, page = 0, size = 10) final Pageable paginacao) {
 
         var paginaDtoOut = Optional.ofNullable(produtoDtoFiltro)
-                .map(filtro -> {
-                    System.out.println("\n\n 1 -> " + filtro + "\n");
-                    return filtro;
-                })
                 .map(ProdutoDtoFiltro::converterParaProdutoFiltro)
-                .map(filtro -> {
-                    System.out.println("\n\n 2 -> " + filtro + "\n");
-                    return filtro;
-                })
                 .map(filtro -> this.pesquisarInputPort.pesquisar(filtro, paginacao))
                 .map(pagina -> pagina.map(this.mapper::toProdutoPesquisarDtoOut))
                 .orElseThrow();
