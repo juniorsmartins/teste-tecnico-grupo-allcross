@@ -40,7 +40,7 @@ public final class FabricaDeObjetosDeTeste {
 
         return ProdutoEntity.builder()
                 .id(random.nextLong(200) + 100)
-                .nome(faker.name().fullName())
+                .nome(faker.lorem().characters(10, 25))
                 .ativo(random.nextBoolean())
                 .sku(UUID.randomUUID())
                 .valorCusto(BigDecimal.valueOf(10))

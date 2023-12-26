@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public final class ProdutoFiltro {
 
-    private Long id;
+    private String id;
 
     private String nome;
 
@@ -22,11 +22,11 @@ public final class ProdutoFiltro {
 
     private CategoriaId categoria;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -84,6 +84,20 @@ public final class ProdutoFiltro {
 
     public void setCategoria(CategoriaId categoria) {
         this.categoria = categoria;
+    }
+
+    @Override
+    public String toString() {
+        return "ProdutoFiltro{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", ativo=" + ativo +
+                ", valorCusto=" + valorCusto +
+                ", icms=" + icms +
+                ", valorVenda=" + valorVenda +
+                ", quantidadeEstoque=" + quantidadeEstoque +
+                ", categoria=" + categoria +
+                '}';
     }
 }
 
