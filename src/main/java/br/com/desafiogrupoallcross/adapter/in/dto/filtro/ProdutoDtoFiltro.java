@@ -8,12 +8,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public final class ProdutoDtoFiltro implements Serializable {
 
     @Serial
