@@ -202,7 +202,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].nome").value(Matchers.hasItems(expectedNomes.toArray()));
+                    .jsonPath("$.content[*].nome").value(Matchers.containsInAnyOrder(expectedNomes.toArray()));
         }
 
         @Test
@@ -213,7 +213,7 @@ class ProdutoControllerIntegrationTest {
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path(END_POINT)
-                            .queryParam("nome", idPesquisado)
+                            .queryParam("id", idPesquisado)
                             .queryParam("paginacao", "")
                             .build())
                     .accept(MediaType.APPLICATION_JSON)
@@ -222,7 +222,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].id").isEqualTo(primeiroProduto.getId());
+                    .jsonPath("$.content[0].id").isEqualTo(segundoProduto.getId());
         }
 
         @Test
@@ -230,7 +230,7 @@ class ProdutoControllerIntegrationTest {
         void dadoComFiltroDeDoisIdsAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProdutos() {
             var doisIdsSeparadorPorVirgula = segundoProduto.getId() + "," + terceiroProduto.getId();
 
-            var expectedNomes = Arrays.asList(segundoProduto.getId(), terceiroProduto.getId());
+            var expectedIds = Arrays.asList(segundoProduto.getId(), terceiroProduto.getId());
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -244,7 +244,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].id").value(Matchers.hasItems(expectedNomes.toArray()));
+                    .jsonPath("$.content[*].id", Matchers.containsInAnyOrder(expectedIds.toArray()));
         }
     }
 }

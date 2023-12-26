@@ -19,11 +19,24 @@ public class ProdutoSpecification {
             var pesquisa = new ArrayList<Predicate>();
 
             if (ObjectUtils.isNotEmpty(filtro.getNome())) {
-                var parametros = Arrays.asList(filtro.getNome().split(","));
+                var parametros = Arrays.asList(filtro.getNome().trim().split(","));
 
                 List<Predicate> predicates = parametros.stream()
                     .map(valor -> criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("nome")), "%" + valor.toLowerCase() + "%"))
+                    .toList();
+
+                pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getId())) {
+                var parametros = List.of(filtro.getId().trim().split(","))
+                    .stream()
+                    .map(Long::parseLong)
+                    .toList();
+
+                var predicates = parametros.stream()
+                    .map(valor -> criteriaBuilder.equal(root.get("id"), valor))
                     .toList();
 
                 pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
