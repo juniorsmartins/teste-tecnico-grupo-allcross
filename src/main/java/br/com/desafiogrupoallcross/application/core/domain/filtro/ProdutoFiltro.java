@@ -1,6 +1,7 @@
 package br.com.desafiogrupoallcross.application.core.domain.filtro;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
+import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaResumo;
 
 import java.math.BigDecimal;
 
@@ -20,7 +21,7 @@ public final class ProdutoFiltro {
 
     private Integer quantidadeEstoque;
 
-    private CategoriaId categoria;
+    private CategoriaResumo categoria;
 
     public String getId() {
         return id;
@@ -78,18 +79,18 @@ public final class ProdutoFiltro {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
-    public CategoriaId getCategoria() {
+    public CategoriaResumo getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(CategoriaId categoria) {
+    public void setCategoria(CategoriaResumo categoria) {
         this.categoria = categoria;
     }
 
     @Override
     public String toString() {
         return "ProdutoFiltro{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", nome='" + nome + '\'' +
                 ", ativo=" + ativo +
                 ", valorCusto=" + valorCusto +

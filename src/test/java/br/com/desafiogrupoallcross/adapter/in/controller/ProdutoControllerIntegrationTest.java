@@ -387,6 +387,64 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalElements").isEqualTo(1)
                     .jsonPath("$.content[0].quantidadeEstoque").isEqualTo(valorPesquisado);
         }
+
+        @Test
+        @DisplayName("com um categoria.id e sem paginação")
+        void dadoComFiltroDeCategoriaIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var valorPesquisado = segundoProduto.getCategoria().getId();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.id", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[0].categoria.id").isEqualTo(valorPesquisado);
+        }
+
+        @Test
+        @DisplayName("com dois categoria.id e sem paginação")
+        void dadoComFiltroComDuasCategoriaIdAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
+            primeiroProduto.getCategoria().setId(2L);
+            segundoProduto.getCategoria().setId(3L);
+            terceiroProduto.getCategoria().setId(1L);
+
+            primeiroProduto = produtoRepository.save(primeiroProduto);
+            segundoProduto = produtoRepository.save(segundoProduto);
+            terceiroProduto = produtoRepository.save(terceiroProduto);
+
+            var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getId() + "," + terceiroProduto.getCategoria().getId();
+
+            var expectedIds = Arrays.asList(segundoProduto.getCategoria().getId(), terceiroProduto.getCategoria().getId());
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("categoria.id", doisIdsSeparadorPorVirgula)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(2)
+                    .jsonPath("$.content[*].categoria.id", Matchers.containsInAnyOrder(expectedIds.toArray()));
+        }
     }
 }
 

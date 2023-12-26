@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class ProdutoSpecification {
 
@@ -47,6 +48,10 @@ public final class ProdutoSpecification {
 
             if (ObjectUtils.isNotEmpty(filtro.getQuantidadeEstoque())) {
                 adicionarEstoquePredicados(filtro.getQuantidadeEstoque(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getId())) {
+                adicionarCategoriaIdPredicados(filtro.getCategoria().getId(), root, pesquisa);
             }
 
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
@@ -104,6 +109,15 @@ public final class ProdutoSpecification {
     private static void adicionarEstoquePredicados(Integer quantidadeEstoque, Root<ProdutoEntity> root,
                                                 CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
         pesquisa.add(criteriaBuilder.equal(root.get("quantidadeEstoque"), quantidadeEstoque));
+    }
+
+    private static void adicionarCategoriaIdPredicados(String id, Root<ProdutoEntity> root, List<Predicate> pesquisa) {
+
+        var parametros = Stream.of(id.trim().split(","))
+                .map(Long::parseLong)
+                .toList();
+
+        pesquisa.add(root.join("categoria").get("id").in(parametros));
     }
 }
 
