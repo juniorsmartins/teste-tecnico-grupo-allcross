@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Root;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +31,14 @@ public final class ProdutoSpecification {
 
             if (ObjectUtils.isNotEmpty(filtro.getAtivo())) {
                 adicionarAtivoPredicados(filtro.getAtivo(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getValorCusto())) {
+                adicionarValorCustoPredicados(filtro.getValorCusto(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getIcms())) {
+                adicionarIcmsPredicados(filtro.getIcms(), root, criteriaBuilder, pesquisa);
             }
 
             return criteriaBuilder.and(pesquisa.toArray(new Predicate[0]));
@@ -67,6 +76,16 @@ public final class ProdutoSpecification {
     private static void adicionarAtivoPredicados(boolean ativo, Root<ProdutoEntity> root,
                                                CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
         pesquisa.add(criteriaBuilder.equal(root.get("ativo"), ativo));
+    }
+
+    private static void adicionarValorCustoPredicados(BigDecimal valorCusto, Root<ProdutoEntity> root,
+                                                      CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("valorCusto"), valorCusto));
+    }
+
+    private static void adicionarIcmsPredicados(Double icms, Root<ProdutoEntity> root,
+                                                 CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("icms"), icms));
     }
 }
 

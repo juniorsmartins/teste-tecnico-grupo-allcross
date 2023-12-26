@@ -279,9 +279,9 @@ class ProdutoControllerIntegrationTest {
         @Test
         @DisplayName("com um valorCusto e sem paginação")
         void dadoComFiltroDeValorCustoAndSemPaginacao_QuandoPesquisar_EntaoRetornarUmProduto() {
-            primeiroProduto.setValorCusto(BigDecimal.valueOf(20));
-            segundoProduto.setValorCusto(BigDecimal.valueOf(40));
-            terceiroProduto.setValorCusto(BigDecimal.valueOf(30));
+            primeiroProduto.setValorCusto(BigDecimal.valueOf(20.0));
+            segundoProduto.setValorCusto(BigDecimal.valueOf(40.0));
+            terceiroProduto.setValorCusto(BigDecimal.valueOf(30.0));
 
             primeiroProduto = produtoRepository.save(primeiroProduto);
             segundoProduto = produtoRepository.save(segundoProduto);
