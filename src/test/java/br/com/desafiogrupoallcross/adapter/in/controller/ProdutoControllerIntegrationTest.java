@@ -241,6 +241,26 @@ class ProdutoControllerIntegrationTest {
         }
 
         @Test
+        @DisplayName("com sku e sem paginação")
+        void dadoComFiltroDeSkuAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
+            var valorPesquisado = segundoProduto.getSku();
+
+            webTestClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("sku", valorPesquisado)
+                            .queryParam("paginacao", "")
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.totalPages").isEqualTo(1)
+                    .jsonPath("$.totalElements").isEqualTo(1)
+                    .jsonPath("$.content[*].sku").isEqualTo(valorPesquisado);
+        }
+
+        @Test
         @DisplayName("com um ativo e sem paginação")
         void dadoComFiltroDeAtivoAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
             var ativoPesquisado = segundoProduto.isAtivo();
