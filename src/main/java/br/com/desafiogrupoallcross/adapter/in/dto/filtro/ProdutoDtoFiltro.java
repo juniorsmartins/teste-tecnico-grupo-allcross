@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
@@ -19,6 +20,8 @@ public final class ProdutoDtoFiltro implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
+
+    private UUID sku;
 
     private String nome;
 
