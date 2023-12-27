@@ -65,6 +65,7 @@ class ProdutoSalvarAdapterIntegrationTest {
     @Nested
     @DisplayName("Exceções")
     class ProdutoException {
+
         @Test
         @DisplayName("por categoria inexistente")
         void dadoProdutoComCategoriaInexistente_QuandoSalvar_EntaoLancarException() {
