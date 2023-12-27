@@ -56,7 +56,7 @@ class ProdutoControllerIntegrationTest {
 
     @Nested
     @DisplayName("Cadastrar com dados válidos")
-    class ProdutoCadastrarComDadoValido {
+    class ProdutoCadastrar {
 
         private ProdutoCadastrarDtoIn dtoIn;
 
@@ -110,7 +110,7 @@ class ProdutoControllerIntegrationTest {
 
     @Nested
     @DisplayName("Pesquisar")
-    class ProdutoPesquisarComDadoValido {
+    class ProdutoPesquisar {
 
         @Test
         @DisplayName("sem filtro e sem paginação")
@@ -567,6 +567,40 @@ class ProdutoControllerIntegrationTest {
                         assertThat(response.getResponseBody().id()).isEqualTo(produtoId);
                         assertThat(response.getResponseBody().ativo()).isNotEqualTo(statusAtivo);
                     });
+        }
+    }
+
+    @Nested
+    @DisplayName("Deletar")
+    class ProdutoDeletar {
+
+        @Test
+        @DisplayName("por id")
+        void dadoIdDeProduto_QuandoDeletar_EntaoRetornarHttp204NoContent() {
+            var produtoId = primeiroProduto.getId();
+
+            webTestClient.delete()
+                    .uri(END_POINT + "/" + produtoId)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isNoContent()
+                    .expectBody();
+        }
+
+        @Test
+        @DisplayName("removido por id")
+        void dadoIdDeProduto_QuandoDeletar_EntaoRemoverProdutoDoBancoDeDados() {
+            var produtoId = segundoProduto.getId();
+
+            webTestClient.delete()
+                    .uri(END_POINT + "/" + produtoId)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isNoContent()
+                    .expectBody();
+
+            var resposta = produtoRepository.findById(produtoId);
+            Assertions.assertTrue(resposta.isEmpty());
         }
     }
 }

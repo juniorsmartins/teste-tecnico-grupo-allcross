@@ -7,6 +7,7 @@ import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoPesquisarDtoOu
 import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoMapper;
 import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoCadastrarInputPort;
+import br.com.desafiogrupoallcross.application.port.in.ProdutoDeletarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoInverterStatusAtivoInputPort;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoPesquisarInputPort;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -32,6 +34,8 @@ public class ProdutoController {
     private final ProdutoPesquisarInputPort pesquisarInputPort;
 
     private final ProdutoInverterStatusAtivoInputPort ativoInputPort;
+
+    private final ProdutoDeletarInputPort deletarInputPort;
 
     private final ProdutoMapper mapper;
 
@@ -74,11 +78,27 @@ public class ProdutoController {
         var resposta = Optional.ofNullable(id)
                 .map(this.ativoInputPort::inverterStatusAtivo)
                 .map(this.mapper::toProdutoCadastrarDtoOut)
-                .orElseThrow();
+                .orElseThrow(NoSuchElementException::new);
 
         return ResponseEntity
                 .ok()
                 .body(resposta);
+    }
+
+    @DeleteMapping(path = {"/{produtoId}"},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Void> deletePorId(@PathVariable(name = "produtoId") final Long id) {
+
+        Optional.ofNullable(id)
+            .map(key -> {
+                this.deletarInputPort.deletarPorId(key);
+                return true;
+            })
+            .orElseThrow();
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
 
