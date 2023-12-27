@@ -13,8 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
-@EqualsAndHashCode(of = {"id"})
 public final class CategoriaEntity implements Serializable {
 
     @Serial

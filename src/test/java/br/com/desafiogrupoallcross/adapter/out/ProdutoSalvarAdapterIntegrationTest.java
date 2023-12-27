@@ -2,7 +2,6 @@ package br.com.desafiogrupoallcross.adapter.out;
 
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
-import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoSalvarAdapterException;
 import br.com.desafiogrupoallcross.config.exception.http_404.CategoriaNaoEncontradaException;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.junit.jupiter.api.*;
