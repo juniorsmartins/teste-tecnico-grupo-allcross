@@ -7,6 +7,7 @@ import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoPesquisarDtoOu
 import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoMapper;
 import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoCadastrarInputPort;
+import br.com.desafiogrupoallcross.application.port.in.ProdutoInverterStatusAtivoInputPort;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoPesquisarInputPort;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class ProdutoController {
     private final ProdutoCadastrarInputPort inputPort;
 
     private final ProdutoPesquisarInputPort pesquisarInputPort;
+
+    private final ProdutoInverterStatusAtivoInputPort ativoInputPort;
 
     private final ProdutoMapper mapper;
 
@@ -62,6 +65,20 @@ public class ProdutoController {
         return ResponseEntity
                 .ok()
                 .body(paginaDtoOut);
+    }
+
+    @PatchMapping(path = {"/{produtoId}/inverter-status-ativo"},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<ProdutoCadastrarDtoOut> inverterStatusAtivo(@PathVariable(name = "produtoId") final Long id) {
+
+        var resposta = Optional.ofNullable(id)
+                .map(this.ativoInputPort::inverterStatusAtivo)
+                .map(this.mapper::toProdutoCadastrarDtoOut)
+                .orElseThrow();
+
+        return ResponseEntity
+                .ok()
+                .body(resposta);
     }
 }
 

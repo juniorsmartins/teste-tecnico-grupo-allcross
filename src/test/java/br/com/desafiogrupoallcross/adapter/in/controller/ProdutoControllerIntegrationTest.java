@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @Sql(scripts = "/sql/produtos/produtos-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/sql/fotos/fotos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(scripts = "/sql/produtos/produtos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("Integração - Produto Controller - Cadastrar")
 class ProdutoControllerIntegrationTest {
@@ -538,7 +537,7 @@ class ProdutoControllerIntegrationTest {
 
             Assertions.assertTrue(statusAtivo);
 
-            webTestClient.post()
+            webTestClient.patch()
                     .uri(END_POINT + "/" + produtoId + "/inverter-status-ativo")
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
@@ -558,7 +557,7 @@ class ProdutoControllerIntegrationTest {
 
             Assertions.assertFalse(statusAtivo);
 
-            webTestClient.post()
+            webTestClient.patch()
                     .uri(END_POINT + "/" + produtoId + "/inverter-status-ativo")
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
