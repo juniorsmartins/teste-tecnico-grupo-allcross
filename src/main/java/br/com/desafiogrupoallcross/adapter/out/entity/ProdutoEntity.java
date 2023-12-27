@@ -32,7 +32,7 @@ public final class ProdutoEntity implements Serializable {
     private Long id;
 
     @Generated(GenerationTime.ALWAYS)
-    @Column(name = "sku", nullable = false, columnDefinition = "uuid DEFAULT gen_random_uuid()")
+    @Column(name = "sku", nullable = false, columnDefinition = "uuid DEFAULT gen_random_uuid()", updatable = false)
     private UUID sku;
 
     @Column(name = "nome", nullable = false, length = 100)
@@ -69,10 +69,6 @@ public final class ProdutoEntity implements Serializable {
     @PrePersist
     private void acionarAntesDePersistir() {
         this.dataCadastro = Instant.now();
-    }
-
-    @PreUpdate
-    private void acionarAntesDeAtualizar() {
         this.dataAtualizacao = Instant.now();
     }
 

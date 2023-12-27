@@ -16,11 +16,11 @@ public final class ProdutoBusiness {
 
     private Long id;
 
+    private UUID sku;
+
     private String nome;
 
     private boolean ativo;
-
-    private UUID sku;
 
     private BigDecimal valorCusto;
 

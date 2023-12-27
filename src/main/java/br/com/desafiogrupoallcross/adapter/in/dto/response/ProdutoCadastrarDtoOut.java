@@ -9,8 +9,7 @@ import java.util.UUID;
 
 @JsonPropertyOrder({
         "id", "sku", "nome", "ativo", "valorCusto", "icms",
-        "valorVenda", "quantidadeEstoque", "dataCadastro", "dataAtualizacao",
-        "categoria"
+        "valorVenda", "quantidadeEstoque", "categoria", "dataCadastro", "dataAtualizacao"
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProdutoCadastrarDtoOut(
@@ -21,8 +20,6 @@ public record ProdutoCadastrarDtoOut(
 
         String nome,
 
-        CategoriaDtoOut categoria,
-
         boolean ativo,
 
         BigDecimal valorCusto,
@@ -32,6 +29,8 @@ public record ProdutoCadastrarDtoOut(
         BigDecimal valorVenda,
 
         int quantidadeEstoque,
+
+        CategoriaDtoOut categoria,
 
         Instant dataCadastro,
 

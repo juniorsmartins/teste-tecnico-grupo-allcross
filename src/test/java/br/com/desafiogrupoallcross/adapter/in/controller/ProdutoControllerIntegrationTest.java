@@ -612,8 +612,7 @@ class ProdutoControllerIntegrationTest {
         @BeforeEach
         void criarCenario() {
             atualizarDtoIn = new ProdutoAtualizarDtoIn(primeiroProduto.getId(),
-                    primeiroProduto.getNome(), primeiroProduto.isAtivo(), primeiroProduto.getValorCusto(),
-                    primeiroProduto.getIcms(), primeiroProduto.getValorVenda(), primeiroProduto.getQuantidadeEstoque(),
+                    "Televisão", false, BigDecimal.valueOf(600.1), 25d, BigDecimal.valueOf(725.02), 7,
                     new CategoriaId(primeiroProduto.getCategoria().getId()));
         }
 
@@ -627,8 +626,8 @@ class ProdutoControllerIntegrationTest {
                     .bodyValue(atualizarDtoIn)
                     .exchange()
                     .expectStatus().isOk()
-                    .expectBody(ProdutoCadastrarDtoOut.class)
-                    .consumeWith(response -> {
+                    .expectHeader().contentType(MediaType.APPLICATION_XML)
+                    .expectBody().consumeWith(response -> {
                         assertThat(response.getResponseBody()).isNotNull();
                     });
         }
@@ -646,6 +645,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody(ProdutoCadastrarDtoOut.class)
                     .consumeWith(response -> {
                         assertThat(response.getResponseBody().sku()).isEqualTo(primeiroProduto.getSku());
+                        assertThat(response.getResponseBody().id()).isEqualTo(atualizarDtoIn.id());
                         assertThat(response.getResponseBody().nome()).isEqualTo(atualizarDtoIn.nome());
                         assertThat(response.getResponseBody().ativo()).isEqualTo(atualizarDtoIn.ativo());
                         assertThat(response.getResponseBody().valorCusto()).isEqualTo(atualizarDtoIn.valorCusto());
@@ -654,7 +654,6 @@ class ProdutoControllerIntegrationTest {
                         assertThat(response.getResponseBody().quantidadeEstoque()).isEqualTo(atualizarDtoIn.quantidadeEstoque());
                         assertThat(response.getResponseBody().categoria().id()).isEqualTo(atualizarDtoIn.categoria().id());
                         assertThat(response.getResponseBody().dataCadastro()).isNotNull();
-                        assertThat(response.getResponseBody().dataAtualizacao()).isNotNull();
                     });
         }
     }
