@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public final class ProdutoSpecification {
@@ -25,6 +26,10 @@ public final class ProdutoSpecification {
 
             if (ObjectUtils.isNotEmpty(filtro.getId())) {
                 adicionarIdsPredicados(filtro.getId(), root, criteriaBuilder, pesquisa);
+            }
+
+            if (ObjectUtils.isNotEmpty(filtro.getSku())) {
+                adicionarSkuPrecidados(filtro.getSku(), root, criteriaBuilder, pesquisa);
             }
 
             if (ObjectUtils.isNotEmpty(filtro.getNome())) {
@@ -100,6 +105,11 @@ public final class ProdutoSpecification {
             .toList();
 
         pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+    }
+
+    private static void adicionarSkuPrecidados(UUID sku, Root<ProdutoEntity> root, CriteriaBuilder criteriaBuilder,
+                                               List<Predicate> pesquisa) {
+        pesquisa.add(criteriaBuilder.equal(root.get("sku"), sku));
     }
 
     private static void adicionarAtivoPredicados(boolean ativo, Root<ProdutoEntity> root,

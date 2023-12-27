@@ -257,7 +257,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[*].sku").isEqualTo(valorPesquisado);
+                    .jsonPath("$.content[*].sku").isEqualTo(valorPesquisado.toString());
         }
 
         @Test
