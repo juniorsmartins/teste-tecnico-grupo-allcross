@@ -7,10 +7,7 @@ import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @Sql(scripts = "/sql/produtos/produtos-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/sql/fotos/fotos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(scripts = "/sql/produtos/produtos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("Integração - Produto Controller - Cadastrar")
 class ProdutoControllerIntegrationTest {
@@ -45,8 +41,21 @@ class ProdutoControllerIntegrationTest {
     @Autowired
     private FotoProdutoRepository fotoProdutoRepository;
 
+    private ProdutoEntity primeiroProduto;
+
+    private ProdutoEntity segundoProduto;
+
+    private ProdutoEntity terceiroProduto;
+
+    @BeforeEach
+    void criarCenario() {
+        primeiroProduto = produtoRepository.findById(2001L).get();
+        segundoProduto = produtoRepository.findById(2002L).get();
+        terceiroProduto = produtoRepository.findById(2003L).get();
+    }
+
     @Nested
-    @DisplayName("Cadastrar com Dados válidos")
+    @DisplayName("Cadastrar com dados válidos")
     class ProdutoCadastrarComDadoValido {
 
         private ProdutoCadastrarDtoIn dtoIn;
@@ -102,19 +111,6 @@ class ProdutoControllerIntegrationTest {
     @Nested
     @DisplayName("Pesquisar")
     class ProdutoPesquisarComDadoValido {
-
-        private ProdutoEntity primeiroProduto;
-
-        private ProdutoEntity segundoProduto;
-
-        private ProdutoEntity terceiroProduto;
-
-        @BeforeEach
-        void criarCenario() {
-            primeiroProduto = produtoRepository.findById(1000L).get();
-            segundoProduto = produtoRepository.findById(2000L).get();
-            terceiroProduto = produtoRepository.findById(3000L).get();
-        }
 
         @Test
         @DisplayName("sem filtro e sem paginação")
@@ -526,6 +522,51 @@ class ProdutoControllerIntegrationTest {
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
                     .jsonPath("$.content[*].nome").isEqualTo("Notebook");
+        }
+    }
+
+    @Nested
+    @DisplayName("Inverter status ativo")
+    class ProdutoInverterStatusAtivo {
+
+        @Test
+        @DisplayName("inativar")
+        void dadoIdDeProdutoValidoAtivo_QuandoInativar_EntaoRetornarProdutoInativado() {
+            var produtoId = primeiroProduto.getId();
+            var statusAtivo = primeiroProduto.isAtivo();
+
+            Assertions.assertTrue(statusAtivo);
+
+            webTestClient.patch()
+                    .uri(END_POINT + "/" + produtoId + "/inverter-status-ativo")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ProdutoCadastrarDtoOut.class)
+                    .consumeWith(response -> {
+                        assertThat(response.getResponseBody().id()).isEqualTo(produtoId);
+                        assertThat(response.getResponseBody().ativo()).isNotEqualTo(statusAtivo);
+                    });
+        }
+
+        @Test
+        @DisplayName("ativar")
+        void dadoIdDeProdutoValidoInativo_QuandoAtivar_EntaoRetornarProdutoAtivado() {
+            var produtoId = segundoProduto.getId();
+            var statusAtivo = segundoProduto.isAtivo();
+
+            Assertions.assertFalse(statusAtivo);
+
+            webTestClient.patch()
+                    .uri(END_POINT + "/" + produtoId + "/inverter-status-ativo")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ProdutoCadastrarDtoOut.class)
+                    .consumeWith(response -> {
+                        assertThat(response.getResponseBody().id()).isEqualTo(produtoId);
+                        assertThat(response.getResponseBody().ativo()).isNotEqualTo(statusAtivo);
+                    });
         }
     }
 }
