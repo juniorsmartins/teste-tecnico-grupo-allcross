@@ -78,7 +78,7 @@ public class ProdutoController {
         var resposta = Optional.ofNullable(id)
                 .map(this.ativoInputPort::inverterStatusAtivo)
                 .map(this.mapper::toProdutoCadastrarDtoOut)
-                .orElseThrow();
+                .orElseThrow(NoSuchElementException::new);
 
         return ResponseEntity
                 .ok()
@@ -90,9 +90,11 @@ public class ProdutoController {
     public ResponseEntity<Void> deletePorId(@PathVariable(name = "produtoId") final Long id) {
 
         Optional.ofNullable(id)
-            .ifPresentOrElse(this.deletarInputPort::deletarPorId,
-                () -> {throw new NoSuchElementException();}
-            );
+            .map(key -> {
+                this.deletarInputPort.deletarPorId(key);
+                return true;
+            })
+            .orElseThrow();
 
         return ResponseEntity
                 .noContent()
