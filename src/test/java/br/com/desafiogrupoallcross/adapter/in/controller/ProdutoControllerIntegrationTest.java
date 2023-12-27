@@ -579,7 +579,7 @@ class ProdutoControllerIntegrationTest {
         void dadoIdDeProduto_QuandoDeletar_EntaoRetornarHttp204NoContent() {
             var produtoId = primeiroProduto.getId();
 
-            webTestClient.patch()
+            webTestClient.delete()
                     .uri(END_POINT + "/" + produtoId)
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
@@ -592,7 +592,7 @@ class ProdutoControllerIntegrationTest {
         void dadoIdDeProduto_QuandoDeletar_EntaoRemoverProdutoDoBancoDeDados() {
             var produtoId = segundoProduto.getId();
 
-            webTestClient.patch()
+            webTestClient.delete()
                     .uri(END_POINT + "/" + produtoId)
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
