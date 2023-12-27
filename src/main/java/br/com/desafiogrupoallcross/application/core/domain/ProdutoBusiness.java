@@ -1,6 +1,5 @@
 package br.com.desafiogrupoallcross.application.core.domain;
 
-import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoNuloProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoVazioProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.DadoComTamanhoMaximoInvalidoException;
@@ -29,11 +28,13 @@ public final class ProdutoBusiness {
 
     private BigDecimal valorVenda;
 
-    private Instant dataCadastro;
-
     private int quantidadeEstoque;
 
     private CategoriaBusiness categoria;
+
+    private Instant dataCadastro;
+
+    private Instant dataAtualizacao;
 
     public Long getId() {
         return id;
@@ -110,14 +111,6 @@ public final class ProdutoBusiness {
             );
     }
 
-    public Instant getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(Instant dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
     public int getQuantidadeEstoque() {
         return quantidadeEstoque;
     }
@@ -149,6 +142,22 @@ public final class ProdutoBusiness {
         if (valorCampo.length() > tamanhoMaximno) {
             throw new DadoComTamanhoMaximoInvalidoException(nomeCampo, tamanhoMaximno, valorCampo.length());
         }
+    }
+
+    public Instant getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(Instant dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public Instant getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Instant dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     @Override

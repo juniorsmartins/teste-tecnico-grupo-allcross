@@ -1,5 +1,7 @@
 package br.com.desafiogrupoallcross.adapter.in.controller;
 
+import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
+import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoAtualizarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
@@ -41,6 +43,8 @@ class ProdutoControllerIntegrationTest {
     @Autowired
     private FotoProdutoRepository fotoProdutoRepository;
 
+    private ProdutoCadastrarDtoIn dtoIn;
+
     private ProdutoEntity primeiroProduto;
 
     private ProdutoEntity segundoProduto;
@@ -49,6 +53,8 @@ class ProdutoControllerIntegrationTest {
 
     @BeforeEach
     void criarCenario() {
+        dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
+
         primeiroProduto = produtoRepository.findById(2001L).get();
         segundoProduto = produtoRepository.findById(2002L).get();
         terceiroProduto = produtoRepository.findById(2003L).get();
@@ -57,13 +63,6 @@ class ProdutoControllerIntegrationTest {
     @Nested
     @DisplayName("Cadastrar com dados válidos")
     class ProdutoCadastrar {
-
-        private ProdutoCadastrarDtoIn dtoIn;
-
-        @BeforeEach
-        void criarCenario() {
-            dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
-        }
 
         @Test
         @DisplayName("completos por XML")
@@ -601,6 +600,62 @@ class ProdutoControllerIntegrationTest {
 
             var resposta = produtoRepository.findById(produtoId);
             Assertions.assertTrue(resposta.isEmpty());
+        }
+    }
+
+    @Nested
+    @DisplayName("Atualizar")
+    class ProdutoAtualizar {
+
+        private ProdutoAtualizarDtoIn atualizarDtoIn;
+
+        @BeforeEach
+        void criarCenario() {
+            atualizarDtoIn = new ProdutoAtualizarDtoIn(primeiroProduto.getId(),
+                    primeiroProduto.getNome(), primeiroProduto.isAtivo(), primeiroProduto.getValorCusto(),
+                    primeiroProduto.getIcms(), primeiroProduto.getValorVenda(), primeiroProduto.getQuantidadeEstoque(),
+                    new CategoriaId(primeiroProduto.getCategoria().getId()));
+        }
+
+        @Test
+        @DisplayName("completos por XML")
+        void dadoProdutoValido_QuandoAtualizarComContentNegotiationXML_EntaoRetornarHttp200() {
+
+            webTestClient.put()
+                    .uri(END_POINT)
+                    .accept(MediaType.APPLICATION_XML)
+                    .bodyValue(atualizarDtoIn)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ProdutoCadastrarDtoOut.class)
+                    .consumeWith(response -> {
+                        assertThat(response.getResponseBody()).isNotNull();
+                    });
+        }
+
+        @Test
+        @DisplayName("completos por JSON")
+        void dadoProdutoValido_QuandoAtualizarComContentNegotiationJSon_EntaoRetornarProdutoCadastrarDtoOutComDadosIguaisEntradaAndHttp200() {
+
+            webTestClient.put()
+                    .uri(END_POINT)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(atualizarDtoIn)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody(ProdutoCadastrarDtoOut.class)
+                    .consumeWith(response -> {
+                        assertThat(response.getResponseBody().sku()).isEqualTo(primeiroProduto.getSku());
+                        assertThat(response.getResponseBody().nome()).isEqualTo(atualizarDtoIn.nome());
+                        assertThat(response.getResponseBody().ativo()).isEqualTo(atualizarDtoIn.ativo());
+                        assertThat(response.getResponseBody().valorCusto()).isEqualTo(atualizarDtoIn.valorCusto());
+                        assertThat(response.getResponseBody().icms()).isEqualTo(atualizarDtoIn.icms());
+                        assertThat(response.getResponseBody().valorVenda()).isEqualTo(atualizarDtoIn.valorVenda());
+                        assertThat(response.getResponseBody().quantidadeEstoque()).isEqualTo(atualizarDtoIn.quantidadeEstoque());
+                        assertThat(response.getResponseBody().categoria().id()).isEqualTo(atualizarDtoIn.categoria().id());
+                        assertThat(response.getResponseBody().dataCadastro()).isNotNull();
+                        assertThat(response.getResponseBody().dataAtualizacao()).isNotNull();
+                    });
         }
     }
 }
