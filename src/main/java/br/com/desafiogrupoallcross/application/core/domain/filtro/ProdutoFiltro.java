@@ -9,10 +9,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public final class ProdutoFiltro {
 
     private String id;
+
+    private UUID sku;
 
     private String nome;
 
@@ -36,6 +39,14 @@ public final class ProdutoFiltro {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public UUID getSku() {
+        return sku;
+    }
+
+    public void setSku(UUID sku) {
+        this.sku = sku;
     }
 
     public String getNome() {
@@ -126,6 +137,7 @@ public final class ProdutoFiltro {
         var produtoFiltro = new ProdutoFiltro();
 
         produtoFiltro.setId(dtoFiltro.getId());
+        produtoFiltro.setSku(dtoFiltro.getSku());
         produtoFiltro.setNome(dtoFiltro.getNome());
         produtoFiltro.setAtivo(dtoFiltro.getAtivo());
         produtoFiltro.setValorCusto(dtoFiltro.getValorCusto());
