@@ -167,11 +167,9 @@ public class ProdutoController {
             @PathVariable(name = "produtoId") final Long id) {
 
         Optional.ofNullable(id)
-            .map(key -> {
-                this.deletarInputPort.deletarPorId(key);
-                return true;
-            })
-            .orElseThrow();
+            .ifPresentOrElse(this.deletarInputPort::deletarPorId,
+                () -> {throw new NoSuchElementException();}
+            );
 
         return ResponseEntity
                 .noContent()

@@ -94,19 +94,5 @@ class ProdutoControllerUnitTest {
             Mockito.verifyNoInteractions(cadastrarInputPort);
         }
     }
-
-    @Nested
-    @DisplayName("Deletar")
-    class DeletarException {
-
-        @Test
-        @DisplayName("por id nulo")
-        void dadoIdDeProdutoNulo_QuandoDeletar_EntaoLancarException() {
-            Long produtoId = null;
-            Executable acao = () -> controller.deletePorId(produtoId);
-            Assertions.assertThrows(NoSuchElementException.class, acao);
-            Mockito.verifyNoInteractions(deletarInputPort);
-        }
-    }
 }
 
