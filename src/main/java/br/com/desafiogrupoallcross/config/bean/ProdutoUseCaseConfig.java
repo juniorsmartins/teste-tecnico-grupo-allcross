@@ -32,5 +32,10 @@ public class ProdutoUseCaseConfig {
     public ProdutoAtualizarUseCase produtoAtualizarUseCase(ProdutoAtualizarAdapter produtoAtualizarAdapter) {
         return new ProdutoAtualizarUseCase(produtoAtualizarAdapter);
     }
+
+    @Bean
+    public ProdutoListarAgregadosUseCase produtoListarAgregadosUseCase(ProdutoListarAdapter produtoListarAdapter) {
+        return new ProdutoListarAgregadosUseCase(produtoListarAdapter);
+    }
 }
 
