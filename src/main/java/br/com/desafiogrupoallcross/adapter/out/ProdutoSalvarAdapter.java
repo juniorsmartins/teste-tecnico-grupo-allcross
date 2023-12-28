@@ -10,6 +10,8 @@ import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoSalvarAdapte
 import br.com.desafiogrupoallcross.config.exception.http_404.CategoriaNaoEncontradaException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,6 +19,8 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
+
+    private static final Logger log = LoggerFactory.getLogger(ProdutoSalvarAdapter.class);
 
     private final ProdutoRepository produtoRepository;
 
@@ -26,12 +30,18 @@ public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
     @Override
     public ProdutoBusiness salvar(ProdutoBusiness produtoBusiness) {
 
-        return Optional.ofNullable(produtoBusiness)
+        log.info("Iniciado adaptador para salvar Produto com nome: {}.", produtoBusiness.getNome());
+
+        var resposta = Optional.ofNullable(produtoBusiness)
                 .map(ProdutoEntity::converterParaEntity)
                 .map(this::linkarProdutoComCategoria)
                 .map(this.produtoRepository::save)
                 .map(ProdutoEntity::converterParaBusiness)
                 .orElseThrow(ProdutoSalvarAdapterException::new);
+
+        log.info("Finalizado adaptador para salvar Produto com nome: {}.", resposta.getNome());
+
+        return resposta;
     }
 
     private ProdutoEntity linkarProdutoComCategoria(ProdutoEntity produto) {

@@ -9,12 +9,16 @@ import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoAtualizarAda
 import br.com.desafiogrupoallcross.config.exception.http_404.CategoriaNaoEncontradaException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class ProdutoAtualizarAdapter implements ProdutoAtualizarOutputPort {
+
+    private static final Logger log = LoggerFactory.getLogger(ProdutoAtualizarAdapter.class);
 
     private final ProdutoRepository repository;
 
@@ -24,11 +28,17 @@ public class ProdutoAtualizarAdapter implements ProdutoAtualizarOutputPort {
     @Override
     public ProdutoBusiness atualizar(ProdutoBusiness produtoBusiness) {
 
-        return this.repository.findById(produtoBusiness.getId())
+        log.info("Iniciado adaptador para atualizar Produto com Id: {}.", produtoBusiness.getId());
+
+        var resposta = this.repository.findById(produtoBusiness.getId())
                 .map(entidade -> this.linkarProdutoComCategoria(entidade, produtoBusiness.getCategoria().getId()))
                 .map(entidade -> this.atualizarInformacoes(entidade, produtoBusiness))
                 .map(ProdutoEntity::converterParaBusiness)
                 .orElseThrow(ProdutoAtualizarAdapterException::new);
+
+        log.info("Finalizado adaptador para atualizar Produto com Id: {}.", resposta.getId());
+
+        return resposta;
     }
 
     private ProdutoEntity linkarProdutoComCategoria(ProdutoEntity produtoEntity, Long id) {
