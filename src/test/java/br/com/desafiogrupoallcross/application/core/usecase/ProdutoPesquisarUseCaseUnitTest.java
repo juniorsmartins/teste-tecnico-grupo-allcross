@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,9 +35,9 @@ class ProdutoPesquisarUseCaseUnitTest {
         @DisplayName("com produto nulo")
         void dadoProdutoNulo_QuandoPesquisar_EntaoLancarException() {
             Pageable paginacao = null;
-
             Executable acao = () -> pesquisarUseCase.pesquisar(null, paginacao);
             Assertions.assertThrows(ProdutoPesquisarUseCaseException.class, acao);
+            Mockito.verifyNoInteractions(salvarAdapter);
         }
     }
 

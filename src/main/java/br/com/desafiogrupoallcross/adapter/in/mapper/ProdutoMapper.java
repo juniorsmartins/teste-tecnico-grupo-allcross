@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.in.mapper;
 
+import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoAtualizarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoPesquisarDtoOut;
@@ -14,5 +15,7 @@ public interface ProdutoMapper {
     ProdutoCadastrarDtoOut toProdutoCadastrarDtoOut(ProdutoBusiness produtoBusiness);
 
     ProdutoPesquisarDtoOut toProdutoPesquisarDtoOut(ProdutoBusiness produtoBusiness);
+
+    ProdutoBusiness toProdutoBusiness(ProdutoAtualizarDtoIn atualizarDtoIn);
 }
 

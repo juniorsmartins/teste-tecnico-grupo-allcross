@@ -32,7 +32,7 @@ public final class ProdutoEntity implements Serializable {
     private Long id;
 
     @Generated(GenerationTime.ALWAYS)
-    @Column(name = "sku", nullable = false, columnDefinition = "uuid DEFAULT gen_random_uuid()")
+    @Column(name = "sku", nullable = false, columnDefinition = "uuid DEFAULT gen_random_uuid()", updatable = false)
     private UUID sku;
 
     @Column(name = "nome", nullable = false, length = 100)
@@ -53,9 +53,6 @@ public final class ProdutoEntity implements Serializable {
     @OneToMany(mappedBy = "produto")
     private List<FotoProdutoEntity> fotos;
 
-    @Column(name = "data_cadastro", nullable = false, insertable = true, updatable = false)
-    private Instant dataCadastro;
-
     @Column(name = "quantidade_estoque")
     private int quantidadeEstoque;
 
@@ -63,9 +60,16 @@ public final class ProdutoEntity implements Serializable {
     @JoinColumn(name = "categoria_id", nullable = false)
     private CategoriaEntity categoria;
 
+    @Column(name = "data_cadastro", nullable = false, insertable = true, updatable = false)
+    private Instant dataCadastro;
+
+    @Column(name = "data_atualizacao", nullable = true, insertable = true, updatable = true)
+    private Instant dataAtualizacao;
+
     @PrePersist
     private void acionarAntesDePersistir() {
         this.dataCadastro = Instant.now();
+        this.dataAtualizacao = Instant.now();
     }
 
     public static ProdutoEntity converterParaEntity(ProdutoBusiness produtoBusiness) {
@@ -77,7 +81,6 @@ public final class ProdutoEntity implements Serializable {
         entidade.setValorCusto(produtoBusiness.getValorCusto());
         entidade.setIcms(produtoBusiness.getIcms());
         entidade.setValorVenda(produtoBusiness.getValorVenda());
-        entidade.setDataCadastro(produtoBusiness.getDataCadastro());
         entidade.setQuantidadeEstoque(produtoBusiness.getQuantidadeEstoque());
         entidade.setCategoria(new CategoriaEntity(
                 produtoBusiness.getCategoria().getId(),
@@ -85,6 +88,8 @@ public final class ProdutoEntity implements Serializable {
                 produtoBusiness.getCategoria().isAtivo(),
                 produtoBusiness.getCategoria().getTipo()
             ));
+        entidade.setDataCadastro(produtoBusiness.getDataCadastro());
+        entidade.setDataAtualizacao(produtoBusiness.getDataAtualizacao());
 
         return entidade;
     }
@@ -98,7 +103,6 @@ public final class ProdutoEntity implements Serializable {
         business.setValorCusto(produtoEntity.getValorCusto());
         business.setIcms(produtoEntity.getIcms());
         business.setValorVenda(produtoEntity.getValorVenda());
-        business.setDataCadastro(produtoEntity.getDataCadastro());
         business.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque());
         business.setCategoria(new CategoriaBusiness(
                 produtoEntity.getCategoria().getId(),
@@ -106,6 +110,8 @@ public final class ProdutoEntity implements Serializable {
                 produtoEntity.getCategoria().isAtivo(),
                 produtoEntity.getCategoria().getTipo()
         ));
+        business.setDataCadastro(produtoEntity.getDataCadastro());
+        business.setDataAtualizacao(produtoEntity.getDataAtualizacao());
 
         return business;
     }

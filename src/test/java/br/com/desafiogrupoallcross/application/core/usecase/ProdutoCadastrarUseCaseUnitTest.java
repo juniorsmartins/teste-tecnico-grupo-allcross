@@ -5,6 +5,7 @@ import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoCadastrarUse
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ class ProdutoCadastrarUseCaseUnitTest {
         void dadoProdutoNulo_QuandoCadastrar_EntaoLancarException() {
             Executable acao = () -> cadastrarUseCase.cadastrar(null);
             Assertions.assertThrows(ProdutoCadastrarUseCaseException.class, acao);
+            Mockito.verifyNoInteractions(salvarAdapter);
         }
     }
 }
