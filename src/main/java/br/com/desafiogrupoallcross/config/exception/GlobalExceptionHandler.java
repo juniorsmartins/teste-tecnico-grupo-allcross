@@ -113,7 +113,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
 
-    // Aqui o tratamendo de anotações de BeanValidation
+    // Aqui o tratamendo de anotações de Bean Validation
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException argumentNotValid,
                                                                   HttpHeaders headers, HttpStatusCode status,

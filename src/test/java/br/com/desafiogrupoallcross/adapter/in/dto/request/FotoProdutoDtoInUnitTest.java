@@ -43,8 +43,5 @@ class FotoProdutoDtoInUnitTest {
                 () -> assertEquals(mockFile, fotoProdutoDtoIn.foto()),
                 () -> assertEquals("Teste descrição", fotoProdutoDtoIn.descricao())
         );
-
-        // Verificação usando Mockito para garantir que o construtor do builder foi chamado
-//        Mockito.verify(multipartFile).getBytes();
     }
 }
