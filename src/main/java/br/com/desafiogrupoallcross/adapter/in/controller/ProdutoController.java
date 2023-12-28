@@ -3,8 +3,10 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 import br.com.desafiogrupoallcross.adapter.in.dto.filtro.ProdutoDtoFiltro;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoAtualizarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
+import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoAgregadoDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoPesquisarDtoOut;
+import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoAgregadoMapper;
 import br.com.desafiogrupoallcross.adapter.in.mapper.ProdutoMapper;
 import br.com.desafiogrupoallcross.application.core.domain.filtro.ProdutoFiltro;
 import br.com.desafiogrupoallcross.application.port.in.*;
@@ -27,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -46,7 +49,11 @@ public class ProdutoController {
 
     private final ProdutoAtualizarInputPort atualizarInputPort;
 
+    private final ProdutoListarAgregadosInputPort listarAgregadosInputPort;
+
     private final ProdutoMapper mapper;
+
+    private final ProdutoAgregadoMapper agregadoMapper;
 
     @PostMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -204,6 +211,28 @@ public class ProdutoController {
                 .map(this.atualizarInputPort::atualizar)
                 .map(this.mapper::toProdutoCadastrarDtoOut)
                 .orElseThrow();
+
+        return ResponseEntity
+                .ok()
+                .body(resposta);
+    }
+
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoCadastrarDtoOut.class))),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar recurso.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "500", description = "Situação inesperada no servidor.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+        })
+    public ResponseEntity<List<ProdutoAgregadoDtoOut>> listarAgregados() {
+
+        var resposta = this.listarAgregadosInputPort.listarAgregados()
+                .stream()
+                .map(this.agregadoMapper::toProdutoAgregadoDtoOut)
+                .toList();
 
         return ResponseEntity
                 .ok()
