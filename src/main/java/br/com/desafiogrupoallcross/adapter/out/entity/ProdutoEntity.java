@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
+import org.hibernate.envers.Audited;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Audited
 @Entity
 @Table(name = "produtos")
 @Builder
@@ -69,6 +71,11 @@ public final class ProdutoEntity implements Serializable {
     @PrePersist
     private void acionarAntesDePersistir() {
         this.dataCadastro = Instant.now();
+        this.dataAtualizacao = Instant.now();
+    }
+
+    @PreUpdate
+    private void acionarAntesDeAtualizar() {
         this.dataAtualizacao = Instant.now();
     }
 
