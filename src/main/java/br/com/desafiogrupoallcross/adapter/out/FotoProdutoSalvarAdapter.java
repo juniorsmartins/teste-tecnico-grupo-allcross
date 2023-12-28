@@ -11,6 +11,8 @@ import br.com.desafiogrupoallcross.config.exception.http_404.MultipartFileNaoEnc
 import br.com.desafiogrupoallcross.config.exception.http_404.ProdutoNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FotoProdutoSalvarAdapter implements FotoProdutoSalvarOutputPort {
 
+    private static final Logger log = LoggerFactory.getLogger(FotoProdutoSalvarAdapter.class);
+
     private final FotoProdutoRepository fotoProdutoRepository;
 
     private final ProdutoRepository produtoRepository;
@@ -29,11 +33,15 @@ public class FotoProdutoSalvarAdapter implements FotoProdutoSalvarOutputPort {
     @Override
     public void salvar(final Long id, FotoProdutoBusiness fotoProdutoBusiness) {
 
+        log.info("Iniciado adaptador para salvar imagem do Produto com Id: {}.", id);
+
         Optional.ofNullable(fotoProdutoBusiness)
                 .map(this::converterParaEntity)
                 .map(foto -> this.linkarFotoComProduto(id, foto))
                 .map(this.fotoProdutoRepository::save)
                 .orElseThrow(FotoProdutoSalvarAdapterException::new);
+
+        log.info("Finalizado adaptador para salvar imagem do Produto com Id: {}.", id);
     }
 
     private FotoProdutoEntity converterParaEntity(FotoProdutoBusiness fotoProdutoBusiness) {
