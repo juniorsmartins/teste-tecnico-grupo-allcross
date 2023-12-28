@@ -1,9 +1,17 @@
 package br.com.desafiogrupoallcross.adapter.in.controller;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
+import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.mapper.FotoProdutoCadastrarMapper;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoCadastrarInputPort;
+import br.com.desafiogrupoallcross.config.exception.ApiError;
 import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoCadastrarControllerException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -12,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@Tag(name = "FotosProduto", description = "Contém todos os recursos de FotoProduto (cadastrar).")
 @RestController
 @RequestMapping(path = "/api/v1/produtos")
 @RequiredArgsConstructor
@@ -22,8 +31,26 @@ public class FotoProdutoController {
     private final FotoProdutoCadastrarMapper mapper;
 
     @PostMapping(path = {"/{produtoId}/imagem"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> cadastrarImagem(@PathVariable(name = "produtoId") final Long id,
-                                                @Valid FotoProdutoDtoIn dtoIn) {
+    @Operation(summary = "Cadastrar FotoProduto", description = "Recurso para cadastrar uma nova FotoProduto.",
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
+                content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formulada.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar recurso.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "Conflito com regras de negócio.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "500", description = "Situação inesperada no servidor.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+        })
+    public ResponseEntity<Void> cadastrarImagem(
+            @Parameter(name = "id", description = "Chave de Identificação.", example = "78", required = true)
+            @PathVariable(name = "produtoId") final Long id,
+            @Parameter(name = "FotoProdutoDtoIn", description = "Objeto para transporte de dados para cadastrar.", required = true)
+            @Valid FotoProdutoDtoIn dtoIn) {
 
         Optional.ofNullable(dtoIn)
                 .map(mapper::toFotoProdutoBusiness)

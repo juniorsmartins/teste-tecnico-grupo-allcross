@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -197,7 +196,7 @@ public class ProdutoController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
         })
     public ResponseEntity<ProdutoCadastrarDtoOut> atualizar(
-            @Parameter(name = "id", description = "Chave de Identificação.", example = "78", required = true)
+            @Parameter(name = "ProdutoAtualizarDtoIn", description = "Objeto para transporte de dados para atualizar.", required = true)
             @RequestBody @Valid ProdutoAtualizarDtoIn atualizarDtoIn) {
 
         var resposta = Optional.ofNullable(atualizarDtoIn)
