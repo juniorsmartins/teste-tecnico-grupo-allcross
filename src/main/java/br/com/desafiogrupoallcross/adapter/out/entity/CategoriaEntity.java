@@ -3,10 +3,12 @@ package br.com.desafiogrupoallcross.adapter.out.entity;
 import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+@Audited
 @Entity
 @Table(name = "categorias")
 @Builder
