@@ -4,11 +4,15 @@ import br.com.desafiogrupoallcross.application.core.domain.ProdutoAgregado;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoListarAgregadosInputPort;
 import br.com.desafiogrupoallcross.application.port.out.ProdutoListarOutputPort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ProdutoListarAgregadosUseCase implements ProdutoListarAgregadosInputPort {
+
+    private static final Logger log = LoggerFactory.getLogger(ProdutoListarAgregadosUseCase.class);
 
     private final ProdutoListarOutputPort listarOutputPort;
 
@@ -19,10 +23,16 @@ public class ProdutoListarAgregadosUseCase implements ProdutoListarAgregadosInpu
     @Override
     public List<ProdutoAgregado> listarAgregados() {
 
-        return this.listarOutputPort.listar()
+        log.info("Iniciado serviço para listar Agregados de Produto.");
+
+        var resposta = this.listarOutputPort.listar()
                 .stream()
                 .map(this::criarProdutoAgregado)
                 .toList();
+
+        log.info("Finalizado serviço para listar Agregados de Produto.");
+
+        return resposta;
     }
 
     private ProdutoAgregado criarProdutoAgregado(ProdutoBusiness business) {
