@@ -28,7 +28,7 @@ public class AuditoriaController {
 
     private final AuditoriaProdutoInputPort auditoriaProdutoInputPort;
 
-    @GetMapping(path = "/produtos/auditoria/{id}",
+    @GetMapping(path = "/produtos/{produtoId}/auditoria",
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Auditar Produtos", description = "Recurso para consultar auditoria de Produtos por Id.",
         responses = {
@@ -43,7 +43,7 @@ public class AuditoriaController {
             @ApiResponse(responseCode = "500", description = "Situação inesperada no servidor.",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
         })
-    public ResponseEntity<List<String>> consultarAuditoriaDeProdutoPorId(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<List<String>> consultarAuditoriaDeProdutoPorId(@PathVariable(name = "produtoId") final Long id) {
 
         var resposta = Optional.ofNullable(id)
                 .map(this.auditoriaProdutoInputPort::consultarAuditoriaDeProdutoPorId)
