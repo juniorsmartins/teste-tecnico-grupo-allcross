@@ -217,7 +217,8 @@ public class ProdutoController {
                 .body(resposta);
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(path = {"/agregados"},
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
