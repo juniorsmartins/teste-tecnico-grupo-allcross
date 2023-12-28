@@ -8,6 +8,7 @@ import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,7 @@ class FotoProdutoCadastrarUseCaseUnitTest {
         void dadoFotoProdutoNula_QuandoCadastrar_EntaoLancarException() {
             Executable acao = () -> cadastrarUseCase.cadastrarImagem(produtoSalvo.getId(), null);
             Assertions.assertThrows(FotoProdutoCadastrarUseCaseException.class, acao);
+            Mockito.verifyNoInteractions(salvarAdapter);
         }
     }
 }

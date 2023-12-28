@@ -1,7 +1,7 @@
-package br.com.desafiogrupoallcross.adapter.out;
+package br.com.desafiogrupoallcross.application.core.usecase;
 
-import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
-import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoSalvarAdapterException;
+import br.com.desafiogrupoallcross.adapter.out.ProdutoAtualizarAdapter;
+import br.com.desafiogrupoallcross.config.exception.http_400.ProdutoAtualizarUseCaseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,25 +17,25 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
-@DisplayName("Unitário - Produto Adapter - Salvar")
-class ProdutoSalvarAdapterUnitTest {
+@DisplayName("Unitário - Produto UseCase - Atualizar")
+class ProdutoAtualizarUseCaseUnitTest {
 
     @MockBean
-    private ProdutoRepository repository;
+    private ProdutoAtualizarAdapter atualizarAdapter;
 
     @Autowired
-    private ProdutoSalvarAdapter salvarAdapter;
+    private ProdutoAtualizarUseCase atualizarUseCase;
 
     @Nested
     @DisplayName("Exceções")
     class ProdutoException {
 
         @Test
-        @DisplayName("por produto nulo")
-        void dadoProdutoNulo_QuandoSalvar_EntaoLancarException() {
-            Executable acao = () -> salvarAdapter.salvar(null);
-            Assertions.assertThrows(ProdutoSalvarAdapterException.class, acao);
-            Mockito.verifyNoInteractions(repository);
+        @DisplayName("com produto nulo")
+        void dadoProdutoNulo_QuandoAtualizar_EntaoLancarException() {
+            Executable acao = () -> atualizarUseCase.atualizar(null);
+            Assertions.assertThrows(ProdutoAtualizarUseCaseException.class, acao);
+            Mockito.verifyNoInteractions(atualizarAdapter);
         }
     }
 }
