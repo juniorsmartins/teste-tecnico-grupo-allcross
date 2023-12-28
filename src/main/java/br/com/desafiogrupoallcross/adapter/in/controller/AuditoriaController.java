@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,8 @@ import java.util.Optional;
 @RequestMapping(path = "/api/v1")
 @RequiredArgsConstructor
 public class AuditoriaController {
+
+    private final Logger log = LoggerFactory.getLogger(AuditoriaController.class);
 
     private final AuditoriaProdutoInputPort auditoriaProdutoInputPort;
 
@@ -45,9 +49,13 @@ public class AuditoriaController {
         })
     public ResponseEntity<List<String>> consultarAuditoriaDeProdutoPorId(@PathVariable(name = "produtoId") final Long id) {
 
+        log.info("Requisição recebida para consultar Auditoria de Produto com Id: {}.", id);
+
         var resposta = Optional.ofNullable(id)
                 .map(this.auditoriaProdutoInputPort::consultarAuditoriaDeProdutoPorId)
                 .orElseThrow();
+
+        log.info("Auditoria consultada com sucesso para Produto com Id: {}.", id);
 
         return ResponseEntity
                 .ok()

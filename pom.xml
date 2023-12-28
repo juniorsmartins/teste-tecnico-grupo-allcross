@@ -102,6 +102,14 @@
 		</dependency>
 
 
+		<!-- LOGGING -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.22.1</version>
+		</dependency>
+
+
 		<!-- TESTES AUTOMATIZADOS -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
