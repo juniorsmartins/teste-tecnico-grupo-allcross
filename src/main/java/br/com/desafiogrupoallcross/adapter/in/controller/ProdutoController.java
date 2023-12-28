@@ -20,6 +20,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,6 +40,8 @@ import java.util.Optional;
 @RequestMapping(path = "/api/v1/produtos")
 @RequiredArgsConstructor
 public class ProdutoController {
+
+    private final Logger log = LoggerFactory.getLogger(ProdutoController.class);
 
     private final ProdutoCadastrarInputPort inputPort;
 
@@ -79,11 +83,15 @@ public class ProdutoController {
             @Parameter(name = "ProdutoCadastrarDtoIn", description = "Objeto para transporte de dados de entrada.", required = true)
             @RequestBody @Valid ProdutoCadastrarDtoIn dtoIn) {
 
+        log.info("Recebida requisição para cadastrar Produto: {}.", dtoIn.nome());
+
         var resposta = Optional.ofNullable(dtoIn)
                 .map(mapper::toProdutoBusiness)
                 .map(inputPort::cadastrar)
                 .map(mapper::toProdutoCadastrarDtoOut)
                 .orElseThrow();
+
+        log.info("Produto cadastrado com sucesso: {}.", resposta.nome());
 
         return ResponseEntity
                 .created(URI.create("/api/v1/produtos/" + resposta.id()))
@@ -113,11 +121,15 @@ public class ProdutoController {
         @Valid final ProdutoDtoFiltro produtoDtoFiltro,
         @PageableDefault(sort = "nome", direction = Sort.Direction.ASC, page = 0, size = 10) final Pageable paginacao) {
 
+        log.info("Requisição recebida para pesquisar Produtos.");
+
         var paginaDtoOut = Optional.ofNullable(produtoDtoFiltro)
                 .map(ProdutoFiltro::converterParaProdutoFiltro)
                 .map(filtro -> this.pesquisarInputPort.pesquisar(filtro, paginacao))
                 .map(pagina -> pagina.map(this.mapper::toProdutoPesquisarDtoOut))
                 .orElseThrow();
+
+        log.info("Produto pesquisado com sucesso.");
 
         return ResponseEntity
                 .ok()
@@ -143,10 +155,14 @@ public class ProdutoController {
             @Parameter(name = "id", description = "Chave de Identificação.", example = "78", required = true)
             @PathVariable(name = "produtoId") final Long id) {
 
+        log.info("Requisição recebida para inverter status ativo do Produto com Id: {}.", id);
+
         var resposta = Optional.ofNullable(id)
                 .map(this.ativoInputPort::inverterStatusAtivo)
                 .map(this.mapper::toProdutoCadastrarDtoOut)
                 .orElseThrow(NoSuchElementException::new);
+
+        log.info("Produto com status ativo invertido com sucesso: {}.", id);
 
         return ResponseEntity
                 .ok()
@@ -172,10 +188,14 @@ public class ProdutoController {
             @Parameter(name = "id", description = "Chave de Identificação.", example = "78", required = true)
             @PathVariable(name = "produtoId") final Long id) {
 
+        log.info("Requisição recebida para deletar Produto com Id: {}.", id);
+
         Optional.ofNullable(id)
             .ifPresentOrElse(this.deletarInputPort::deletarPorId,
                 () -> {throw new NoSuchElementException();}
             );
+
+        log.info("Produto deletado por Id com sucesso: {}.", id);
 
         return ResponseEntity
                 .noContent()
@@ -206,11 +226,15 @@ public class ProdutoController {
             @Parameter(name = "ProdutoAtualizarDtoIn", description = "Objeto para transporte de dados para atualizar.", required = true)
             @RequestBody @Valid ProdutoAtualizarDtoIn atualizarDtoIn) {
 
+        log.info("Requisição recebida para atualizar Produto com Id: {}.", atualizarDtoIn.id());
+
         var resposta = Optional.ofNullable(atualizarDtoIn)
                 .map(this.mapper::toProdutoBusiness)
                 .map(this.atualizarInputPort::atualizar)
                 .map(this.mapper::toProdutoCadastrarDtoOut)
                 .orElseThrow();
+
+        log.info("Produto atualizado com sucesso com Id: {}.", atualizarDtoIn.id());
 
         return ResponseEntity
                 .ok()
@@ -230,10 +254,14 @@ public class ProdutoController {
         })
     public ResponseEntity<List<ProdutoAgregadoDtoOut>> listarAgregados() {
 
+        log.info("Requisição recebida para listar Agregados de Produtos.");
+
         var resposta = this.listarAgregadosInputPort.listarAgregados()
                 .stream()
                 .map(this.agregadoMapper::toProdutoAgregadoDtoOut)
                 .toList();
+
+        log.info("Agregados de Produtos listados com sucesso.");
 
         return ResponseEntity
                 .ok()
