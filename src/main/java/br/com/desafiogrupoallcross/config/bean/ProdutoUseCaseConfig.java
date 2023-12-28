@@ -1,13 +1,7 @@
 package br.com.desafiogrupoallcross.config.bean;
 
-import br.com.desafiogrupoallcross.adapter.out.ProdutoDeletarAdapter;
-import br.com.desafiogrupoallcross.adapter.out.ProdutoInverterStatusAtivoAdapter;
-import br.com.desafiogrupoallcross.adapter.out.ProdutoPesquisarAdapter;
-import br.com.desafiogrupoallcross.adapter.out.ProdutoSalvarAdapter;
-import br.com.desafiogrupoallcross.application.core.usecase.ProdutoCadastrarUseCase;
-import br.com.desafiogrupoallcross.application.core.usecase.ProdutoDeletarUseCase;
-import br.com.desafiogrupoallcross.application.core.usecase.ProdutoInverterStatusAtivoUseCase;
-import br.com.desafiogrupoallcross.application.core.usecase.ProdutoPesquisarUseCase;
+import br.com.desafiogrupoallcross.adapter.out.*;
+import br.com.desafiogrupoallcross.application.core.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +26,11 @@ public class ProdutoUseCaseConfig {
     @Bean
     public ProdutoDeletarUseCase produtoDeletarUseCase(ProdutoDeletarAdapter produtoDeletarAdapter) {
         return new ProdutoDeletarUseCase(produtoDeletarAdapter);
+    }
+
+    @Bean
+    public ProdutoAtualizarUseCase produtoAtualizarUseCase(ProdutoAtualizarAdapter produtoAtualizarAdapter) {
+        return new ProdutoAtualizarUseCase(produtoAtualizarAdapter);
     }
 }
 

@@ -33,7 +33,6 @@ class FotoProdutoControllerIntegrationTest {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-
     private ClassPathResource imagem;
 
     @BeforeEach

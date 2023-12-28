@@ -6,7 +6,8 @@ public abstract sealed class RequisicaoMalFormuladaException extends RuntimeExce
         CampoNuloProibidoException, CampoVazioProibidoException, DadoComTamanhoMaximoInvalidoException,
         ProdutoCadastrarUseCaseException, ProdutoCadastrarControllerException, FotoProdutoCadastrarControllerException,
         FotoProdutoCadastrarUseCaseException, FotoProdutoSalvarAdapterException, ProdutoPesquisarAdapterException,
-        ProdutoPesquisarUseCaseException, ProdutoInverterStatusAtivoUseCaseException, ProdutoDeletarUseCaseException {
+        ProdutoPesquisarUseCaseException, ProdutoInverterStatusAtivoUseCaseException, ProdutoDeletarUseCaseException,
+        ProdutoAtualizarAdapterException, ProdutoAtualizarUseCaseException {
 
   @Serial
   private static final long serialVersionUID = 1L;

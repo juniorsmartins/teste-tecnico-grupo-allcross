@@ -41,7 +41,7 @@ public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
         return produto;
     }
 
-    private CategoriaEntity buscarCategoria(Long id) {
+    private CategoriaEntity buscarCategoria(final Long id) {
         return this.categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoriaNaoEncontradaException(id));
     }
