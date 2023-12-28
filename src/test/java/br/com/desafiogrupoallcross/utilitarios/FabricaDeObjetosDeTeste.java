@@ -86,6 +86,18 @@ public final class FabricaDeObjetosDeTeste {
         return new ProdutoCadastrarDtoIn(nome, ativo, valorCusto, icms, valorVenda, quantidadeEstoque, categoriaId);
     }
 
+    public static ProdutoCadastrarDtoIn.ProdutoCadastrarDtoInBuilder gerarProdutoCadastrarDtoInBuilder() {
+
+        return ProdutoCadastrarDtoIn.builder()
+                .nome("Rádio")
+                .ativo(true)
+                .valorCusto(BigDecimal.valueOf(500))
+                .icms(30D)
+                .valorVenda(BigDecimal.valueOf(650))
+                .quantidadeEstoque(1)
+                .categoria(new CategoriaId(1L));
+    }
+
     public static FotoProdutoDtoIn.FotoProdutoDtoInBuilder gerarFotoProdutoDtoInBuilder() throws IOException {
 
         // Cria um arquivo temporário com dados fictícios

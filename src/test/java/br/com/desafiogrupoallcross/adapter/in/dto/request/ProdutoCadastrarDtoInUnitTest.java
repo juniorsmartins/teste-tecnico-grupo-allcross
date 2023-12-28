@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.request;
 
+import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import com.github.javafaker.Faker;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -29,14 +30,7 @@ class ProdutoCadastrarDtoInUnitTest {
 
     @BeforeEach
     void criarCenario() {
-        cadastrarDtoIn = ProdutoCadastrarDtoIn.builder()
-                .nome("Rádio")
-                .ativo(true)
-                .valorCusto(BigDecimal.valueOf(500))
-                .icms(30D)
-                .valorVenda(BigDecimal.valueOf(650))
-                .quantidadeEstoque(1)
-                .categoria(new CategoriaId(1L));
+        cadastrarDtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoInBuilder();
     }
 
     @Nested
