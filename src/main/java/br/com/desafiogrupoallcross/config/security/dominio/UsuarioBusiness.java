@@ -7,14 +7,13 @@ public class UsuarioBusiness {
 
     private Long id;
 
-    @Column(name = "username", unique = true, nullable = false, length = 100)
+//    @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
 
-    @Column(name = "password", nullable = false)
+//    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "role", nullable = false, length = 30)
-    @Enumerated(EnumType.STRING)
+//    @Column(name = "role", nullable = false, length = 30)
     private RoleEnum role;
 
     public Long getId() {
