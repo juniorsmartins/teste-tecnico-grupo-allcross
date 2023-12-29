@@ -37,7 +37,7 @@ import java.util.Optional;
 
 @Tag(name = "Produtos", description = "Contém todos os recursos de Produto (cadastrar, consultar, atualizar, ativar/desativar e deletar).")
 @RestController
-@RequestMapping(path = "/api/v1/produtos")
+@RequestMapping(path = {"/api/v1/produtos"})
 @RequiredArgsConstructor
 public class ProdutoController {
 
