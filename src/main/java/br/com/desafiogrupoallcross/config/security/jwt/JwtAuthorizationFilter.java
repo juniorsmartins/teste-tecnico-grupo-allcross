@@ -1,6 +1,5 @@
 package br.com.desafiogrupoallcross.config.security.jwt;
 
-import br.com.desafiogrupoallcross.config.security.controller.AutenticacaoController;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,12 +18,12 @@ import java.io.IOException;
 
 // Classe responsável por capturar todas as requisições que chegam na API Rest. Pega o Token para validar o token e autenticar o usuário na aplicação.
 // Se o Token não for validado, então o Security interrompe a operação e devolve erro para o cliente
-@RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final Logger log = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    private final JwtUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private JwtUserDetailsService jwtUserDetailsService;
 
     @Override // Esse método que irá interceptar as requisições
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
