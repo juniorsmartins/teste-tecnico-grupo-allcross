@@ -24,9 +24,9 @@ public class JwtUtils {
 
     public static final long EXPIRE_DAYS = 0; // Armazena tempo para o token expirar
 
-    public static final long EXPIRE_HOURS = 0; // Armazena tempo para o token expirar
+    public static final long EXPIRE_HOURS = 2; // Armazena tempo para o token expirar
 
-    public static final long EXPIRE_MINUTES = 2; // Armazena tempo para o token expirar
+    public static final long EXPIRE_MINUTES = 30; // Armazena tempo para o token expirar
 
     public JwtUtils() { }
 
