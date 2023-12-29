@@ -14,7 +14,7 @@ public class UtilImpl implements Util {
                 .id(usuarioBusiness.getId())
                 .username(usuarioBusiness.getUsername())
                 .password(usuarioBusiness.getPassword())
-                .role(usuarioBusiness.getRole()ar)
+                .role(usuarioBusiness.getRole())
                 .build();
     }
 
