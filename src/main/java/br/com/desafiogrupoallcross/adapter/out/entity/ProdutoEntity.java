@@ -7,11 +7,11 @@ import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,8 +23,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"id"})
-public final class ProdutoEntity implements Serializable {
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+public final class ProdutoEntity extends AbstractAuditingEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -61,23 +61,6 @@ public final class ProdutoEntity implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "categoria_id", nullable = false)
     private CategoriaEntity categoria;
-
-    @Column(name = "data_cadastro", nullable = false, insertable = true, updatable = false)
-    private Instant dataCadastro;
-
-    @Column(name = "data_atualizacao", nullable = true, insertable = true, updatable = true)
-    private Instant dataAtualizacao;
-
-    @PrePersist
-    private void acionarAntesDePersistir() {
-        this.dataCadastro = Instant.now();
-        this.dataAtualizacao = Instant.now();
-    }
-
-    @PreUpdate
-    private void acionarAntesDeAtualizar() {
-        this.dataAtualizacao = Instant.now();
-    }
 
     public static ProdutoEntity converterParaEntity(ProdutoBusiness produtoBusiness) {
         var entidade = new ProdutoEntity();
