@@ -1,7 +1,9 @@
 package br.com.desafiogrupoallcross.adapter.in.controller;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
-import br.com.desafiogrupoallcross.adapter.in.mapper.FotoProdutoCadastrarMapper;
+import br.com.desafiogrupoallcross.adapter.in.dto.response.FotoProdutoDtoOut;
+import br.com.desafiogrupoallcross.adapter.in.mapper.FotoProdutoMapper;
+import br.com.desafiogrupoallcross.application.port.in.FotoProdutoBuscarTodosInputPort;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoCadastrarInputPort;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
 import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoCadastrarControllerException;
@@ -19,11 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "FotosProduto", description = "Contém todos os recursos de FotoProduto (cadastrar).")
@@ -36,7 +36,9 @@ public class FotoProdutoController {
 
     private final FotoProdutoCadastrarInputPort inputPort;
 
-    private final FotoProdutoCadastrarMapper mapper;
+    private final FotoProdutoBuscarTodosInputPort buscarTodosInputPort;
+
+    private final FotoProdutoMapper mapper;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @PostMapping(path = {"/{produtoId}/imagem"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -77,6 +79,19 @@ public class FotoProdutoController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    @GetMapping(path = {"/imagem"})
+    public ResponseEntity<List<FotoProdutoDtoOut>> buscarImagens() {
+
+        var resposta = this.buscarTodosInputPort.buscarImagens()
+                .stream()
+                .map(this.mapper::toFotoProdutoDtoOut)
+                .toList();
+
+        return ResponseEntity
+                .ok()
+                .body(resposta);
     }
 }
 

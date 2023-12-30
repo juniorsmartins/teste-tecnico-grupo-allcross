@@ -1,11 +1,14 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
+import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoBuscar;
+import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoBusiness;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
 
 @Audited
 @Entity
@@ -43,5 +46,18 @@ public final class FotoProdutoEntity extends AbstractAuditingEntity implements S
 
     @Column(name = "tamanho")
     private long tamanho;
+
+    public static FotoProdutoBuscar converterEntityParaBusiness(FotoProdutoEntity entity) {
+        InputStream fotoStream = new ByteArrayInputStream(entity.getFoto());
+
+        var produtoBuscar = new FotoProdutoBuscar();
+        produtoBuscar.setFoto(fotoStream);
+        produtoBuscar.setNome(entity.getNome());
+        produtoBuscar.setDescricao(entity.getDescricao());
+        produtoBuscar.setTipo(entity.getTipo());
+        produtoBuscar.setTamanho(entity.getTamanho());
+
+        return produtoBuscar;
+    }
 }
 

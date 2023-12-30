@@ -64,6 +64,11 @@
 			<version>${mapstruct.version}</version>
 		</dependency>
 
+		<dependency> <!-- Para converter byte[] em MultipartFile -->
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+
 
 		<!-- CONTENT NEGOTIATION -->
 		<dependency>
@@ -172,7 +177,8 @@
 			<version>${javafaker.version}</version>
 		</dependency>
 
-	</dependencies>
+
+    </dependencies>
 
 	<build>
 		<plugins>
