@@ -24,7 +24,7 @@ public class ProdutoAtualizarUseCase implements ProdutoAtualizarInputPort {
 
         log.info("Iniciado serviço para atualizar Produto com Id: {}.", produtoBusiness.getId());
 
-        var resposta = Optional.ofNullable(produtoBusiness)
+        var resposta = Optional.of(produtoBusiness)
                 .map(this.atualizarOutputPort::atualizar)
                 .orElseThrow(ProdutoAtualizarUseCaseException::new);
 
