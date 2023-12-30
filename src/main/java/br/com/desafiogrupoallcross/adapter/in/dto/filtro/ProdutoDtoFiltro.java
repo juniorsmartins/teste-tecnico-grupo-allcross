@@ -40,5 +40,7 @@ public final class ProdutoDtoFiltro implements Serializable {
     @Pattern(regexp = "\\d{2}/\\d{2}/\\d{4}", message = "Formato de data inválido. Utilize o formato dd/MM/yyyy.")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String dataCadastro;
+
+    private String cadastradoPor;
 }
 
