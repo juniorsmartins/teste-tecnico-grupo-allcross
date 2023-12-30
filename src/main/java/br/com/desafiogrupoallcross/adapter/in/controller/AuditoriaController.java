@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class AuditoriaController {
 
     private final AuditoriaProdutoInputPort auditoriaProdutoInputPort;
 
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping(path = "/produtos/{produtoId}/auditoria",
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Auditar Produtos", description = "Recurso para consultar auditoria de Produtos por Id.",

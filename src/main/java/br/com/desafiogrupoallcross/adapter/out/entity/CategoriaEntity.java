@@ -2,7 +2,10 @@ package br.com.desafiogrupoallcross.adapter.out.entity;
 
 import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
 import java.io.Serial;

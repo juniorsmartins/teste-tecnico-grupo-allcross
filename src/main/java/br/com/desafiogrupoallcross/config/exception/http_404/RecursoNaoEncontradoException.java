@@ -3,7 +3,7 @@ package br.com.desafiogrupoallcross.config.exception.http_404;
 import java.io.Serial;
 
 public abstract sealed class RecursoNaoEncontradoException extends RuntimeException permits ProdutoNaoEncontradoException,
-        MultipartFileNaoEncontradoException, CategoriaNaoEncontradaException {
+        MultipartFileNaoEncontradoException, CategoriaNaoEncontradaException, UsuarioNaoEncontradoException {
 
   @Serial
   private static final long serialVersionUID = 1L;

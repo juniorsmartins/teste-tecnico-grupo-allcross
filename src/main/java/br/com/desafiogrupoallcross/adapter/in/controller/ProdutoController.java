@@ -28,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -37,7 +38,7 @@ import java.util.Optional;
 
 @Tag(name = "Produtos", description = "Contém todos os recursos de Produto (cadastrar, consultar, atualizar, ativar/desativar e deletar).")
 @RestController
-@RequestMapping(path = "/api/v1/produtos")
+@RequestMapping(path = {"/api/v1/produtos"})
 @RequiredArgsConstructor
 public class ProdutoController {
 
@@ -59,6 +60,7 @@ public class ProdutoController {
 
     private final ProdutoAgregadoMapper agregadoMapper;
 
+    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @PostMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -98,6 +100,7 @@ public class ProdutoController {
                 .body(resposta);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
         responses = {
@@ -136,6 +139,7 @@ public class ProdutoController {
                 .body(paginaDtoOut);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @PatchMapping(path = {"/{produtoId}/inverter-status-ativo"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Inverter Status Ativo do Produto", description = "Recurso para modificar o valor do atributo ativo do Produto.",
@@ -169,6 +173,7 @@ public class ProdutoController {
                 .body(resposta);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @DeleteMapping(path = {"/{produtoId}"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Deletar Produto", description = "Recurso para apagar Produto.",
@@ -202,6 +207,7 @@ public class ProdutoController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @PutMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -241,6 +247,7 @@ public class ProdutoController {
                 .body(resposta);
     }
 
+    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @GetMapping(path = {"/agregados"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
