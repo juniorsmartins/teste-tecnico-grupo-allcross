@@ -8,6 +8,7 @@ import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,12 +28,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
+@Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/produtos/produtos-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/produtos/produtos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("Integração - Produto Controller - Cadastrar")
 class ProdutoControllerIntegrationTest {
 
     private static final String END_POINT = "/api/v1/produtos";
+
+    public static final String USERNAME_ADMIN = "kent_beck@email.com";
+
+    public static final String PASSWORD_ADMIN = "0123456789";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -70,6 +77,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.post()
                     .uri(END_POINT)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_XML)
                     .bodyValue(dtoIn)
                     .exchange()
@@ -86,6 +94,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.post()
                     .uri(END_POINT)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(dtoIn)
                     .exchange()
@@ -120,6 +129,7 @@ class ProdutoControllerIntegrationTest {
                             .path(END_POINT)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -140,6 +150,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("size", 2)
                             .queryParam("sort", "nome,asc")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -162,6 +173,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("nome", nomePesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -184,6 +196,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("nome", doisNomesSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -204,6 +217,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("id", idPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -226,6 +240,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("id", doisIdsSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -246,6 +261,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("sku", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -266,6 +282,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("ativo", ativoPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -288,6 +305,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("valorCusto", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -308,6 +326,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("icms", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -328,6 +347,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("valorVenda", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -348,6 +368,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("quantidadeEstoque", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -368,6 +389,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.id", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -390,6 +412,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.id", doisIdsSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -410,6 +433,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.nome", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -432,6 +456,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.nome", doisIdsSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -452,6 +477,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.ativo", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -472,6 +498,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.tipo", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -494,6 +521,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("categoria.tipo", doisTiposSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -514,6 +542,7 @@ class ProdutoControllerIntegrationTest {
                             .queryParam("dataCadastro", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -538,6 +567,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.patch()
                     .uri(END_POINT + "/" + produtoId + "/inverter-status-ativo")
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -558,6 +588,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.patch()
                     .uri(END_POINT + "/" + produtoId + "/inverter-status-ativo")
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isOk()
@@ -580,6 +611,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.delete()
                     .uri(END_POINT + "/" + produtoId)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isNoContent()
@@ -593,6 +625,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.delete()
                     .uri(END_POINT + "/" + produtoId)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
                     .exchange()
                     .expectStatus().isNoContent()
@@ -622,6 +655,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.put()
                     .uri(END_POINT)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_XML)
                     .bodyValue(atualizarDtoIn)
                     .exchange()
@@ -638,6 +672,7 @@ class ProdutoControllerIntegrationTest {
 
             webTestClient.put()
                     .uri(END_POINT)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(atualizarDtoIn)
                     .exchange()

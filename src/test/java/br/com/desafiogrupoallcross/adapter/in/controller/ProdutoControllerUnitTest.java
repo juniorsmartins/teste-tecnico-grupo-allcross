@@ -4,12 +4,11 @@ import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoCadastrarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoDeletarInputPort;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
-import br.com.desafiogrupoallcross.config.exception.TipoDeErroEnum;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
@@ -19,17 +18,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.NoSuchElementException;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
+@Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("Unitário - Produto Controller - Deletar")
 class ProdutoControllerUnitTest {
 
     private static final String END_POINT = "/api/v1/produtos";
+
+    public static final String USERNAME_ADMIN = "kent_beck@email.com";
+
+    public static final String PASSWORD_ADMIN = "0123456789";
 
     public static Faker faker = new Faker();
 
@@ -63,6 +67,7 @@ class ProdutoControllerUnitTest {
 
             var erro = webTestClient.post()
                     .uri(END_POINT)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(paraVerificar)
                     .exchange()
@@ -82,6 +87,7 @@ class ProdutoControllerUnitTest {
 
             var erro = webTestClient.post()
                     .uri(END_POINT)
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(paraVerificar)
                     .exchange()
