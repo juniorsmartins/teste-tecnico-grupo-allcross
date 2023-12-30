@@ -6,6 +6,7 @@ import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
 import br.com.desafiogrupoallcross.config.exception.TipoDeErroEnum;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,16 +14,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
+@Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @DisplayName("Integração - FotoProduto Controller - Cadastrar")
 class FotoProdutoControllerIntegrationTest {
 
     private static final String END_POINT = "/api/v1/produtos";
+
+    public static final String USERNAME_ADMIN = "kent_beck@email.com";
+
+    public static final String PASSWORD_ADMIN = "0123456789";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -70,7 +78,8 @@ class FotoProdutoControllerIntegrationTest {
 
             // Simule uma requisição multipart
             webTestClient.post()
-                .uri("/api/v1/produtos/" + produtoSalvo.getId() + "/imagem")
+                .uri(END_POINT + produtoSalvo.getId() + "/imagem")
+                .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData("foto", imagem).with("descricao", "descrição da foto"))
                 .exchange()
@@ -84,7 +93,8 @@ class FotoProdutoControllerIntegrationTest {
 
             // Simule uma requisição multipart
             webTestClient.post()
-                    .uri("/api/v1/produtos/" + produtoId + "/imagem")
+                    .uri(END_POINT + produtoId + "/imagem")
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData("foto", imagem)
                             .with("descricao", "descrição X"))
@@ -108,7 +118,8 @@ class FotoProdutoControllerIntegrationTest {
 
             // Simule uma requisição multipart
             webTestClient.post()
-                    .uri("/api/v1/produtos/" + produtoId + "/imagem")
+                    .uri(END_POINT + produtoId + "/imagem")
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData("foto", imagem)
                             .with("descricao", "descrição X"))
@@ -125,7 +136,8 @@ class FotoProdutoControllerIntegrationTest {
             Assertions.assertTrue(fotoPersistida.getFoto().length > 0);
 
             webTestClient.post()
-                    .uri("/api/v1/produtos/" + produtoId + "/imagem")
+                    .uri(END_POINT + produtoId + "/imagem")
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData("foto", imagem)
                             .with("descricao", "descrição Y"))
@@ -154,7 +166,8 @@ class FotoProdutoControllerIntegrationTest {
             var produtoIdInexistente = 0L;
 
             var resposta = webTestClient.post()
-                    .uri("/api/v1/produtos/" + produtoIdInexistente + "/imagem")
+                    .uri(END_POINT + produtoIdInexistente + "/imagem")
+                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData("foto", imagem)
                             .with("descricao", "descrição X"))

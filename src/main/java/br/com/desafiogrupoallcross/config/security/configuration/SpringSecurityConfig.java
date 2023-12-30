@@ -22,6 +22,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 public class SpringSecurityConfig {
 
+    private static final String[] DOCUMENTACAO_OPENAPI = {
+            "/docs/index.html",
+            "/v3/api-docs/**",
+            "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**",
+            "/**.html", "/webjars/**", "/configuration/**", "/swagger-resources/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -32,6 +39,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll() // Post público para criar usuário
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth").permitAll() // Post público para o usuário logar na aplicação
+                        .requestMatchers(DOCUMENTACAO_OPENAPI).permitAll() // Libera acesso aos end-points do Swagger
                         .anyRequest().authenticated() // Todos os demais endpoints são privados e requerem autenticação
                 ) // Incluir sistema de autorizações
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Define a política de sessão da API - neste caso, Stateless (sem sessão)

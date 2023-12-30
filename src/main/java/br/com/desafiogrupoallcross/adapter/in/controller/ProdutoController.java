@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,11 +61,12 @@ public class ProdutoController {
 
     private final ProdutoAgregadoMapper agregadoMapper;
 
-    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @PostMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Cadastrar Produto", description = "Recurso para cadastrar um novo Produto.",
+    @Operation(summary = "Cadastrar Produto", description = "Recurso para cadastrar um novo Produto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
+        security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "201", description = "Recurso cadastrado com sucesso.",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoCadastrarDtoOut.class))),
@@ -102,7 +104,8 @@ public class ProdutoController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
+        security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
                 content = {@Content(mediaType = "application/json", array = @ArraySchema(minItems = 1, schema = @Schema(implementation = ProdutoCadastrarDtoOut.class), uniqueItems = true))}),
@@ -142,7 +145,8 @@ public class ProdutoController {
     @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @PatchMapping(path = {"/{produtoId}/inverter-status-ativo"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Inverter Status Ativo do Produto", description = "Recurso para modificar o valor do atributo ativo do Produto.",
+    @Operation(summary = "Inverter Status Ativo do Produto", description = "Recurso para modificar atributo ativo do Produto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
+        security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoCadastrarDtoOut.class))),
@@ -173,10 +177,11 @@ public class ProdutoController {
                 .body(resposta);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @DeleteMapping(path = {"/{produtoId}"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Deletar Produto", description = "Recurso para apagar Produto.",
+    @Operation(summary = "Deletar Produto", description = "Recurso para apagar Produto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
+        security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
                 content = @Content(mediaType = "application/json")),
@@ -211,7 +216,8 @@ public class ProdutoController {
     @PutMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
+        security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoCadastrarDtoOut.class))),
@@ -247,10 +253,11 @@ public class ProdutoController {
                 .body(resposta);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @GetMapping(path = {"/agregados"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
+        security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProdutoCadastrarDtoOut.class))),
