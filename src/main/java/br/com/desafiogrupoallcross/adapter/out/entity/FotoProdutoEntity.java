@@ -15,8 +15,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"id"})
-public final class FotoProdutoEntity implements Serializable {
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+public final class FotoProdutoEntity extends AbstractAuditingEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,14 +29,19 @@ public final class FotoProdutoEntity implements Serializable {
     @JoinColumn(name = "produto_id")
     private ProdutoEntity produto;
 
+    @Column(name = "foto")
     private byte[] foto;
 
+    @Column(name = "nome")
     private String nome;
 
+    @Column(name = "descricao")
     private String descricao;
 
+    @Column(name = "tipo")
     private String tipo;
 
+    @Column(name = "tamanho")
     private long tamanho;
 }
 
