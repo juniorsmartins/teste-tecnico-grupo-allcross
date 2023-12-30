@@ -46,7 +46,7 @@ public final class FabricaDeObjetosDeTeste {
                 .valorCusto(BigDecimal.valueOf(10))
                 .icms(10)
                 .valorVenda(BigDecimal.valueOf(11))
-                .dataCadastro(Instant.now().minusSeconds(2 * 365 * 24 * 60 * 60))
+//                .dataCadastro(Instant.now().minusSeconds(2 * 365 * 24 * 60 * 60))
                 .quantidadeEstoque(random.nextInt(50) + 1)
                 .categoria(categoria);
     }

@@ -65,7 +65,7 @@ public class ProdutoController {
     @PostMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Cadastrar Produto", description = "Recurso para cadastrar um novo Produto.",
+    @Operation(summary = "Cadastrar Produto", description = "Recurso para cadastrar um novo Produto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "201", description = "Recurso cadastrado com sucesso.",
@@ -104,7 +104,7 @@ public class ProdutoController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
@@ -145,7 +145,7 @@ public class ProdutoController {
     @PreAuthorize("hasRole('ADMINISTRADOR') OR hasRole('ESTOQUISTA')")
     @PatchMapping(path = {"/{produtoId}/inverter-status-ativo"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Inverter Status Ativo do Produto", description = "Recurso para modificar o valor do atributo ativo do Produto.",
+    @Operation(summary = "Inverter Status Ativo do Produto", description = "Recurso para modificar atributo ativo do Produto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
@@ -180,7 +180,7 @@ public class ProdutoController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @DeleteMapping(path = {"/{produtoId}"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Deletar Produto", description = "Recurso para apagar Produto.",
+    @Operation(summary = "Deletar Produto", description = "Recurso para apagar Produto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
@@ -216,7 +216,7 @@ public class ProdutoController {
     @PutMapping(
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",
@@ -256,7 +256,7 @@ public class ProdutoController {
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @GetMapping(path = {"/agregados"},
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos.",
+    @Operation(summary = "Pesquisar Produtos", description = "Recurso para pesquisar Produtos. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "200", description = "Requisição bem sucedida e com retorno.",

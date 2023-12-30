@@ -40,7 +40,7 @@ public class FotoProdutoController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @PostMapping(path = {"/{produtoId}/imagem"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Cadastrar FotoProduto", description = "Recurso para cadastrar uma nova FotoProduto.",
+    @Operation(summary = "Cadastrar FotoProduto", description = "Recurso para cadastrar uma nova FotoProduto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
         security = {@SecurityRequirement(name = "security")},
         responses = {
             @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
