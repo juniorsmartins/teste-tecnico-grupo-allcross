@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.config.security.configuration;
 
+import br.com.desafiogrupoallcross.config.security.jwt.JwtAuthenticationEntryPoint;
 import br.com.desafiogrupoallcross.config.security.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class SpringSecurityConfig {
                 ) // Incluir sistema de autorizações
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Define a política de sessão da API - neste caso, Stateless (sem sessão)
                 .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class) // Registramos os filtros - primeiro acionará o jwtAuthorizationFilter() e só depois acionará o UsernamePasswordAuthenticationFilter - a ordem como foram colocados define quem será acionado primeiro
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint())) // Sempre que houver uma exceção de usuário não logado, o Spring vai na classe JwtAuthenticationEntryPoint e lança a exceção com status 401
                 .build();
     }
 
