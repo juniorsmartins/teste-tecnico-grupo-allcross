@@ -11,14 +11,14 @@ public class FotoMultipartFileEncapsulateImpl implements FotoMultipartFileEncaps
     @Override
     public FotoProdutoRecuperar encapsularFoto(MultipartFile foto) {
 
-        var fotoConvertidaEmByte = FotoUtils.converterMultipartFileEmArrayDeByte(foto);
-        var fotoCompactadaEmByte = FotoUtils.compactarFoto(fotoConvertidaEmByte);
-
         var fotoRecuperar = new FotoProdutoRecuperar();
-        fotoRecuperar.setFoto(fotoCompactadaEmByte);
         fotoRecuperar.setNome(foto.getOriginalFilename());
         fotoRecuperar.setTipo(foto.getContentType());
         fotoRecuperar.setTamanho(foto.getSize());
+
+        var fotoConvertidaEmByte = FotoUtils.converterMultipartFileEmArrayDeByte(foto);
+        var fotoCompactadaEmByte = FotoUtils.compactarFoto(fotoConvertidaEmByte);
+        fotoRecuperar.setFoto(fotoCompactadaEmByte);
 
         return fotoRecuperar;
     }

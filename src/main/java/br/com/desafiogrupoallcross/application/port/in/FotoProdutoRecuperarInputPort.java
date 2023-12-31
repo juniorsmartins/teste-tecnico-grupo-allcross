@@ -1,11 +1,9 @@
 package br.com.desafiogrupoallcross.application.port.in;
 
-import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoRecuperar;
-
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface FotoProdutoRecuperarInputPort {
 
-    List<FotoProdutoRecuperar> recuperarImagem(Long produtoId);
+    Stream<byte[]> recuperarFoto(Long produtoId);
 }
 

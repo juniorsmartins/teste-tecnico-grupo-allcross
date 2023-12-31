@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class FotoProdutoRecuperarUseCase implements FotoProdutoRecuperarInputPort {
 
@@ -21,12 +22,13 @@ public class FotoProdutoRecuperarUseCase implements FotoProdutoRecuperarInputPor
     }
 
     @Override
-    public List<FotoProdutoRecuperar> recuperarImagem(final Long produtoId) {
+    public Stream<byte[]> recuperarFoto(final Long produtoId) {
 
         log.info("");
 
         var resposta = Optional.ofNullable(produtoId)
                 .map(this.recuperarOutputPort::recuperarImagem)
+                .map(lista -> lista.stream().map(FotoProdutoRecuperar::getFoto))
                 .orElseThrow();
 
         log.info("");
