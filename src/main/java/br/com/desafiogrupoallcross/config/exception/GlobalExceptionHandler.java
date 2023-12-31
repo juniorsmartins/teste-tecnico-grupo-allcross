@@ -2,6 +2,7 @@ package br.com.desafiogrupoallcross.config.exception;
 
 import br.com.desafiogrupoallcross.config.exception.http_400.RequisicaoMalFormuladaException;
 import br.com.desafiogrupoallcross.config.exception.http_404.RecursoNaoEncontradoException;
+import br.com.desafiogrupoallcross.config.exception.http_500.ProblemaInternoNoServidorException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +36,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         var tipoErroEnum = TipoDeErroEnum.USUARIO_NAO_AUTORIZADO;
         var httpStatus = HttpStatus.FORBIDDEN;
+        var detail = ex.getMessage();
+
+        var mensagemDeErro = this.criarMensagemDeRetorno(tipoErroEnum, httpStatus, detail)
+                .build();
+
+        return this.handleExceptionInternal(ex, mensagemDeErro, new HttpHeaders(), httpStatus, webRequest);
+    }
+
+    @ExceptionHandler(value = ProblemaInternoNoServidorException.class)
+    public ResponseEntity<Object> tratarProblemaInterno(ProblemaInternoNoServidorException ex, WebRequest webRequest) {
+
+        var tipoErroEnum = TipoDeErroEnum.PROBLEMA_INTERNO_NO_SERVIDOR;
+        var httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         var detail = ex.getMessage();
 
         var mensagemDeErro = this.criarMensagemDeRetorno(tipoErroEnum, httpStatus, detail)
