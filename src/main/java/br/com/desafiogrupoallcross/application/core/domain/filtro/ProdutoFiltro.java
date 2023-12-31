@@ -33,6 +33,8 @@ public final class ProdutoFiltro {
 
     private String dataCadastro;
 
+    private String cadastradoPor;
+
     public String getId() {
         return id;
     }
@@ -113,6 +115,14 @@ public final class ProdutoFiltro {
         this.dataCadastro = dataCadastro;
     }
 
+    public String getCadastradoPor() {
+        return cadastradoPor;
+    }
+
+    public void setCadastradoPor(String cadastradoPor) {
+        this.cadastradoPor = cadastradoPor;
+    }
+
     public Instant dataCadastroInicial() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -146,6 +156,7 @@ public final class ProdutoFiltro {
         produtoFiltro.setQuantidadeEstoque(dtoFiltro.getQuantidadeEstoque());
         produtoFiltro.setCategoria(dtoFiltro.getCategoria());
         produtoFiltro.setDataCadastro(dtoFiltro.getDataCadastro());
+        produtoFiltro.setCadastradoPor(dtoFiltro.getCadastradoPor());
 
         return produtoFiltro;
     }
