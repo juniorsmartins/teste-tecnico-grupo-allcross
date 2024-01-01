@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.application.core.usecase;
 
+import br.com.desafiogrupoallcross.adapter.out.FotoProdutoArmazenarAdapter;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoCadastrarUseCaseException;
@@ -22,10 +23,10 @@ import java.io.IOException;
 class FotoProdutoCadastrarUseCaseUnitTest {
 
     @MockBean
-    private FotoProdutoSalvarAdapter salvarAdapter;
+    private FotoProdutoArmazenarAdapter fotoProdutoArmazenarAdapter;
 
     @Autowired
-    private FotoProdutoCadastrarUseCase cadastrarUseCase;
+    private FotoProdutoArmazenarUseCase fotoProdutoArmazenarUseCase;
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -45,9 +46,9 @@ class FotoProdutoCadastrarUseCaseUnitTest {
         @Test
         @DisplayName("com fotoProduto nula")
         void dadoFotoProdutoNula_QuandoCadastrar_EntaoLancarException() {
-            Executable acao = () -> cadastrarUseCase.cadastrarImagem(produtoSalvo.getId(), null);
+            Executable acao = () -> fotoProdutoArmazenarUseCase.armazenar(produtoSalvo.getId(), null);
             Assertions.assertThrows(FotoProdutoCadastrarUseCaseException.class, acao);
-            Mockito.verifyNoInteractions(salvarAdapter);
+            Mockito.verifyNoInteractions(fotoProdutoArmazenarAdapter);
         }
     }
 }

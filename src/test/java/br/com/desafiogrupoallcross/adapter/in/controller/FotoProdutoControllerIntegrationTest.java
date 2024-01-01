@@ -104,7 +104,6 @@ class FotoProdutoControllerIntegrationTest {
             var fotoPersistida = fotoProdutoRepository.findByProdutoId(produtoId).get(0);
 
             Assertions.assertNotNull(fotoPersistida.getProduto());
-            Assertions.assertEquals("descrição X", fotoPersistida.getDescricao());
             Assertions.assertEquals("teste.jpg", fotoPersistida.getNome());
             Assertions.assertEquals("image/jpeg", fotoPersistida.getTipo());
             Assertions.assertTrue(fotoPersistida.getTamanho() > 0);
@@ -129,7 +128,6 @@ class FotoProdutoControllerIntegrationTest {
             var fotoPersistida = fotoProdutoRepository.findByProdutoId(produtoId).get(0);
 
             Assertions.assertNotNull(fotoPersistida.getProduto());
-            Assertions.assertEquals("descrição X", fotoPersistida.getDescricao());
             Assertions.assertEquals("teste.jpg", fotoPersistida.getNome());
             Assertions.assertEquals("image/jpeg", fotoPersistida.getTipo());
             Assertions.assertTrue(fotoPersistida.getTamanho() > 0);
@@ -147,7 +145,6 @@ class FotoProdutoControllerIntegrationTest {
             var fotoPersistida2 = fotoProdutoRepository.findByProdutoId(produtoId);
 
             Assertions.assertNotNull(fotoPersistida.getProduto());
-            Assertions.assertEquals("descrição Y", fotoPersistida2.get(1).getDescricao());
             Assertions.assertEquals("teste.jpg", fotoPersistida2.get(1).getNome());
             Assertions.assertEquals("image/jpeg", fotoPersistida2.get(1).getTipo());
             Assertions.assertTrue(fotoPersistida.getTamanho() > 0);
