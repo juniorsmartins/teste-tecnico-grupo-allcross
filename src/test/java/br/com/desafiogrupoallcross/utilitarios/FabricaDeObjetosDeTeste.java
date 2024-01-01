@@ -96,7 +96,7 @@ public final class FabricaDeObjetosDeTeste {
                 .categoria(new CategoriaId(1L));
     }
 
-    public static MultipartFile gerarMultipartFile() throws IOException {
+    public static MockMultipartFile gerarMockMultipartFile() throws IOException {
 
         // Cria um arquivo temporário com dados fictícios
         Path arquivoTemporario = Files.createTempFile("teste", ".jpg");
@@ -108,7 +108,7 @@ public final class FabricaDeObjetosDeTeste {
 
     public static FotoProduto gerarFotoProduto() throws IOException {
 
-        MultipartFile multipartFile = gerarMultipartFile();
+        MultipartFile multipartFile = gerarMockMultipartFile();
 
         var fotoProduto = new FotoProduto();
         fotoProduto.setFoto(multipartFile.getBytes());

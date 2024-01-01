@@ -41,9 +41,6 @@ class ProdutoControllerUnitTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private ProdutoDeletarInputPort deletarInputPort;
-
-    @MockBean
     private ProdutoCadastrarInputPort cadastrarInputPort;
 
     @InjectMocks
@@ -62,6 +59,7 @@ class ProdutoControllerUnitTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"", " "})
+        @DisplayName("com nome vazio e em branco")
         void dadoProdutoCadastrarDtoInVazioAndEmBranco_QuandoCadastrar_EntaoLancarException(String nome) {
             var paraVerificar = cadastrarDtoInBuilder.nome(nome).build();
 
@@ -75,12 +73,13 @@ class ProdutoControllerUnitTest {
                     .expectBody(ApiError.class)
                     .returnResult().getResponseBody();
 
-            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "classe");
+            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "nome");
             Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getAnotacaoViolada(), "NotBlank");
             Mockito.verifyNoInteractions(cadastrarInputPort);
         }
 
         @Test
+        @DisplayName("com nome de tamanho inválido")
         void dadoProdutoCadastrarDtoInComTamanhoDeNomeInvalido_QuandoCadastrar_EntaoLancarException() {
             var paraVerificar = cadastrarDtoInBuilder
                     .nome(faker.lorem().characters(101, 130)).build();
@@ -95,7 +94,7 @@ class ProdutoControllerUnitTest {
                     .expectBody(ApiError.class)
                     .returnResult().getResponseBody();
 
-            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "classe");
+            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "nome");
             Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getAnotacaoViolada(), "Size");
             Mockito.verifyNoInteractions(cadastrarInputPort);
         }

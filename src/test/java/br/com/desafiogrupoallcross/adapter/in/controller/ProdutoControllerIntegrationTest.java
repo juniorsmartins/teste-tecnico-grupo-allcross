@@ -5,7 +5,6 @@ import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoAtualizarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
-import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
@@ -47,9 +46,6 @@ class ProdutoControllerIntegrationTest {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    @Autowired
-    private FotoProdutoRepository fotoProdutoRepository;
-
     private ProdutoCadastrarDtoIn dtoIn;
 
     private ProdutoEntity primeiroProduto;
@@ -76,16 +72,16 @@ class ProdutoControllerIntegrationTest {
         void dadoProdutoValido_QuandoCadastrarComContentNegotiationXML_EntaoRetornarHttp201() {
 
             webTestClient.post()
-                    .uri(END_POINT)
-                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
-                    .accept(MediaType.APPLICATION_XML)
-                    .bodyValue(dtoIn)
-                    .exchange()
-                    .expectStatus().isCreated()
-                    .expectHeader().contentType(MediaType.APPLICATION_XML)
-                    .expectBody().consumeWith(response -> {
-                        assertThat(response.getResponseBody()).isNotNull();
-                    });
+                .uri(END_POINT)
+                .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
+                .accept(MediaType.APPLICATION_XML)
+                .bodyValue(dtoIn)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_XML)
+                .expectBody().consumeWith(response -> {
+                    assertThat(response.getResponseBody()).isNotNull();
+                });
         }
 
         @Test
@@ -93,26 +89,26 @@ class ProdutoControllerIntegrationTest {
         void dadoProdutoValido_QuandoCadastrarComContentNegotiationJSon_EntaoRetornarProdutoCadastrarDtoOutComDadosIguaisEntradaAndHttp201() {
 
             webTestClient.post()
-                    .uri(END_POINT)
-                    .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(dtoIn)
-                    .exchange()
-                    .expectStatus().isCreated()
-                    .expectBody(ProdutoCadastrarDtoOut.class)
-                    .consumeWith(response -> {
-                        assertThat(response.getResponseBody()).isNotNull();
-                        assertThat(response.getResponseBody().id()).isNotNull();
-                        assertThat(response.getResponseBody().sku()).isNotNull();
-                        assertThat(response.getResponseBody().nome()).isEqualTo(dtoIn.nome());
-                        assertThat(response.getResponseBody().ativo()).isEqualTo(dtoIn.ativo());
-                        assertThat(response.getResponseBody().valorCusto()).isEqualTo(dtoIn.valorCusto());
-                        assertThat(response.getResponseBody().icms()).isEqualTo(dtoIn.icms());
-                        assertThat(response.getResponseBody().valorVenda()).isEqualTo(dtoIn.valorVenda());
-                        assertThat(response.getResponseBody().quantidadeEstoque()).isEqualTo(dtoIn.quantidadeEstoque());
-                        assertThat(response.getResponseBody().categoria().id()).isEqualTo(dtoIn.categoria().id());
-                        assertThat(response.getResponseBody().dataCadastro()).isNotNull();
-                    });
+                .uri(END_POINT)
+                .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dtoIn)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(ProdutoCadastrarDtoOut.class)
+                .consumeWith(response -> {
+                    assertThat(response.getResponseBody()).isNotNull();
+                    assertThat(response.getResponseBody().id()).isNotNull();
+                    assertThat(response.getResponseBody().sku()).isNotNull();
+                    assertThat(response.getResponseBody().nome()).isEqualTo(dtoIn.nome());
+                    assertThat(response.getResponseBody().ativo()).isEqualTo(dtoIn.ativo());
+                    assertThat(response.getResponseBody().valorCusto()).isEqualTo(dtoIn.valorCusto());
+                    assertThat(response.getResponseBody().icms()).isEqualTo(dtoIn.icms());
+                    assertThat(response.getResponseBody().valorVenda()).isEqualTo(dtoIn.valorVenda());
+                    assertThat(response.getResponseBody().quantidadeEstoque()).isEqualTo(dtoIn.quantidadeEstoque());
+                    assertThat(response.getResponseBody().categoria().id()).isEqualTo(dtoIn.categoria().id());
+                    assertThat(response.getResponseBody().dataCadastro()).isNotNull();
+                });
         }
     }
 

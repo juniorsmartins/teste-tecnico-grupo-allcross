@@ -19,14 +19,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.io.IOException;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/sql/produtos/produtos-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/produtos/produtos-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DisplayName("Integração - FotoProduto Controller - Cadastrar")
 class FotoProdutoControllerIntegrationTest {
 
-    private static final String END_POINT = "/api/v1/produtos";
+    private static final String END_POINT = "/api/v1/produtos/fotos";
 
     public static final String USERNAME_ADMIN = "kent_beck@email.com";
 
@@ -62,8 +66,8 @@ class FotoProdutoControllerIntegrationTest {
 
         @BeforeEach
         void criarCenario() {
-            var produto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
-            produtoSalvo = produtoRepository.save(produto);
+//            var produto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+            produtoSalvo = produtoRepository.findById(2001L).get();
         }
 
         @AfterEach
@@ -74,18 +78,21 @@ class FotoProdutoControllerIntegrationTest {
 
         @Test
         @DisplayName("completa")
-        void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarHttp204NoContent() {
+        void dadoFotoValida_QuandoArmazenarFoto_EntaoRetornarHttp204NoContent() throws IOException {
 
             // Simule uma requisição multipart
             webTestClient.post()
-                .uri(END_POINT + produtoSalvo.getId() + "/imagem")
+                .uri(uriBuilder -> uriBuilder
+                        .path(END_POINT)
+                        .queryParam("produtoId", 2001L)
+                        .queryParam("foto", imagem)
+                        .build())
                 .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData("foto", imagem).with("descricao", "descrição da foto"))
                 .exchange()
                 .expectStatus().isNoContent();
         }
-
+        //                .body(BodyInserters.fromMultipartData("foto", imagem).with("descricao", "descrição da foto"))
         @Test
         @DisplayName("persistência")
         void dadoFotoValida_QuandoCadastrarFoto_EntaoRetornarFotoPersistida() {
@@ -93,11 +100,15 @@ class FotoProdutoControllerIntegrationTest {
 
             // Simule uma requisição multipart
             webTestClient.post()
-                    .uri(END_POINT + produtoId + "/imagem")
+                    .uri(uriBuilder -> uriBuilder
+                            .path(END_POINT)
+                            .queryParam("produtoId", 2001L)
+                            .queryParam("foto", imagem)
+                            .build())
                     .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(BodyInserters.fromMultipartData("foto", imagem)
-                            .with("descricao", "descrição X"))
+//                    .body(BodyInserters.fromMultipartData("foto", imagem)
+//                            .with("descricao", "descrição X"))
                     .exchange()
                     .expectStatus().isNoContent();
 

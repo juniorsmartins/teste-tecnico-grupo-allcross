@@ -36,7 +36,7 @@ public final class ProdutoEntity extends AbstractAuditingEntity implements Seria
     @Column(name = "sku", nullable = false, columnDefinition = "uuid DEFAULT gen_random_uuid()", updatable = false)
     private UUID sku;
 
-    @Column(name = "classe", nullable = false, length = 100)
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
     @Column(name = "ativo")
