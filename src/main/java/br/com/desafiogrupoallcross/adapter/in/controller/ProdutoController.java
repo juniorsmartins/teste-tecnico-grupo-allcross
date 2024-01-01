@@ -125,7 +125,7 @@ public class ProdutoController {
     public ResponseEntity<Page<ProdutoPesquisarDtoOut>> pesquisar(
         @Parameter(name = "ProdutoDtoFiltro", description = "Objeto para transporte de dados usados como filtros de pesquisa.", required = false)
         @Valid final ProdutoDtoFiltro produtoDtoFiltro,
-        @PageableDefault(sort = "classe", direction = Sort.Direction.ASC, page = 0, size = 10) final Pageable paginacao) {
+        @PageableDefault(sort = "nome", direction = Sort.Direction.ASC, page = 0, size = 10) final Pageable paginacao) {
 
         log.info("Requisição recebida para pesquisar Produtos.");
 
