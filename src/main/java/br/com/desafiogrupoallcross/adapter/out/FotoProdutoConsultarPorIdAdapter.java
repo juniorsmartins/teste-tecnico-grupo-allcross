@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Repository
 @RequiredArgsConstructor
 public class FotoProdutoConsultarPorIdAdapter implements FotoProdutoConsultarPorIdOutputPort {
@@ -29,20 +27,21 @@ public class FotoProdutoConsultarPorIdAdapter implements FotoProdutoConsultarPor
     @Override
     public FotoProduto consultarPorId(final Long id) {
 
-        log.info("");
+        log.info("Iniciado adaptador para consultar FotoProduto por Id: {}", id);
 
         var resposta = this.repository.findById(id)
-                .map(this::converterParaFotoProduto)
+                .map(this::converterEntityParaFotoProduto)
                 .orElseThrow(() -> new FotoProdutoNaoEncontradoException(id));
 
-        log.info("");
+        log.info("Finalizado adaptador para consultar FotoProduto por Id: {}", id);
 
         return resposta;
     }
 
-    private FotoProduto converterParaFotoProduto(FotoProdutoEntity entity) {
+    private FotoProduto converterEntityParaFotoProduto(FotoProdutoEntity entity) {
 
         var fotoProduto = new FotoProduto();
+        fotoProduto.setId(entity.getId());
         fotoProduto.setFoto(entity.getFoto());
         fotoProduto.setNome(entity.getNome());
         fotoProduto.setTipo(entity.getTipo());

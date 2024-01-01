@@ -1,9 +1,11 @@
 package br.com.desafiogrupoallcross.adapter.in.mapper;
 
-import br.com.desafiogrupoallcross.adapter.out.utilitario.FotoUtils;
 import br.com.desafiogrupoallcross.application.core.domain.FotoProduto;
+import br.com.desafiogrupoallcross.config.exception.http_404.MultipartFileNaoEncontradoException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Component
 public class FotoMultipartFileConversorImpl implements FotoMultipartFileConversor {
@@ -16,10 +18,18 @@ public class FotoMultipartFileConversorImpl implements FotoMultipartFileConverso
         fotoProduto.setTipo(foto.getContentType());
         fotoProduto.setTamanho(foto.getSize());
 
-        var fotoConvertidaEmByte = FotoUtils.converterMultipartFileEmArrayDeByte(foto);
+        var fotoConvertidaEmByte = this.converterMultipartFileEmArrayDeByte(foto);
         fotoProduto.setFoto(fotoConvertidaEmByte);
 
         return fotoProduto;
+    }
+
+    public byte[] converterMultipartFileEmArrayDeByte(MultipartFile file) {
+        try {
+            return file.getBytes();
+        } catch (IOException e) {
+            throw new MultipartFileNaoEncontradoException();
+        }
     }
 }
 

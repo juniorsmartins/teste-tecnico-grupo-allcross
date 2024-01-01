@@ -21,11 +21,11 @@ public class FotoProdutoListarUseCase implements FotoProdutoListarInputPort {
     @Override
     public List<FotoProduto> listar() {
 
-        log.info("");
+        log.info("Iniciado serviço para listar FotosProduto.");
 
         var resposta = this.fotoProdutoListarOutputPort.listar();
 
-        log.info("");
+        log.info("Finalizado serviço para listar FotosProduto.");
 
         return resposta;
     }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,24 +19,26 @@ public class FotoProdutoListarAdapter implements FotoProdutoListarOutputPort {
 
     private static final Logger log = LoggerFactory.getLogger(FotoProdutoListarAdapter.class);
 
-    private final FotoProdutoRepository repository;
+    private final FotoProdutoRepository fotoProdutoRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public List<FotoProduto> listar() {
 
-        log.info("");
+        log.info("Iniciado adaptador para listar FotosProduto.");
 
-        var resposta = this.repository.listar()
+        var resposta = this.fotoProdutoRepository.listar()
                 .stream()
-                .map(this::converterParaFotoProduto)
+                .map(this::converterEntityParaFotoProdutoSemImagem)
                 .toList();
 
-        log.info("");
+        log.info("Finalizado adaptador para listar FotosProduto.");
 
         return resposta;
     }
 
-    private FotoProduto converterParaFotoProduto(FotoProdutoEntity entity) {
+    private FotoProduto converterEntityParaFotoProdutoSemImagem(FotoProdutoEntity entity) {
+
         var fotoProduto = new FotoProduto();
         fotoProduto.setId(entity.getId());
         fotoProduto.setNome(entity.getNome());

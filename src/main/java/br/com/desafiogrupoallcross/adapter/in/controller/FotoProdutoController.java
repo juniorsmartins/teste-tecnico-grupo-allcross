@@ -1,17 +1,13 @@
 package br.com.desafiogrupoallcross.adapter.in.controller;
 
-import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.FotoProdutoListarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.in.mapper.FotoMultipartFileConversor;
 import br.com.desafiogrupoallcross.adapter.in.mapper.FotoProdutoMapper;
-import br.com.desafiogrupoallcross.application.core.domain.FotoProduto;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoArmazenarInputPort;
-import br.com.desafiogrupoallcross.application.port.in.FotoProdutoCadastrarInputPort;
-import br.com.desafiogrupoallcross.application.port.in.FotoProdutoListarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoConsultarPorIdInputPort;
+import br.com.desafiogrupoallcross.application.port.in.FotoProdutoListarInputPort;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
-import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoCadastrarControllerException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Tag(name = "FotosProduto", description = "Contém todos os recursos de FotoProduto (cadastrar).")
 @RestController
@@ -45,11 +38,7 @@ public class FotoProdutoController {
 
     private final Logger log = LoggerFactory.getLogger(FotoProdutoController.class);
 
-    private final FotoProdutoCadastrarInputPort inputPort;
-
-    private final FotoProdutoMapper mapper;
-
-    private final FotoProdutoArmazenarInputPort armazenarInputPort;
+    private final FotoProdutoArmazenarInputPort fotoProdutoArmazenarInputPort;
 
     private final FotoProdutoConsultarPorIdInputPort fotoProdutoConsultarPorIdInputPort;
 
@@ -57,46 +46,7 @@ public class FotoProdutoController {
 
     private final FotoMultipartFileConversor fotoMultipartFileConversor;
 
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
-    @PostMapping(path = {"/{produtoId}/imagem"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Cadastrar FotoProduto", description = "Recurso para cadastrar uma nova FotoProduto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
-        security = {@SecurityRequirement(name = "security")},
-        responses = {
-            @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
-                content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "Requisição mal formulada.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar recurso.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(responseCode = "404", description = "Recurso não encontrado.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(responseCode = "409", description = "Conflito com regras de negócio.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-            @ApiResponse(responseCode = "500", description = "Situação inesperada no servidor.",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-        })
-    public ResponseEntity<Void> cadastrarImagem(
-            @Parameter(name = "id", description = "Chave de Identificação.", example = "78", required = true)
-            @PathVariable(name = "produtoId") final Long id,
-            @Parameter(name = "FotoProdutoDtoIn", description = "Objeto para transporte de dados para cadastrar.", required = true)
-            @Valid FotoProdutoDtoIn dtoIn) {
-
-        log.info("Requisição recebida para cadastrar imagem de Produto com Id: {}.", id);
-
-        Optional.ofNullable(dtoIn)
-                .map(mapper::toFotoProdutoBusiness)
-                .map(foto -> {
-                    inputPort.cadastrarImagem(id, foto);
-                    return true;
-                })
-                .orElseThrow(FotoProdutoCadastrarControllerException::new);
-
-        log.info("Imagem cadastrada com sucesso para Produto com Id: {}.", id);
-
-        return ResponseEntity
-                .noContent()
-                .build();
-    }
+    private final FotoProdutoMapper mapper;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @PostMapping(path = {"/fotos"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -128,13 +78,13 @@ public class FotoProdutoController {
         Objects.requireNonNull(file);
 
         var fileConvertidoEmFotoProduto = this.fotoMultipartFileConversor.paraFotoProduto(file);
-        this.armazenarInputPort.armazenar(id, fileConvertidoEmFotoProduto);
+        this.fotoProdutoArmazenarInputPort.armazenar(id, fileConvertidoEmFotoProduto);
 
         log.info("Imagem cadastrada com sucesso para Produto com Id: {}.", id);
 
         return ResponseEntity
-                .noContent()
-                .build();
+            .noContent()
+            .build();
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")

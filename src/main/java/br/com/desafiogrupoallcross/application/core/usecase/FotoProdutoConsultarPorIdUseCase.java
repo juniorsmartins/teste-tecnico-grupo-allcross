@@ -7,30 +7,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public class FotoProdutoConsultarPorIdUseCase implements FotoProdutoConsultarPorIdInputPort {
 
     private static final Logger log = LoggerFactory.getLogger(FotoProdutoConsultarPorIdUseCase.class);
 
-    private final FotoProdutoConsultarPorIdOutputPort recuperarOutputPort;
+    private final FotoProdutoConsultarPorIdOutputPort fotoProdutoConsultarPorIdOutputPort;
 
-    public FotoProdutoConsultarPorIdUseCase(FotoProdutoConsultarPorIdOutputPort recuperarOutputPort) {
-        this.recuperarOutputPort = recuperarOutputPort;
+    public FotoProdutoConsultarPorIdUseCase(FotoProdutoConsultarPorIdOutputPort fotoProdutoConsultarPorIdOutputPort) {
+        this.fotoProdutoConsultarPorIdOutputPort = fotoProdutoConsultarPorIdOutputPort;
     }
 
     @Override
     public FotoProduto consultarPorId(final Long id) {
 
-        log.info("");
+        log.info("Iniciado serviço para consultar FotoProduto por Id: {}", id);
 
         Objects.requireNonNull(id);
 
-        var resposta = Optional.of(id)
-                .map(this.recuperarOutputPort::consultarPorId)
-                .orElseThrow();
+        var resposta = this.fotoProdutoConsultarPorIdOutputPort.consultarPorId(id);
 
-        log.info("");
+        log.info("Finalizado serviço para consultar FotoProduto por Id: {}", id);
 
         return resposta;
     }
