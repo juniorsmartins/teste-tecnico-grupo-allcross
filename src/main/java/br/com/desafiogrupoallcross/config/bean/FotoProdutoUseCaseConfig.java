@@ -2,12 +2,12 @@ package br.com.desafiogrupoallcross.config.bean;
 
 import br.com.desafiogrupoallcross.adapter.out.FotoProdutoArmazenarAdapter;
 import br.com.desafiogrupoallcross.adapter.out.FotoProdutoListarAdapter;
-import br.com.desafiogrupoallcross.adapter.out.FotoProdutoRecuperarAdapter;
+import br.com.desafiogrupoallcross.adapter.out.FotoProdutoConsultarPorIdAdapter;
 import br.com.desafiogrupoallcross.adapter.out.FotoProdutoSalvarAdapter;
 import br.com.desafiogrupoallcross.application.core.usecase.FotoProdutoArmazenarUseCase;
 import br.com.desafiogrupoallcross.application.core.usecase.FotoProdutoCadastrarUseCase;
 import br.com.desafiogrupoallcross.application.core.usecase.FotoProdutoListarUseCase;
-import br.com.desafiogrupoallcross.application.core.usecase.FotoProdutoRecuperarUseCase;
+import br.com.desafiogrupoallcross.application.core.usecase.FotoProdutoConsultarPorIdUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,8 +25,8 @@ public class FotoProdutoUseCaseConfig {
     }
 
     @Bean
-    public FotoProdutoRecuperarUseCase fotoProdutoRecuperarUseCase(FotoProdutoRecuperarAdapter fotoProdutoRecuperarAdapter) {
-        return new FotoProdutoRecuperarUseCase(fotoProdutoRecuperarAdapter);
+    public FotoProdutoConsultarPorIdUseCase fotoProdutoRecuperarUseCase(FotoProdutoConsultarPorIdAdapter fotoProdutoRecuperarAdapter) {
+        return new FotoProdutoConsultarPorIdUseCase(fotoProdutoRecuperarAdapter);
     }
 
     @Bean
