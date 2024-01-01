@@ -1,6 +1,5 @@
 package br.com.desafiogrupoallcross.application.core.usecase;
 
-import br.com.desafiogrupoallcross.adapter.out.FotoProdutoSalvarAdapter;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoCadastrarUseCaseException;

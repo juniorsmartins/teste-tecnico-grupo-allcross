@@ -2,8 +2,10 @@ package br.com.desafiogrupoallcross.application.port.in;
 
 import br.com.desafiogrupoallcross.application.core.domain.FotoProduto;
 
-public interface FotoProdutoArmazenarInputPort {
+import java.util.List;
 
-    void armazenar(Long id, FotoProduto fotoProduto);
+public interface FotoProdutoListarInputPort {
+
+    List<FotoProduto> listar();
 }
 
