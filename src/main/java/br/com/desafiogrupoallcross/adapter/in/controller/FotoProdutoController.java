@@ -165,7 +165,5 @@ public class FotoProdutoController {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(foto);
         return new InputStreamResource(byteArrayInputStream);
     }
-
-
 }
 

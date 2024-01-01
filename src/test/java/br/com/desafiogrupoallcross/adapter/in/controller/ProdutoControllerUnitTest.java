@@ -41,9 +41,6 @@ class ProdutoControllerUnitTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private ProdutoDeletarInputPort deletarInputPort;
-
-    @MockBean
     private ProdutoCadastrarInputPort cadastrarInputPort;
 
     @InjectMocks
@@ -62,6 +59,7 @@ class ProdutoControllerUnitTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"", " "})
+        @DisplayName("com nome vazio e em branco")
         void dadoProdutoCadastrarDtoInVazioAndEmBranco_QuandoCadastrar_EntaoLancarException(String nome) {
             var paraVerificar = cadastrarDtoInBuilder.nome(nome).build();
 
@@ -81,6 +79,7 @@ class ProdutoControllerUnitTest {
         }
 
         @Test
+        @DisplayName("com nome de tamanho inválido")
         void dadoProdutoCadastrarDtoInComTamanhoDeNomeInvalido_QuandoCadastrar_EntaoLancarException() {
             var paraVerificar = cadastrarDtoInBuilder
                     .nome(faker.lorem().characters(101, 130)).build();

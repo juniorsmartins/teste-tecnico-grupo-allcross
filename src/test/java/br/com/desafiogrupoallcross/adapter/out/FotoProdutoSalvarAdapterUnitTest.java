@@ -26,7 +26,7 @@ class FotoProdutoSalvarAdapterUnitTest {
     private FotoProdutoRepository fotoRepository;
 
     @Autowired
-    private FotoProdutoSalvarAdapter fotoSalvarAdapter;
+    private FotoProdutoArmazenarAdapter fotoProdutoArmazenarAdapter;
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -44,18 +44,18 @@ class FotoProdutoSalvarAdapterUnitTest {
     class FotoProdutoException {
 
         @Test
-        @DisplayName("por foto nula")
-        void dadoFotoProdutoNulo_QuandoSalvar_EntaoLancarException() {
-            Executable acao = () -> fotoSalvarAdapter.salvar(produtoSalvo.getId(), null);
-            Assertions.assertThrows(FotoProdutoSalvarAdapterException.class, acao);
+        @DisplayName("por fotoProduto nulo")
+        void dadoFotoProdutoNulo_QuandoArmazenar_EntaoLancarException() {
+            Executable acao = () -> fotoProdutoArmazenarAdapter.armazenar(produtoSalvo.getId(), null);
+            Assertions.assertThrows(NullPointerException.class, acao);
         }
 
         @Test
-        @DisplayName("por fotoProduto sem foto")
-        void dadoFotoProdutoSemFoto_QuandoSalvar_EntaoLancarException() throws IOException {
-            var fotoProdutoSemFoto = FabricaDeObjetosDeTeste.gerarFotoProdutoBusinessSemFoto();
-            Executable acao = () -> fotoSalvarAdapter.salvar(produtoSalvo.getId(), fotoProdutoSemFoto);
-            Assertions.assertThrows(MultipartFileNaoEncontradoException.class, acao);
+        @DisplayName("por id nulo")
+        void dadoIdNulo_QuandoArmazenar_EntaoLancarException() throws IOException {
+            var fotoProduto = FabricaDeObjetosDeTeste.gerarFotoProduto();
+            Executable acao = () -> fotoProdutoArmazenarAdapter.armazenar(null, fotoProduto);
+            Assertions.assertThrows(NullPointerException.class, acao);
         }
     }
 

@@ -32,7 +32,7 @@ public final class FotoProdutoEntity extends AbstractAuditingEntity implements S
     @Column(name = "foto")
     private byte[] foto;
 
-    @Column(name = "nome")
+    @Column(name = "classe")
     private String nome;
 
     @Column(name = "tipo")

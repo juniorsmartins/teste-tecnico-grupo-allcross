@@ -1,13 +1,12 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
-import br.com.desafiogrupoallcross.application.core.domain.CategoriaBusiness;
+import br.com.desafiogrupoallcross.application.core.domain.Categoria;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.envers.Audited;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -74,7 +73,7 @@ public final class ProdutoEntity extends AbstractAuditingEntity implements Seria
         entidade.setQuantidadeEstoque(produtoBusiness.getQuantidadeEstoque());
         entidade.setCategoria(new CategoriaEntity(
                 produtoBusiness.getCategoria().getId(),
-                produtoBusiness.getCategoria().getNome(),
+                produtoBusiness.getCategoria().getClasse(),
                 produtoBusiness.getCategoria().isAtivo(),
                 produtoBusiness.getCategoria().getTipo()
             ));
@@ -94,9 +93,9 @@ public final class ProdutoEntity extends AbstractAuditingEntity implements Seria
         business.setIcms(produtoEntity.getIcms());
         business.setValorVenda(produtoEntity.getValorVenda());
         business.setQuantidadeEstoque(produtoEntity.getQuantidadeEstoque());
-        business.setCategoria(new CategoriaBusiness(
+        business.setCategoria(new Categoria(
                 produtoEntity.getCategoria().getId(),
-                produtoEntity.getCategoria().getNome(),
+                produtoEntity.getCategoria().getClasse(),
                 produtoEntity.getCategoria().isAtivo(),
                 produtoEntity.getCategoria().getTipo()
         ));

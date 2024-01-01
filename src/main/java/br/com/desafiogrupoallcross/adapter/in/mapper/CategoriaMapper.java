@@ -2,14 +2,14 @@ package br.com.desafiogrupoallcross.adapter.in.mapper;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.CategoriaDtoOut;
-import br.com.desafiogrupoallcross.application.core.domain.CategoriaBusiness;
+import br.com.desafiogrupoallcross.application.core.domain.Categoria;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CategoriaMapper {
 
-    CategoriaBusiness toCategoriaBusiness(CategoriaId categoriaId);
+    Categoria toCategoriaBusiness(CategoriaId categoriaId);
 
-    CategoriaDtoOut toCategoriaDtoOut(CategoriaBusiness categoriaBusiness);
+    CategoriaDtoOut toCategoriaDtoOut(Categoria categoria);
 }
 

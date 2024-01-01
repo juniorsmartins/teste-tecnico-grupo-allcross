@@ -27,8 +27,8 @@ public final class CategoriaEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome", nullable = false)
-    private String nome;
+    @Column(name = "classe", nullable = false)
+    private String classe;
 
     @Column(name = "ativo", nullable = false)
     private boolean ativo;

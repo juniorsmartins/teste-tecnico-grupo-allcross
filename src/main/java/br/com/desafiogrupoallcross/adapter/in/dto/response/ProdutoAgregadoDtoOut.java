@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.math.BigDecimal;
 
 @JsonPropertyOrder({
-        "nome", "valorCusto", "icms", "valorVenda", "quantidadeEstoque", "custoTotal", "valorTotal"
+        "classe", "valorCusto", "icms", "valorVenda", "quantidadeEstoque", "custoTotal", "valorTotal"
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProdutoAgregadoDtoOut(

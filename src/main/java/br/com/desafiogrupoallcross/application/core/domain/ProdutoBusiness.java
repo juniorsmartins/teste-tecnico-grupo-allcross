@@ -30,7 +30,7 @@ public final class ProdutoBusiness {
 
     private int quantidadeEstoque;
 
-    private CategoriaBusiness categoria;
+    private Categoria categoria;
 
     private Instant dataCadastro;
 
@@ -119,11 +119,11 @@ public final class ProdutoBusiness {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
-    public CategoriaBusiness getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(CategoriaBusiness categoria) {
+    public void setCategoria(Categoria categoria) {
         final String NOME_CAMPO = "categoria";
 
         Optional.ofNullable(categoria)
