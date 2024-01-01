@@ -64,8 +64,8 @@ public final class ProdutoSpecification {
                 adicionarCategoriaIdPredicados(filtro.getCategoria().getId(), root, pesquisa);
             }
 
-            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getNome())) {
-                adicionarCategoriaNomePredicados(filtro.getCategoria().getNome(), root, criteriaBuilder, pesquisa);
+            if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getClasse())) {
+                adicionarCategoriaClassePredicados(filtro.getCategoria().getClasse(), root, criteriaBuilder, pesquisa);
             }
 
             if (ObjectUtils.isNotEmpty(filtro.getCategoria()) && ObjectUtils.isNotEmpty(filtro.getCategoria().getAtivo())) {
@@ -91,7 +91,7 @@ public final class ProdutoSpecification {
 
         List<Predicate> predicates = parametros.stream()
             .map(valor -> criteriaBuilder.like(
-                criteriaBuilder.lower(root.get("nome")), "%" + valor.toLowerCase() + "%"))
+                criteriaBuilder.lower(root.get("classe")), "%" + valor.toLowerCase() + "%"))
             .toList();
 
         pesquisa.add(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
@@ -150,13 +150,13 @@ public final class ProdutoSpecification {
         pesquisa.add(root.join("categoria").get("id").in(parametros));
     }
 
-    private static void adicionarCategoriaNomePredicados(String nome, Root<ProdutoEntity> root,
-                                               CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
+    private static void adicionarCategoriaClassePredicados(String classe, Root<ProdutoEntity> root,
+                                                           CriteriaBuilder criteriaBuilder, List<Predicate> pesquisa) {
 
-        var parametros = List.of(nome.trim().split(","));
+        var parametros = List.of(classe.trim().split(","));
 
         var predicates = parametros.stream()
-            .map(valor -> criteriaBuilder.like(criteriaBuilder.lower(root.get("categoria").get("nome")),
+            .map(valor -> criteriaBuilder.like(criteriaBuilder.lower(root.get("categoria").get("classe")),
                 "%" + valor.toLowerCase() + "%"))
             .toList();
 
