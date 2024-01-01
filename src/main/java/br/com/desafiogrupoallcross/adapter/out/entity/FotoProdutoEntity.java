@@ -29,15 +29,11 @@ public final class FotoProdutoEntity extends AbstractAuditingEntity implements S
     @JoinColumn(name = "produto_id")
     private ProdutoEntity produto;
 
-    @Lob
     @Column(name = "foto")
     private byte[] foto;
 
     @Column(name = "nome")
     private String nome;
-
-    @Column(name = "descricao")
-    private String descricao;
 
     @Column(name = "tipo")
     private String tipo;

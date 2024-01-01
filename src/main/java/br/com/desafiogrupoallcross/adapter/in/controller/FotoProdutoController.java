@@ -2,9 +2,8 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
-import br.com.desafiogrupoallcross.adapter.in.mapper.FotoMultipartFileEncapsulate;
+import br.com.desafiogrupoallcross.adapter.in.mapper.FotoMultipartFileConversor;
 import br.com.desafiogrupoallcross.adapter.in.mapper.FotoProdutoCadastrarMapper;
-import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoRecuperar;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoArmazenarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoCadastrarInputPort;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoRecuperarInputPort;
@@ -28,7 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -48,7 +47,7 @@ public class FotoProdutoController {
 
     private final FotoProdutoRecuperarInputPort recuperarInputPort;
 
-    private final FotoMultipartFileEncapsulate fotoMultipartFileEncapsulate;
+    private final FotoMultipartFileConversor fotoMultipartFileConversor;
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
     @PostMapping(path = {"/{produtoId}/imagem"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -92,38 +91,36 @@ public class FotoProdutoController {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ESTOQUISTA')")
-    @PostMapping(path = {"/{produtoId}/foto"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = {"/fotos"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Cadastrar FotoProduto", description = "Recurso para cadastrar uma nova FotoProduto. A requisição exige Bearer Token. Acesso restrito para ADMINISTRADOR|ESTOQUISTA.",
-            security = {@SecurityRequirement(name = "security")},
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
-                            content = @Content(mediaType = "application/json")),
-                    @ApiResponse(responseCode = "400", description = "Requisição mal formulada.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-                    @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar recurso.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-                    @ApiResponse(responseCode = "404", description = "Recurso não encontrado.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-                    @ApiResponse(responseCode = "409", description = "Conflito com regras de negócio.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-                    @ApiResponse(responseCode = "500", description = "Situação inesperada no servidor.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
-            })
-    public ResponseEntity<Void> armazenarFoto(
-            @Parameter(name = "id", description = "Chave de Identificação.", example = "78", required = true)
-            @PathVariable(name = "produtoId") final Long id,
-            @Parameter(name = "FotoProdutoDtoIn", description = "Objeto para transporte de dados para cadastrar.", required = true)
-            @RequestParam("image") MultipartFile file) {
+        security = {@SecurityRequirement(name = "security")},
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Requisição bem sucedida e sem retorno.",
+                content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formulada.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar recurso.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "409", description = "Conflito com regras de negócio.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "500", description = "Situação inesperada no servidor.",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))),
+        })
+    public ResponseEntity<Void> armazenar(
+        @Parameter(name = "produtoId", description = "Chave de Identificação do Produto.", example = "78", required = true)
+        @RequestParam(name = "produtoId") final Long id,
+        @Parameter(name = "MultipartFile", description = "MultipartFile é um objeto que representa um arquivo que será serializado no corpo de uma requisição.", required = true)
+        @RequestParam("foto") MultipartFile file) {
 
         log.info("Requisição recebida para cadastrar imagem de Produto com Id: {}.", id);
 
-        Optional.ofNullable(file)
-                .map(foto -> {
-                    var fotoEncapsulada = this.fotoMultipartFileEncapsulate.encapsularFoto(foto);
-                    this.armazenarInputPort.armazenar(id, fotoEncapsulada);
-                    return true;
-                })
-                .orElseThrow(FotoProdutoCadastrarControllerException::new);
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(file);
+
+        var fileConvertidoEmFotoProduto = this.fotoMultipartFileConversor.paraFotoProduto(file);
+        this.armazenarInputPort.armazenar(id, fileConvertidoEmFotoProduto);
 
         log.info("Imagem cadastrada com sucesso para Produto com Id: {}.", id);
 

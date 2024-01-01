@@ -1,6 +1,6 @@
 package br.com.desafiogrupoallcross.application.core.domain;
 
-public final class FotoProdutoRecuperar {
+public final class FotoProduto {
 
     private byte[] foto;
 

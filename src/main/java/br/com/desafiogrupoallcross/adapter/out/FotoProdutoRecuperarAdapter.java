@@ -4,7 +4,7 @@ import br.com.desafiogrupoallcross.adapter.out.entity.FotoProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.utilitario.FotoUtils;
-import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoRecuperar;
+import br.com.desafiogrupoallcross.application.core.domain.FotoProduto;
 import br.com.desafiogrupoallcross.application.port.out.FotoProdutoRecuperarOutputPort;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class FotoProdutoRecuperarAdapter implements FotoProdutoRecuperarOutputPo
 
     @Transactional(readOnly = true)
     @Override
-    public List<FotoProdutoRecuperar> recuperarImagem(final Long produtoId) {
+    public List<FotoProduto> recuperarImagem(final Long produtoId) {
 
         log.info("");
 
@@ -40,10 +40,10 @@ public class FotoProdutoRecuperarAdapter implements FotoProdutoRecuperarOutputPo
         return resposta;
     }
 
-    private FotoProdutoRecuperar converterParaRecuperar(FotoProdutoEntity entity) {
+    private FotoProduto converterParaRecuperar(FotoProdutoEntity entity) {
         var fotoDescompactadaEmByte = FotoUtils.descompactarImagem(entity.getFoto());
 
-        var fotoProduto = new FotoProdutoRecuperar();
+        var fotoProduto = new FotoProduto();
         fotoProduto.setFoto(fotoDescompactadaEmByte);
         fotoProduto.setNome(fotoProduto.getNome());
         fotoProduto.setTipo(fotoProduto.getTipo());

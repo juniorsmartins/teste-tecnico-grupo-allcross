@@ -1,13 +1,12 @@
 package br.com.desafiogrupoallcross.application.core.usecase;
 
-import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoRecuperar;
+import br.com.desafiogrupoallcross.application.core.domain.FotoProduto;
 import br.com.desafiogrupoallcross.application.port.in.FotoProdutoArmazenarInputPort;
 import br.com.desafiogrupoallcross.application.port.out.FotoProdutoArmazenarOutputPort;
-import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoCadastrarUseCaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
+import java.util.Objects;
 
 public class FotoProdutoArmazenarUseCase implements FotoProdutoArmazenarInputPort {
 
@@ -20,14 +19,14 @@ public class FotoProdutoArmazenarUseCase implements FotoProdutoArmazenarInputPor
     }
 
     @Override
-    public void armazenar(Long id, FotoProdutoRecuperar fotoProduto) {
+    public void armazenar(final Long id, final FotoProduto fotoProduto) {
 
         log.info("Iniciado serviço para cadastrar imagem de Produto com Id: {}.", id);
 
-        Optional.ofNullable(fotoProduto)
-                .ifPresentOrElse(foto -> outputPort.armazenar(id, foto),
-                        () -> {throw new FotoProdutoCadastrarUseCaseException();}
-                );
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(fotoProduto);
+
+        this.outputPort.armazenar(id, fotoProduto);
 
         log.info("Finalizado serviço para cadastrar imagem de Produto com Id: {}.", id);
     }
