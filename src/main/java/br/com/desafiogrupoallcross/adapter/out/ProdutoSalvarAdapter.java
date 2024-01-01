@@ -30,7 +30,7 @@ public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
     @Override
     public ProdutoBusiness salvar(ProdutoBusiness produtoBusiness) {
 
-        log.info("Iniciado adaptador para salvar Produto com nome: {}.", produtoBusiness.getNome());
+        log.info("Iniciado adaptador para salvar Produto com classe: {}.", produtoBusiness.getNome());
 
         var resposta = Optional.ofNullable(produtoBusiness)
                 .map(ProdutoEntity::converterParaEntity)
@@ -39,7 +39,7 @@ public class ProdutoSalvarAdapter implements ProdutoSalvarOutputPort {
                 .map(ProdutoEntity::converterParaBusiness)
                 .orElseThrow(ProdutoSalvarAdapterException::new);
 
-        log.info("Finalizado adaptador para salvar Produto com nome: {}.", resposta.getNome());
+        log.info("Finalizado adaptador para salvar Produto com classe: {}.", resposta.getNome());
 
         return resposta;
     }

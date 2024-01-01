@@ -22,13 +22,13 @@ public class ProdutoCadastrarUseCase implements ProdutoCadastrarInputPort {
     @Override
     public ProdutoBusiness cadastrar(ProdutoBusiness produtoBusiness) {
 
-        log.info("Iniciado serviço para cadastrar Produto com nome: {}.", produtoBusiness.getNome());
+        log.info("Iniciado serviço para cadastrar Produto com classe: {}.", produtoBusiness.getNome());
 
         var resposta = Optional.ofNullable(produtoBusiness)
                 .map(salvarOutputPort::salvar)
                 .orElseThrow(ProdutoCadastrarUseCaseException::new);
 
-        log.info("Finalizado serviço para cadastrar Produto com nome: {}.", resposta.getNome());
+        log.info("Finalizado serviço para cadastrar Produto com classe: {}.", resposta.getNome());
 
         return resposta;
     }

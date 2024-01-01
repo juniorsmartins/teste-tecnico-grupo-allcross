@@ -11,7 +11,7 @@ public final class CategoriaFiltro {
 
     private String id;
 
-    private String nome;
+    private String classe;
 
     private Boolean ativo;
 

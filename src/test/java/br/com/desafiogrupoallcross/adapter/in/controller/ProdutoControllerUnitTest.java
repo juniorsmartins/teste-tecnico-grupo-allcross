@@ -75,7 +75,7 @@ class ProdutoControllerUnitTest {
                     .expectBody(ApiError.class)
                     .returnResult().getResponseBody();
 
-            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "nome");
+            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "classe");
             Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getAnotacaoViolada(), "NotBlank");
             Mockito.verifyNoInteractions(cadastrarInputPort);
         }
@@ -95,7 +95,7 @@ class ProdutoControllerUnitTest {
                     .expectBody(ApiError.class)
                     .returnResult().getResponseBody();
 
-            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "nome");
+            Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getLocalDeErro(), "classe");
             Assertions.assertEquals(erro.getParametrosInvalidos().get(0).getAnotacaoViolada(), "Size");
             Mockito.verifyNoInteractions(cadastrarInputPort);
         }

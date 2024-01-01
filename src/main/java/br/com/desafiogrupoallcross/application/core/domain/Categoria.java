@@ -2,21 +2,21 @@ package br.com.desafiogrupoallcross.application.core.domain;
 
 import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
 
-public final class CategoriaBusiness {
+public final class Categoria {
 
     private Long id;
 
-    private String nome;
+    private String classe;
 
     private boolean ativo;
 
     private TipoCategoriaEnum tipo;
 
-    public CategoriaBusiness() {}
+    public Categoria() {}
 
-    public CategoriaBusiness(Long id, String nome, boolean ativo, TipoCategoriaEnum tipo) {
+    public Categoria(Long id, String classe, boolean ativo, TipoCategoriaEnum tipo) {
         this.setId(id);
-        this.setNome(nome);
+        this.setClasse(classe);
         this.setAtivo(ativo);
         this.setTipo(tipo);
     }
@@ -29,12 +29,12 @@ public final class CategoriaBusiness {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getClasse() {
+        return classe;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setClasse(String classe) {
+        this.classe = classe;
     }
 
     public boolean isAtivo() {

@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @JsonPropertyOrder({
-        "id", "sku", "nome", "ativo", "valorCusto", "icms",
+        "id", "sku", "classe", "ativo", "valorCusto", "icms",
         "valorVenda", "quantidadeEstoque", "categoria", "dataCadastro", "dataAtualizacao"
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)

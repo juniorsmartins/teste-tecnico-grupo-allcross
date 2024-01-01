@@ -1,14 +1,12 @@
 package br.com.desafiogrupoallcross.utilitarios;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.CategoriaId;
-import br.com.desafiogrupoallcross.adapter.in.dto.request.FotoProdutoDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.out.entity.CategoriaEntity;
 import br.com.desafiogrupoallcross.adapter.out.entity.FotoProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.entity.enuns.TipoCategoriaEnum;
-import br.com.desafiogrupoallcross.application.core.domain.CategoriaBusiness;
-import br.com.desafiogrupoallcross.application.core.domain.FotoProdutoBusiness;
+import br.com.desafiogrupoallcross.application.core.domain.Categoria;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import com.github.javafaker.Faker;
 import org.springframework.mock.web.MockMultipartFile;
@@ -33,7 +31,7 @@ public final class FabricaDeObjetosDeTeste {
 
         var categoria = CategoriaEntity.builder()
                 .id(1L)
-                .nome("Eletrônicos")
+                .classe("Eletrônicos")
                 .ativo(true)
                 .tipo(TipoCategoriaEnum.NORMAL)
                 .build();
@@ -53,9 +51,9 @@ public final class FabricaDeObjetosDeTeste {
 
     public static ProdutoBusiness gerarProdutoBusiness() {
 
-        var categoria = new CategoriaBusiness();
+        var categoria = new Categoria();
         categoria.setId(1L);
-        categoria.setNome("Eletrônicos");
+        categoria.setClasse("Eletrônicos");
         categoria.setAtivo(true);
         categoria.setTipo(TipoCategoriaEnum.NORMAL);
 

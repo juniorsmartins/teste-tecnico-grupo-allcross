@@ -148,7 +148,7 @@ class ProdutoControllerIntegrationTest {
                             .path(END_POINT)
                             .queryParam("page", 0)
                             .queryParam("size", 2)
-                            .queryParam("sort", "nome,asc")
+                            .queryParam("sort", "classe,asc")
                             .build())
                     .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
                     .accept(MediaType.APPLICATION_JSON)
@@ -158,19 +158,19 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(2)
                     .jsonPath("$.content.size()").isEqualTo(2)
-                    .jsonPath("$.content[0].nome").isEqualTo(expectedNomesAscendentes.get(0))
-                    .jsonPath("$.content[1].nome").isEqualTo(expectedNomesAscendentes.get(1));
+                    .jsonPath("$.content[0].classe").isEqualTo(expectedNomesAscendentes.get(0))
+                    .jsonPath("$.content[1].classe").isEqualTo(expectedNomesAscendentes.get(1));
         }
 
         @Test
-        @DisplayName("com um nome e sem paginação")
+        @DisplayName("com um classe e sem paginação")
         void dadoComFiltroDeNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
             var nomePesquisado = primeiroProduto.getNome();
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path(END_POINT)
-                            .queryParam("nome", nomePesquisado)
+                            .queryParam("classe", nomePesquisado)
                             .queryParam("paginacao", "")
                             .build())
                     .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
@@ -180,7 +180,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].nome").isEqualTo(nomePesquisado);
+                    .jsonPath("$.content[0].classe").isEqualTo(nomePesquisado);
         }
 
         @Test
@@ -193,7 +193,7 @@ class ProdutoControllerIntegrationTest {
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path(END_POINT)
-                            .queryParam("nome", doisNomesSeparadorPorVirgula)
+                            .queryParam("classe", doisNomesSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
                     .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
@@ -203,7 +203,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].nome").value(Matchers.containsInAnyOrder(expected.toArray()));
+                    .jsonPath("$.content[*].classe").value(Matchers.containsInAnyOrder(expected.toArray()));
         }
 
         @Test
@@ -423,14 +423,14 @@ class ProdutoControllerIntegrationTest {
         }
 
         @Test
-        @DisplayName("com um categoria.nome e sem paginação")
+        @DisplayName("com um categoria.classe e sem paginação")
         void dadoComFiltroDeCategoriaNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComUmProduto() {
-            var valorPesquisado = segundoProduto.getCategoria().getNome();
+            var valorPesquisado = segundoProduto.getCategoria().getClasse();
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path(END_POINT)
-                            .queryParam("categoria.nome", valorPesquisado)
+                            .queryParam("categoria.classe", valorPesquisado)
                             .queryParam("paginacao", "")
                             .build())
                     .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
@@ -440,20 +440,20 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[0].categoria.nome").isEqualTo(valorPesquisado);
+                    .jsonPath("$.content[0].categoria.classe").isEqualTo(valorPesquisado);
         }
 
         @Test
-        @DisplayName("com dois categoria.nome e sem paginação")
+        @DisplayName("com dois categoria.classe e sem paginação")
         void dadoComFiltroComDuasCategoriaNomeAndSemPaginacao_QuandoPesquisar_EntaoRetornarListaComDoisProduto() {
-            var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getNome() + "," + terceiroProduto.getCategoria().getNome();
+            var doisIdsSeparadorPorVirgula = segundoProduto.getCategoria().getClasse() + "," + terceiroProduto.getCategoria().getClasse();
 
             var expected = List.of(doisIdsSeparadorPorVirgula.split(","));
 
             webTestClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path(END_POINT)
-                            .queryParam("categoria.nome", doisIdsSeparadorPorVirgula)
+                            .queryParam("categoria.classe", doisIdsSeparadorPorVirgula)
                             .queryParam("paginacao", "")
                             .build())
                     .headers(JwtAuthentication.getHeaderAuthorization(webTestClient, USERNAME_ADMIN, PASSWORD_ADMIN))
@@ -463,7 +463,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(2)
-                    .jsonPath("$.content[*].categoria.nome", Matchers.containsInAnyOrder(expected.toArray()));
+                    .jsonPath("$.content[*].categoria.classe", Matchers.containsInAnyOrder(expected.toArray()));
         }
 
         @Test
@@ -549,7 +549,7 @@ class ProdutoControllerIntegrationTest {
                     .expectBody()
                     .jsonPath("$.totalPages").isEqualTo(1)
                     .jsonPath("$.totalElements").isEqualTo(1)
-                    .jsonPath("$.content[*].nome").isEqualTo("Notebook");
+                    .jsonPath("$.content[*].classe").isEqualTo("Notebook");
         }
     }
 
