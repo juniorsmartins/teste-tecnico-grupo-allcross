@@ -50,7 +50,6 @@ public class FotoProdutoSalvarAdapter implements FotoProdutoSalvarOutputPort {
         var fotoProdutoEntity = new FotoProdutoEntity();
         fotoProdutoEntity.setFoto(fotoConvertida);
         fotoProdutoEntity.setNome(fotoProdutoBusiness.getNome());
-        fotoProdutoEntity.setDescricao(fotoProdutoBusiness.getDescricao());
         fotoProdutoEntity.setTipo(fotoProdutoBusiness.getTipo());
         fotoProdutoEntity.setTamanho(fotoProdutoBusiness.getTamanho());
 

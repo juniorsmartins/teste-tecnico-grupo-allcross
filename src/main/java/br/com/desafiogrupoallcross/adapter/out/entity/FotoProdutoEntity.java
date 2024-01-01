@@ -40,5 +40,13 @@ public final class FotoProdutoEntity extends AbstractAuditingEntity implements S
 
     @Column(name = "tamanho")
     private long tamanho;
+
+    public FotoProdutoEntity(Long id, String nome, String tipo, long tamanho, ProdutoEntity produto) {
+        this.id = id;
+        this.nome = nome;
+        this.tipo = tipo;
+        this.tamanho = tamanho;
+        this.produto = produto;
+    }
 }
 
