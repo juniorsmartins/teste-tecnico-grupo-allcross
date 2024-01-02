@@ -7,7 +7,7 @@ public final class JasperReportUseCaseException extends ProblemaInternoNoServido
     }
 
     public JasperReportUseCaseException() {
-        this("Falha ao gerar PDF de Relatório com JasperReport.");
+        this("Falha no serviço ao gerar PDF de Relatório com JasperReport.");
     }
 }
 

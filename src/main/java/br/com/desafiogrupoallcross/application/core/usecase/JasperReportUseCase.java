@@ -1,5 +1,6 @@
 package br.com.desafiogrupoallcross.application.core.usecase;
 
+import br.com.desafiogrupoallcross.application.port.in.JasperReportInputPort;
 import br.com.desafiogrupoallcross.config.exception.http_500.JasperReportUseCaseException;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -7,10 +8,8 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpStatus;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -20,7 +19,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class JasperReportUseCase {
+public class JasperReportUseCase implements JasperReportInputPort {
 
     private static final Logger log = LoggerFactory.getLogger(JasperReportUseCase.class);
 
@@ -38,10 +37,12 @@ public class JasperReportUseCase {
         this.dataSource = dataSource;
     }
 
+    @Override
     public void addParams() {
         this.parametros.put("REPORT_LOCALE", new Locale("pt", "BR"));
     }
 
+    @Override
     public byte[] gerarPdf(String nomeRelatorio) {
 
         log.info("Iniciado serviço JasperReport para gerar relatório PDF de Produtos.");
