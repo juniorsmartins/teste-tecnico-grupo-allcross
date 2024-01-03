@@ -3,9 +3,7 @@ package br.com.desafiogrupoallcross.adapter.out;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
-import br.com.desafiogrupoallcross.config.exception.http_400.FotoProdutoSalvarAdapterException;
-import br.com.desafiogrupoallcross.config.exception.http_404.MultipartFileNaoEncontradoException;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -35,7 +33,7 @@ class FotoProdutoSalvarAdapterUnitTest {
 
     @BeforeEach
     void criarCenario() throws IOException {
-        var produto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+        var produto = FactoryObjectMotherAndBuilder.gerarProdutoEntityBuilder().build();
         produtoSalvo = produtoRepository.save(produto);
     }
 
@@ -53,7 +51,7 @@ class FotoProdutoSalvarAdapterUnitTest {
         @Test
         @DisplayName("por id nulo")
         void dadoIdNulo_QuandoArmazenar_EntaoLancarException() throws IOException {
-            var fotoProduto = FabricaDeObjetosDeTeste.gerarFotoProduto();
+            var fotoProduto = FactoryObjectMotherAndBuilder.gerarFotoProduto();
             Executable acao = () -> fotoProdutoArmazenarAdapter.armazenar(null, fotoProduto);
             Assertions.assertThrows(NullPointerException.class, acao);
         }

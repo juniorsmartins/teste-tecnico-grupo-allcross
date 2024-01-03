@@ -1,7 +1,7 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,15 +25,15 @@ class FotoProdutoEntityUnitTest {
 
     @BeforeEach
     void criarCenario() throws IOException {
-        var produto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+        var produto = FactoryObjectMotherAndBuilder.gerarProdutoEntityBuilder().build();
         var produtoSalvo = produtoRepository.save(produto);
 
-        primeiraFoto = FabricaDeObjetosDeTeste.gerarFotoProdutoEntityBuilder()
+        primeiraFoto = FactoryObjectMotherAndBuilder.gerarFotoProdutoEntityBuilder()
                 .id(1L)
                 .produto(produtoSalvo)
                 .build();
 
-        segundaFoto = FabricaDeObjetosDeTeste.gerarFotoProdutoEntityBuilder()
+        segundaFoto = FactoryObjectMotherAndBuilder.gerarFotoProdutoEntityBuilder()
                 .id(2L)
                 .produto(produtoSalvo)
                 .build();

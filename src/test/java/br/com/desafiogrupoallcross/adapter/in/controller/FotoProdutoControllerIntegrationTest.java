@@ -5,7 +5,6 @@ import br.com.desafiogrupoallcross.adapter.out.repository.FotoProdutoRepository;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
 import br.com.desafiogrupoallcross.config.exception.TipoDeErroEnum;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
 import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

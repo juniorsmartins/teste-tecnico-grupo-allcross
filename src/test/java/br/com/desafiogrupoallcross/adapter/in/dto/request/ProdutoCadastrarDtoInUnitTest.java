@@ -1,6 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.in.dto.request;
 
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import com.github.javafaker.Faker;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -30,7 +30,7 @@ class ProdutoCadastrarDtoInUnitTest {
 
     @BeforeEach
     void criarCenario() {
-        cadastrarDtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoInBuilder();
+        cadastrarDtoIn = FactoryObjectMotherAndBuilder.gerarProdutoCadastrarDtoInBuilder();
     }
 
     @Nested

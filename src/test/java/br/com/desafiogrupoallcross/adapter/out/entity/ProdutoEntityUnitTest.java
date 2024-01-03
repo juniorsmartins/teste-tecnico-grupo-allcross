@@ -1,6 +1,6 @@
 package br.com.desafiogrupoallcross.adapter.out.entity;
 
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,10 +22,10 @@ class ProdutoEntityUnitTest {
 
         @BeforeEach
         void criarCenarioParaMetodosPadrao() {
-            primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+            primeiroProduto = FactoryObjectMotherAndBuilder.gerarProdutoEntityBuilder().build();
             primeiroProduto.setId(1L);
 
-            segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoEntityBuilder().build();
+            segundoProduto = FactoryObjectMotherAndBuilder.gerarProdutoEntityBuilder().build();
             segundoProduto.setId(2L);
         }
 
