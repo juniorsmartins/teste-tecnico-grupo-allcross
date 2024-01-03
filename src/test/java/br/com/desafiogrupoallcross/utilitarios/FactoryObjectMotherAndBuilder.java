@@ -22,7 +22,7 @@ import java.util.Random;
 import java.util.UUID;
 
 // Uso dos Design Patterns, Object Mother e Builder.
-public final class FabricaDeObjetosDeTeste {
+public final class FactoryObjectMotherAndBuilder {
 
     public static Faker faker = new Faker();
 
