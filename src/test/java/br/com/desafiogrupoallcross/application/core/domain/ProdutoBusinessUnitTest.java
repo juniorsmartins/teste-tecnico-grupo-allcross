@@ -4,7 +4,7 @@ import br.com.desafiogrupoallcross.application.core.usecase.ProdutoCadastrarUseC
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoNuloProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.CampoVazioProibidoException;
 import br.com.desafiogrupoallcross.config.exception.http_400.DadoComTamanhoMaximoInvalidoException;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -25,7 +25,7 @@ class ProdutoBusinessUnitTest {
 
     @BeforeEach
     void criarCenario() {
-        produtoBusiness = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+        produtoBusiness = FactoryObjectMotherAndBuilder.gerarProdutoBusiness();
     }
 
     @Nested
@@ -50,7 +50,7 @@ class ProdutoBusinessUnitTest {
         @Test
         @DisplayName("com tamanho inválido")
         void dadoNomeComTamanhoInvalido_QuandoSetar_EntaoLancarException() {
-            var nome = FabricaDeObjetosDeTeste.faker.lorem().characters(101, 120);
+            var nome = FactoryObjectMotherAndBuilder.faker.lorem().characters(101, 120);
             Executable acao = () -> produtoBusiness.setNome(nome);
             Assertions.assertThrows(DadoComTamanhoMaximoInvalidoException.class, acao);
         }
@@ -102,10 +102,10 @@ class ProdutoBusinessUnitTest {
 
         @BeforeEach
         void criarCenarioParaMetodosPadrao() {
-            primeiroProduto = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+            primeiroProduto = FactoryObjectMotherAndBuilder.gerarProdutoBusiness();
             primeiroProduto.setId(1L);
 
-            segundoProduto = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+            segundoProduto = FactoryObjectMotherAndBuilder.gerarProdutoBusiness();
             segundoProduto.setId(2L);
         }
 

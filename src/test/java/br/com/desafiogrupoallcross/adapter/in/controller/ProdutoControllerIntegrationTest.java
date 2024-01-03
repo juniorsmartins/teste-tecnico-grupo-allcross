@@ -6,7 +6,7 @@ import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.adapter.in.dto.response.ProdutoCadastrarDtoOut;
 import br.com.desafiogrupoallcross.adapter.out.entity.ProdutoEntity;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
@@ -56,7 +56,7 @@ class ProdutoControllerIntegrationTest {
 
     @BeforeEach
     void criarCenario() {
-        dtoIn = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoIn();
+        dtoIn = FactoryObjectMotherAndBuilder.gerarProdutoCadastrarDtoIn();
 
         primeiroProduto = produtoRepository.findById(2001L).get();
         segundoProduto = produtoRepository.findById(2002L).get();

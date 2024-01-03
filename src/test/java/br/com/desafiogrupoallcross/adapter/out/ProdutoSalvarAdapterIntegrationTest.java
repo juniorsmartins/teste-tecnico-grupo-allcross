@@ -3,7 +3,7 @@ package br.com.desafiogrupoallcross.adapter.out;
 import br.com.desafiogrupoallcross.adapter.out.repository.ProdutoRepository;
 import br.com.desafiogrupoallcross.application.core.domain.ProdutoBusiness;
 import br.com.desafiogrupoallcross.config.exception.http_404.CategoriaNaoEncontradaException;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -27,7 +27,7 @@ class ProdutoSalvarAdapterIntegrationTest {
 
     @BeforeEach
     void criarCenario() {
-        produtoBusiness = FabricaDeObjetosDeTeste.gerarProdutoBusiness();
+        produtoBusiness = FactoryObjectMotherAndBuilder.gerarProdutoBusiness();
     }
 
     @Nested

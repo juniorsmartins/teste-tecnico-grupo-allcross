@@ -2,9 +2,8 @@ package br.com.desafiogrupoallcross.adapter.in.controller;
 
 import br.com.desafiogrupoallcross.adapter.in.dto.request.ProdutoCadastrarDtoIn;
 import br.com.desafiogrupoallcross.application.port.in.ProdutoCadastrarInputPort;
-import br.com.desafiogrupoallcross.application.port.in.ProdutoDeletarInputPort;
 import br.com.desafiogrupoallcross.config.exception.ApiError;
-import br.com.desafiogrupoallcross.utilitarios.FabricaDeObjetosDeTeste;
+import br.com.desafiogrupoallcross.utilitarios.FactoryObjectMotherAndBuilder;
 import br.com.desafiogrupoallcross.utilitarios.JwtAuthentication;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
@@ -54,7 +53,7 @@ class ProdutoControllerUnitTest {
 
         @BeforeEach
         void criarCenario() {
-            cadastrarDtoInBuilder = FabricaDeObjetosDeTeste.gerarProdutoCadastrarDtoInBuilder();
+            cadastrarDtoInBuilder = FactoryObjectMotherAndBuilder.gerarProdutoCadastrarDtoInBuilder();
         }
 
         @ParameterizedTest
